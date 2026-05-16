@@ -1,1211 +1,2601 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AquaSense – AI Water Shortage Early Warning</title>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --blue:#1a73e8;--blue-light:#e8f0fe;--blue-dark:#1557b0;
-  --green:#34a853;--green-light:#e6f4ea;
-  --red:#ea4335;--red-light:#fce8e6;
-  --yellow:#fbbc04;--yellow-light:#fef7e0;
-  --orange:#fa7b17;--orange-light:#feefc3;
-  --gray50:#f8f9fa;--gray100:#f1f3f4;--gray200:#e8eaed;
-  --gray400:#bdc1c6;--gray600:#80868b;--gray800:#3c4043;--gray900:#202124;
-  --white:#fff;
-  --shadow-1:0 1px 2px rgba(60,64,67,.3),0 1px 3px 1px rgba(60,64,67,.15);
-  --shadow-2:0 1px 2px rgba(60,64,67,.3),0 2px 6px 2px rgba(60,64,67,.15);
-  --shadow-3:0 4px 8px 3px rgba(60,64,67,.15),0 1px 3px rgba(60,64,67,.3);
-  --radius:8px;--radius-lg:12px;--radius-xl:24px;
-  --font:'Google Sans',sans-serif;--font-body:'Roboto',sans-serif;
-}
-html,body{min-height:100%;background:var(--gray50);font-family:var(--font-body);color:var(--gray900)}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AquaSense – AI Water Shortage Early Warning</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
 
-/* ── TOAST NOTIFICATIONS ── */
-#toast-container{position:fixed;top:16px;right:16px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
-.toast{background:var(--gray900);color:#fff;padding:12px 16px;border-radius:var(--radius);font-size:13px;
-  display:flex;align-items:center;gap:10px;min-width:280px;max-width:380px;
-  pointer-events:all;cursor:pointer;box-shadow:var(--shadow-3);
-  transform:translateX(120%);transition:transform 0.35s cubic-bezier(.2,.8,.4,1),opacity 0.3s;opacity:0}
-.toast.show{transform:translateX(0);opacity:1}
-.toast.hide{transform:translateX(120%);opacity:0}
-.toast-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.toast-icon.critical{background:var(--red)}
-.toast-icon.high{background:var(--orange)}
-.toast-icon.info{background:var(--blue)}
-.toast-icon.success{background:var(--green)}
-.toast-icon i{font-size:15px;color:#fff}
-.toast-body{flex:1}
-.toast-title{font-family:var(--font);font-weight:500;font-size:13px;margin-bottom:1px}
-.toast-sub{font-size:12px;opacity:0.75}
-.toast-close{opacity:0.6;font-size:18px;line-height:1;cursor:pointer}
-.toast-action{background:var(--blue);color:#fff;border:none;border-radius:4px;padding:4px 10px;font-size:12px;font-family:var(--font);cursor:pointer;margin-top:6px;white-space:nowrap}
+    :root {
+      --blue: #1a73e8;
+      --blue-light: #e8f0fe;
+      --blue-dark: #1557b0;
+      --green: #34a853;
+      --green-light: #e6f4ea;
+      --red: #ea4335;
+      --red-light: #fce8e6;
+      --yellow: #fbbc04;
+      --yellow-light: #fef7e0;
+      --orange: #fa7b17;
+      --orange-light: #feefc3;
+      --gray50: #f8f9fa;
+      --gray100: #f1f3f4;
+      --gray200: #e8eaed;
+      --gray400: #bdc1c6;
+      --gray600: #80868b;
+      --gray800: #3c4043;
+      --gray900: #202124;
+      --white: #fff;
+      --shadow-1: 0 1px 2px rgba(60, 64, 67, .3), 0 1px 3px 1px rgba(60, 64, 67, .15);
+      --shadow-2: 0 1px 2px rgba(60, 64, 67, .3), 0 2px 6px 2px rgba(60, 64, 67, .15);
+      --shadow-3: 0 4px 8px 3px rgba(60, 64, 67, .15), 0 1px 3px rgba(60, 64, 67, .3);
+      --radius: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 24px;
+      --font: 'Google Sans', sans-serif;
+      --font-body: 'Roboto', sans-serif;
+    }
 
-/* ── SCREENS ── */
-.screen{display:none;min-height:100vh;width:100%;position:relative}
-.screen.active{display:flex}
+    html,
+    body {
+      min-height: 100%;
+      background: var(--gray50);
+      font-family: var(--font-body);
+      color: var(--gray900)
+    }
 
-/* ── LOGIN SCREEN ── */
-#login-screen{background:var(--white);justify-content:center;align-items:center;flex-direction:column;gap:0}
-.login-left{width:50%;height:100%;background:linear-gradient(160deg,#e8f0fe 0%,#c5dff8 60%,#b3d2f5 100%);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:48px}
-.login-illustration{width:320px;height:260px}
-.login-right{width:50%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;gap:0}
-.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:32px}
-.login-logo-mark{width:40px;height:40px;border-radius:10px;background:var(--blue);
-  display:flex;align-items:center;justify-content:center}
-.login-logo-mark i{font-size:22px;color:#fff}
-.login-logo-text{font-family:var(--font);font-size:22px;font-weight:700;color:var(--blue)}
-.login-logo-sub{font-size:12px;color:var(--gray600);margin-top:1px}
-.login-card{width:100%;max-width:380px;background:var(--white);border-radius:var(--radius-xl);
-  padding:40px 36px;box-shadow:var(--shadow-3)}
-.login-title{font-family:var(--font);font-size:22px;font-weight:500;color:var(--gray900);margin-bottom:6px}
-.login-sub{font-size:14px;color:var(--gray600);margin-bottom:28px}
-.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
-.role-card{border:2px solid var(--gray200);border-radius:var(--radius-lg);padding:16px;cursor:pointer;
-  transition:all 0.2s;text-align:center;background:var(--white)}
-.role-card:hover{border-color:var(--blue);background:var(--blue-light)}
-.role-card.selected{border-color:var(--blue);background:var(--blue-light)}
-.role-card i{font-size:28px;color:var(--gray600);margin-bottom:8px;display:block}
-.role-card.selected i{color:var(--blue)}
-.role-card-title{font-family:var(--font);font-size:13px;font-weight:500;color:var(--gray800)}
-.role-card-sub{font-size:11px;color:var(--gray600);margin-top:2px}
-.input-group{margin-bottom:16px}
-.input-label{font-size:12px;font-weight:500;color:var(--gray700);margin-bottom:6px;display:block}
-.g-input{width:100%;border:1px solid var(--gray400);border-radius:var(--radius);padding:11px 14px;
-  font-size:14px;font-family:var(--font-body);color:var(--gray900);outline:none;transition:border-color 0.2s}
-.g-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,115,232,0.15)}
-.ward-select-wrap{display:none}
-.ward-select-wrap.visible{display:block}
-.btn-primary{width:100%;background:var(--blue);color:#fff;border:none;border-radius:var(--radius-xl);
-  padding:12px;font-size:14px;font-family:var(--font);font-weight:500;cursor:pointer;
-  transition:background 0.2s,box-shadow 0.2s;margin-top:8px}
-.btn-primary:hover{background:var(--blue-dark);box-shadow:var(--shadow-2)}
-.login-footer{font-size:12px;color:var(--gray600);margin-top:16px;text-align:center}
-.demo-creds{background:var(--gray100);border-radius:var(--radius);padding:10px 14px;font-size:12px;
-  color:var(--gray600);margin-top:16px;line-height:1.7}
+    /* ── TOAST NOTIFICATIONS ── */
+    #toast-container {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none
+    }
 
-/* ── MAIN APP ── */
-#app-screen{flex-direction:column;min-height:100vh}
-.g-topbar{height:64px;background:var(--white);border-bottom:1px solid var(--gray200);
-  display:flex;align-items:center;padding:0 24px;gap:16px;flex-shrink:0;
-  box-shadow:0 1px 3px rgba(0,0,0,.08);position:sticky;top:0;z-index:100}
-.top-logo{display:flex;align-items:center;gap:8px;margin-right:32px;text-decoration:none}
-.top-logo-mark{width:32px;height:32px;border-radius:8px;background:var(--blue);
-  display:flex;align-items:center;justify-content:center}
-.top-logo-mark i{font-size:18px;color:#fff}
-.top-logo-text{font-family:var(--font);font-size:18px;font-weight:700;color:var(--blue)}
-.top-search{flex:1;max-width:480px;position:relative}
-.top-search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--gray600)}
-.top-search input{width:100%;background:var(--gray100);border:1px solid transparent;border-radius:24px;
-  padding:9px 16px 9px 38px;font-size:14px;font-family:var(--font-body);color:var(--gray900);
-  outline:none;transition:all 0.2s}
-.top-search input:focus{background:var(--white);border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,115,232,0.12)}
-.top-search input::placeholder{color:var(--gray600)}
-.top-right{margin-left:auto;display:flex;align-items:center;gap:8px}
-.live-chip{display:flex;align-items:center;gap:6px;background:var(--green-light);color:var(--green);
-  padding:5px 12px;border-radius:24px;font-size:12px;font-family:var(--font);font-weight:500}
-.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-.icon-btn{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;position:relative;transition:background 0.15s}
-.icon-btn:hover{background:var(--gray100)}
-.icon-btn i{font-size:20px;color:var(--gray600)}
-.notif-badge{position:absolute;top:4px;right:4px;width:16px;height:16px;border-radius:50%;
-  background:var(--red);font-size:9px;font-family:var(--font);display:flex;align-items:center;
-  justify-content:center;border:2px solid var(--white);color:#fff}
-.user-chip{display:flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border-radius:24px;
-  cursor:pointer;transition:background 0.15s}
-.user-chip:hover{background:var(--gray100)}
-.user-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  font-family:var(--font);font-size:13px;font-weight:500;color:#fff}
-.user-name{font-size:13px;font-family:var(--font);color:var(--gray800)}
-.role-badge{font-size:10px;background:var(--blue-light);color:var(--blue);
-  padding:2px 7px;border-radius:10px;font-family:var(--font);font-weight:500}
+    .toast {
+      background: var(--gray900);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 280px;
+      max-width: 380px;
+      pointer-events: all;
+      cursor: pointer;
+      box-shadow: var(--shadow-3);
+      transform: translateX(120%);
+      transition: transform 0.35s cubic-bezier(.2, .8, .4, 1), opacity 0.3s;
+      opacity: 0
+    }
 
-/* ── APP BODY ── */
-.g-body{display:flex;flex:1}
+    .toast.show {
+      transform: translateX(0);
+      opacity: 1
+    }
 
-/* ── SIDEBAR ── */
-.g-sidebar{width:256px;flex-shrink:0;background:var(--white);border-right:1px solid var(--gray200);
-  padding:12px 0;display:flex;flex-direction:column;gap:0;position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto}
-.nav-section{font-size:11px;font-weight:500;color:var(--gray600);letter-spacing:0.1em;
-  text-transform:uppercase;padding:12px 16px 4px}
-.nav-item{display:flex;align-items:center;gap:12px;padding:10px 16px;cursor:pointer;
-  font-size:14px;color:var(--gray800);border-radius:0 24px 24px 0;margin-right:12px;
-  transition:background 0.15s;position:relative;font-family:var(--font);font-weight:400}
-.nav-item:hover{background:var(--gray100)}
-.nav-item.active{background:var(--blue-light);color:var(--blue);font-weight:500}
-.nav-item i{font-size:18px;flex-shrink:0}
-.nav-pill{margin-left:auto;background:var(--red-light);color:var(--red);
-  font-size:11px;padding:1px 8px;border-radius:10px;font-weight:500}
-.nav-pill.amber{background:var(--orange-light);color:var(--orange)}
-.sidebar-bottom{margin-top:auto;padding:12px 16px;border-top:1px solid var(--gray200)}
-.model-chip{display:flex;align-items:center;gap:10px;background:var(--gray100);border-radius:var(--radius);
-  padding:10px 12px;font-size:12px;color:var(--gray600)}
-.model-chip i{font-size:16px;color:var(--blue)}
+    .toast.hide {
+      transform: translateX(120%);
+      opacity: 0
+    }
 
-/* ── MAIN CONTENT ── */
-.g-main{flex:1;padding:24px;display:flex;flex-direction:column;gap:20px;background:var(--gray50);min-width:0}
+    .toast-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
 
-/* ── PAGE SYSTEM ── */
-.page{display:none;flex-direction:column;gap:20px;animation:fadein 0.25s ease}
-.page.active{display:flex}
-@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .toast-icon.critical {
+      background: var(--red)
+    }
 
-/* ── PAGE HEADER ── */
-.page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
-.page-title{font-family:var(--font);font-size:22px;font-weight:500;color:var(--gray900)}
-.page-sub{font-size:14px;color:var(--gray600);margin-top:2px}
-.btn-contained{background:var(--blue);color:#fff;border:none;border-radius:var(--radius-xl);
-  padding:9px 20px;font-size:13px;font-family:var(--font);font-weight:500;cursor:pointer;
-  display:flex;align-items:center;gap:6px;transition:box-shadow 0.2s,background 0.2s}
-.btn-contained:hover{background:var(--blue-dark);box-shadow:var(--shadow-2)}
-.btn-outlined{background:var(--white);color:var(--blue);border:1px solid var(--blue);border-radius:var(--radius-xl);
-  padding:8px 20px;font-size:13px;font-family:var(--font);font-weight:500;cursor:pointer;
-  display:flex;align-items:center;gap:6px;transition:background 0.15s}
-.btn-outlined:hover{background:var(--blue-light)}
+    .toast-icon.high {
+      background: var(--orange)
+    }
 
-/* ── STAT CARDS ── */
-.stat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
-.stat-card{background:var(--white);border-radius:var(--radius-lg);padding:20px;
-  box-shadow:var(--shadow-1);position:relative;overflow:hidden}
-.stat-label{font-size:12px;color:var(--gray600);margin-bottom:12px;font-family:var(--font)}
-.stat-val{font-family:var(--font);font-size:30px;font-weight:500;color:var(--gray900);line-height:1}
-.stat-val .unit{font-size:16px;font-weight:400;color:var(--gray600)}
-.stat-change{font-size:12px;margin-top:8px;display:flex;align-items:center;gap:4px}
-.stat-change.up{color:var(--red)}
-.stat-change.down{color:var(--green)}
-.stat-change.neutral{color:var(--gray600)}
-.stat-icon{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center}
-.stat-icon i{font-size:18px}
-.stat-icon.blue{background:var(--blue-light)} .stat-icon.blue i{color:var(--blue)}
-.stat-icon.red{background:var(--red-light)} .stat-icon.red i{color:var(--red)}
-.stat-icon.green{background:var(--green-light)} .stat-icon.green i{color:var(--green)}
-.stat-icon.yellow{background:var(--yellow-light)} .stat-icon.yellow i{color:var(--orange)}
-.stat-icon.orange{background:var(--orange-light)} .stat-icon.orange i{color:var(--orange)}
+    .toast-icon.info {
+      background: var(--blue)
+    }
 
-/* ── CARDS ── */
-.g-card{background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow-1);padding:20px}
-.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.card-title{font-family:var(--font);font-size:15px;font-weight:500;color:var(--gray900);
-  display:flex;align-items:center;gap:8px}
-.card-title i{font-size:18px;color:var(--blue)}
-.chip{font-size:11px;padding:3px 10px;border-radius:10px;font-family:var(--font);font-weight:500}
-.chip-green{background:var(--green-light);color:var(--green)}
-.chip-red{background:var(--red-light);color:var(--red)}
-.chip-blue{background:var(--blue-light);color:var(--blue)}
-.chip-yellow{background:var(--yellow-light);color:var(--orange)}
+    .toast-icon.success {
+      background: var(--green)
+    }
 
-/* ── MAP CANVAS ── */
-#mapCanvas{width:100%;height:340px;border-radius:var(--radius);cursor:crosshair;display:block}
-.map-wrap{position:relative;border-radius:var(--radius);overflow:hidden;background:var(--gray100)}
-.map-legend{position:absolute;bottom:12px;right:12px;background:rgba(255,255,255,0.95);
-  border-radius:var(--radius);padding:10px 14px;box-shadow:var(--shadow-1)}
-.legend-item{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--gray800);margin-bottom:4px;font-family:var(--font)}
-.legend-item:last-child{margin-bottom:0}
-.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-#wardTooltip{position:absolute;background:var(--gray900);color:#fff;border-radius:var(--radius);
-  padding:10px 14px;font-size:12px;pointer-events:none;display:none;min-width:140px;z-index:10}
-#wardTooltip .tt-name{font-family:var(--font);font-weight:500;margin-bottom:5px;font-size:13px}
-#wardTooltip .tt-row{display:flex;justify-content:space-between;gap:16px;font-size:11px;color:rgba(255,255,255,0.7);margin-top:3px}
+    .toast-icon i {
+      font-size: 15px;
+      color: #fff
+    }
 
-/* ── WARD TABLE ── */
-.ward-table{width:100%;border-collapse:collapse}
-.ward-table th{font-size:11px;font-weight:500;color:var(--gray600);text-transform:uppercase;
-  letter-spacing:0.06em;padding:8px 12px;text-align:left;border-bottom:1px solid var(--gray200)}
-.ward-table td{padding:11px 12px;font-size:13px;border-bottom:1px solid var(--gray100);vertical-align:middle}
-.ward-table tr:hover td{background:var(--gray50)}
-.ward-table tr:last-child td{border-bottom:none}
-.risk-chip{font-size:11px;padding:3px 10px;border-radius:10px;font-family:var(--font);font-weight:500;white-space:nowrap}
-.risk-chip.critical{background:var(--red-light);color:var(--red)}
-.risk-chip.high{background:var(--orange-light);color:var(--orange)}
-.risk-chip.moderate{background:var(--yellow-light);color:var(--orange)}
-.risk-chip.low{background:var(--green-light);color:var(--green)}
-.progress-bar{height:6px;background:var(--gray200);border-radius:3px;overflow:hidden;min-width:80px}
-.progress-fill{height:100%;border-radius:3px}
+    .toast-body {
+      flex: 1
+    }
 
-/* ── ALERT CARDS ── */
-.alert-item{display:flex;gap:12px;padding:14px;border-radius:var(--radius);margin-bottom:8px;
-  border-left:3px solid;cursor:pointer;transition:box-shadow 0.15s}
-.alert-item:hover{box-shadow:var(--shadow-1)}
-.alert-item.critical{background:#fef7f7;border-left-color:var(--red)}
-.alert-item.high{background:#fff8f2;border-left-color:var(--orange)}
-.alert-item.info{background:#f0f6ff;border-left-color:var(--blue)}
-.alert-item.resolved{background:var(--gray50);border-left-color:var(--green)}
-.alert-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.alert-item.critical .alert-icon{background:var(--red-light)} .alert-item.critical .alert-icon i{color:var(--red);font-size:18px}
-.alert-item.high .alert-icon{background:var(--orange-light)} .alert-item.high .alert-icon i{color:var(--orange);font-size:18px}
-.alert-item.info .alert-icon{background:var(--blue-light)} .alert-item.info .alert-icon i{color:var(--blue);font-size:18px}
-.alert-item.resolved .alert-icon{background:var(--green-light)} .alert-item.resolved .alert-icon i{color:var(--green);font-size:18px}
-.alert-title{font-family:var(--font);font-size:13px;font-weight:500;color:var(--gray900);margin-bottom:3px}
-.alert-desc{font-size:12px;color:var(--gray600);line-height:1.5}
-.alert-meta{font-size:11px;color:var(--gray400);margin-top:5px}
+    .toast-title {
+      font-family: var(--font);
+      font-weight: 500;
+      font-size: 13px;
+      margin-bottom: 1px
+    }
 
-/* ── COMPLAINT FORM ── */
-.complaint-form{display:flex;flex-direction:column;gap:14px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.form-group{display:flex;flex-direction:column;gap:6px}
-.form-label{font-size:13px;font-weight:500;color:var(--gray700);font-family:var(--font)}
-.g-select{width:100%;border:1px solid var(--gray400);border-radius:var(--radius);padding:10px 12px;
-  font-size:14px;font-family:var(--font-body);color:var(--gray900);outline:none;background:var(--white);
-  transition:border-color 0.2s;cursor:pointer}
-.g-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,115,232,0.12)}
-.g-textarea{width:100%;border:1px solid var(--gray400);border-radius:var(--radius);padding:10px 12px;
-  font-size:14px;font-family:var(--font-body);color:var(--gray900);outline:none;resize:vertical;min-height:80px;
-  transition:border-color 0.2s}
-.g-textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,115,232,0.12)}
+    .toast-sub {
+      font-size: 12px;
+      opacity: 0.75
+    }
 
-/* ── FORECAST PANEL ── */
-.forecast-slider-wrap{padding:8px 4px}
-.forecast-track{position:relative;height:8px;background:var(--gray200);border-radius:4px;margin:20px 0 10px}
-.forecast-fill{position:absolute;left:0;height:100%;border-radius:4px;transition:width 0.3s;
-  background:linear-gradient(90deg,var(--green),var(--yellow),var(--red))}
-.forecast-thumb{position:absolute;width:20px;height:20px;border-radius:50%;background:var(--blue);
-  top:50%;transform:translate(-50%,-50%);cursor:pointer;box-shadow:var(--shadow-2);
-  border:3px solid var(--white)}
-.forecast-ticks{display:flex;justify-content:space-between;font-size:11px;color:var(--gray600);font-family:var(--font)}
-.forecast-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
-.fc-card{background:var(--gray50);border-radius:var(--radius);padding:14px;border:1px solid var(--gray200)}
-.fc-day{font-size:12px;color:var(--gray600);font-family:var(--font);margin-bottom:6px}
-.fc-risk{font-family:var(--font);font-size:16px;font-weight:500}
+    .toast-close {
+      opacity: 0.6;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer
+    }
 
-/* ── WATER BUDGET ── */
-.budget-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.budget-item{display:flex;align-items:center;justify-content:space-between;padding:12px;
-  background:var(--gray50);border-radius:var(--radius);border:1px solid var(--gray200)}
-.budget-item-label{font-size:13px;color:var(--gray700);font-family:var(--font)}
-.budget-item-val{font-family:var(--font);font-size:18px;font-weight:500;color:var(--gray900)}
-.budget-item-unit{font-size:11px;color:var(--gray600);font-weight:400}
-.budget-total{background:var(--blue-light);border:1px solid var(--blue);border-radius:var(--radius-lg);
-  padding:16px;text-align:center;margin-top:12px}
-.budget-total-label{font-size:13px;color:var(--blue);font-family:var(--font);margin-bottom:4px}
-.budget-total-val{font-family:var(--font);font-size:28px;font-weight:500;color:var(--blue)}
-.budget-score{display:inline-block;background:var(--green-light);color:var(--green);
-  font-size:12px;padding:3px 12px;border-radius:10px;font-family:var(--font);font-weight:500;margin-top:6px}
+    .toast-action {
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-family: var(--font);
+      cursor: pointer;
+      margin-top: 6px;
+      white-space: nowrap
+    }
 
-/* ── GAMIFICATION ── */
-.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.badge-card{background:var(--gray50);border-radius:var(--radius-lg);padding:16px;text-align:center;
-  border:1px solid var(--gray200)}
-.badge-card.earned{background:var(--blue-light);border-color:var(--blue)}
-.badge-icon{font-size:32px;margin-bottom:8px}
-.badge-title{font-family:var(--font);font-size:12px;font-weight:500;color:var(--gray800)}
-.badge-card.earned .badge-title{color:var(--blue)}
-.badge-sub{font-size:11px;color:var(--gray500);margin-top:2px}
+    /* ── SCREENS ── */
+    .screen {
+      display: none;
+      min-height: 100vh;
+      width: 100%;
+      position: relative
+    }
 
-/* ── ADMIN PANEL EXTRAS ── */
-.admin-action-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
-.admin-action{background:var(--white);border:1px solid var(--gray200);border-radius:var(--radius-lg);
-  padding:16px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:12px}
-.admin-action:hover{border-color:var(--blue);box-shadow:var(--shadow-1)}
-.admin-action-icon{width:40px;height:40px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.admin-action-text{font-family:var(--font);font-size:13px;font-weight:500;color:var(--gray800)}
-.admin-action-sub{font-size:11px;color:var(--gray600);margin-top:2px}
+    .screen.active {
+      display: flex
+    }
 
-/* ── CITIZEN WARD CARD ── */
-.ward-report-card{background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dark) 100%);
-  color:#fff;border-radius:var(--radius-xl);padding:28px;position:relative;overflow:hidden}
-.ward-report-card::after{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;
-  border-radius:50%;background:rgba(255,255,255,0.06)}
-.ward-rc-label{font-size:12px;opacity:0.8;font-family:var(--font);margin-bottom:4px}
-.ward-rc-name{font-family:var(--font);font-size:24px;font-weight:500;margin-bottom:20px}
-.ward-rc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
-.ward-rc-stat-val{font-family:var(--font);font-size:20px;font-weight:500}
-.ward-rc-stat-label{font-size:11px;opacity:0.75;margin-top:2px}
-.ward-risk-banner{display:inline-flex;align-items:center;gap:6px;background:rgba(234,67,53,0.2);
-  border:1px solid rgba(234,67,53,0.4);border-radius:24px;padding:5px 14px;margin-top:16px;font-size:13px;font-family:var(--font)}
+    /* ── LOGIN SCREEN ── */
+    #login-screen {
+      background: url('bg-image.png') center/cover no-repeat;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 0
+    }
 
-/* ── TABS ── */
-.tab-row{display:flex;gap:0;border-bottom:1px solid var(--gray200);margin-bottom:20px}
-.tab{padding:10px 18px;font-size:13px;font-family:var(--font);font-weight:500;color:var(--gray600);
-  cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 0.15s}
-.tab:hover{color:var(--blue)}
-.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+    .login-left {
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(160deg, #e8f0fe 0%, #c5dff8 60%, #b3d2f5 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      padding: 48px
+    }
 
-/* ── REPORT FEED ── */
-.report-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--gray100)}
-.report-item:last-child{border-bottom:none}
-.report-avatar{width:36px;height:36px;border-radius:50%;background:var(--blue-light);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.report-avatar i{font-size:17px;color:var(--blue)}
-.report-status{font-size:11px;padding:2px 8px;border-radius:8px;font-family:var(--font);font-weight:500;
-  display:inline-block;margin-top:5px}
-.report-status.pending{background:var(--yellow-light);color:var(--orange)}
-.report-status.resolved{background:var(--green-light);color:var(--green)}
-.report-status.investigating{background:var(--blue-light);color:var(--blue)}
+    .login-illustration {
+      width: 320px;
+      height: 260px
+    }
 
-/* ── CHARTS ── */
-.chart-wrap{position:relative;height:220px}
+    .login-right {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px;
+      gap: 0
+    }
 
-/* ── SECTION DIVIDER ── */
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.grid-3{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+    .login-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px
+    }
 
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-thumb{background:var(--gray400);border-radius:3px}
-</style>
+    .login-logo-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .login-logo-mark i {
+      font-size: 22px;
+      color: #fff
+    }
+
+    .login-logo-text {
+      font-family: var(--font);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--blue)
+    }
+
+    .login-logo-sub {
+      font-size: 12px;
+      color: var(--gray600);
+      margin-top: 1px
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 380px;
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      padding: 40px 36px;
+      box-shadow: var(--shadow-3)
+    }
+
+    .login-title {
+      font-family: var(--font);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--gray900);
+      margin-bottom: 6px
+    }
+
+    .login-sub {
+      font-size: 14px;
+      color: var(--gray600);
+      margin-bottom: 28px
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 24px
+    }
+
+    .role-card {
+      border: 2px solid var(--gray200);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      background: var(--white)
+    }
+
+    .role-card:hover {
+      border-color: var(--blue);
+      background: var(--blue-light)
+    }
+
+    .role-card.selected {
+      border-color: var(--blue);
+      background: var(--blue-light)
+    }
+
+    .role-card i {
+      font-size: 28px;
+      color: var(--gray600);
+      margin-bottom: 8px;
+      display: block
+    }
+
+    .role-card.selected i {
+      color: var(--blue)
+    }
+
+    .role-card-title {
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray800)
+    }
+
+    .role-card-sub {
+      font-size: 11px;
+      color: var(--gray600);
+      margin-top: 2px
+    }
+
+    .input-group {
+      margin-bottom: 16px
+    }
+
+    .input-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray700);
+      margin-bottom: 6px;
+      display: block
+    }
+
+    .g-input {
+      width: 100%;
+      border: 1px solid var(--gray400);
+      border-radius: var(--radius);
+      padding: 11px 14px;
+      font-size: 14px;
+      font-family: var(--font-body);
+      color: var(--gray900);
+      outline: none;
+      transition: border-color 0.2s
+    }
+
+    .g-input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15)
+    }
+
+    .ward-select-wrap {
+      display: none
+    }
+
+    .ward-select-wrap.visible {
+      display: block
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-xl);
+      padding: 12px;
+      font-size: 14px;
+      font-family: var(--font);
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      margin-top: 8px
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-dark);
+      box-shadow: var(--shadow-2)
+    }
+
+    .login-footer {
+      font-size: 12px;
+      color: var(--gray600);
+      margin-top: 16px;
+      text-align: center
+    }
+
+    .demo-creds {
+      background: var(--gray100);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--gray600);
+      margin-top: 16px;
+      line-height: 1.7
+    }
+
+    /* ── MAIN APP ── */
+    #app-screen {
+      flex-direction: column;
+      min-height: 100vh
+    }
+
+    .g-topbar {
+      height: 64px;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray200);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 16px;
+      flex-shrink: 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .08);
+      position: sticky;
+      top: 0;
+      z-index: 100
+    }
+
+    .top-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-right: 32px;
+      text-decoration: none
+    }
+
+    .top-logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .top-logo-mark i {
+      font-size: 18px;
+      color: #fff
+    }
+
+    .top-logo-text {
+      font-family: var(--font);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--blue)
+    }
+
+    .top-search {
+      flex: 1;
+      max-width: 480px;
+      position: relative
+    }
+
+    .top-search i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      color: var(--gray600)
+    }
+
+    .top-search input {
+      width: 100%;
+      background: var(--gray100);
+      border: 1px solid transparent;
+      border-radius: 24px;
+      padding: 9px 16px 9px 38px;
+      font-size: 14px;
+      font-family: var(--font-body);
+      color: var(--gray900);
+      outline: none;
+      transition: all 0.2s
+    }
+
+    .top-search input:focus {
+      background: var(--white);
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.12)
+    }
+
+    .top-search input::placeholder {
+      color: var(--gray600)
+    }
+
+    .top-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .live-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-light);
+      color: var(--green);
+      padding: 5px 12px;
+      border-radius: 24px;
+      font-size: 12px;
+      font-family: var(--font);
+      font-weight: 500
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0.4
+      }
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.15s
+    }
+
+    .icon-btn:hover {
+      background: var(--gray100)
+    }
+
+    .icon-btn i {
+      font-size: 20px;
+      color: var(--gray600)
+    }
+
+    .notif-badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--red);
+      font-size: 9px;
+      font-family: var(--font);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--white);
+      color: #fff
+    }
+
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px 6px 6px;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: background 0.15s
+    }
+
+    .user-chip:hover {
+      background: var(--gray100)
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: #fff
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-family: var(--font);
+      color: var(--gray800)
+    }
+
+    .role-badge {
+      font-size: 10px;
+      background: var(--blue-light);
+      color: var(--blue);
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-family: var(--font);
+      font-weight: 500
+    }
+
+    /* ── APP BODY ── */
+    .g-body {
+      display: flex;
+      flex: 1
+    }
+
+    /* ── SIDEBAR ── */
+    .g-sidebar {
+      width: 256px;
+      flex-shrink: 0;
+      background: var(--white);
+      border-right: 1px solid var(--gray200);
+      padding: 12px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: sticky;
+      top: 64px;
+      height: calc(100vh - 64px);
+      overflow-y: auto
+    }
+
+    .nav-section {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gray600);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 12px 16px 4px
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--gray800);
+      border-radius: 0 24px 24px 0;
+      margin-right: 12px;
+      transition: background 0.15s;
+      position: relative;
+      font-family: var(--font);
+      font-weight: 400
+    }
+
+    .nav-item:hover {
+      background: var(--gray100)
+    }
+
+    .nav-item.active {
+      background: var(--blue-light);
+      color: var(--blue);
+      font-weight: 500
+    }
+
+    .nav-item i {
+      font-size: 18px;
+      flex-shrink: 0
+    }
+
+    .nav-pill {
+      margin-left: auto;
+      background: var(--red-light);
+      color: var(--red);
+      font-size: 11px;
+      padding: 1px 8px;
+      border-radius: 10px;
+      font-weight: 500
+    }
+
+    .nav-pill.amber {
+      background: var(--orange-light);
+      color: var(--orange)
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding: 12px 16px;
+      border-top: 1px solid var(--gray200)
+    }
+
+    .model-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gray100);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font-size: 12px;
+      color: var(--gray600)
+    }
+
+    .model-chip i {
+      font-size: 16px;
+      color: var(--blue)
+    }
+
+    /* ── MAIN CONTENT ── */
+    .g-main {
+      flex: 1;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: var(--gray50);
+      min-width: 0
+    }
+
+    /* ── PAGE SYSTEM ── */
+    .page {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+      animation: fadein 0.25s ease
+    }
+
+    .page.active {
+      display: flex
+    }
+
+    @keyframes fadein {
+      from {
+        opacity: 0;
+        transform: translateY(8px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px
+    }
+
+    .page-title {
+      font-family: var(--font);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--gray900)
+    }
+
+    .page-sub {
+      font-size: 14px;
+      color: var(--gray600);
+      margin-top: 2px
+    }
+
+    .btn-contained {
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-xl);
+      padding: 9px 20px;
+      font-size: 13px;
+      font-family: var(--font);
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: box-shadow 0.2s, background 0.2s
+    }
+
+    .btn-contained:hover {
+      background: var(--blue-dark);
+      box-shadow: var(--shadow-2)
+    }
+
+    .btn-outlined {
+      background: var(--white);
+      color: var(--blue);
+      border: 1px solid var(--blue);
+      border-radius: var(--radius-xl);
+      padding: 8px 20px;
+      font-size: 13px;
+      font-family: var(--font);
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s
+    }
+
+    .btn-outlined:hover {
+      background: var(--blue-light)
+    }
+
+    /* ── STAT CARDS ── */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px
+    }
+
+    .stat-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-1);
+      position: relative;
+      overflow: hidden
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--gray600);
+      margin-bottom: 12px;
+      font-family: var(--font)
+    }
+
+    .stat-val {
+      font-family: var(--font);
+      font-size: 30px;
+      font-weight: 500;
+      color: var(--gray900);
+      line-height: 1
+    }
+
+    .stat-val .unit {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--gray600)
+    }
+
+    .stat-change {
+      font-size: 12px;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px
+    }
+
+    .stat-change.up {
+      color: var(--red)
+    }
+
+    .stat-change.down {
+      color: var(--green)
+    }
+
+    .stat-change.neutral {
+      color: var(--gray600)
+    }
+
+    .stat-icon {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .stat-icon i {
+      font-size: 18px
+    }
+
+    .stat-icon.blue {
+      background: var(--blue-light)
+    }
+
+    .stat-icon.blue i {
+      color: var(--blue)
+    }
+
+    .stat-icon.red {
+      background: var(--red-light)
+    }
+
+    .stat-icon.red i {
+      color: var(--red)
+    }
+
+    .stat-icon.green {
+      background: var(--green-light)
+    }
+
+    .stat-icon.green i {
+      color: var(--green)
+    }
+
+    .stat-icon.yellow {
+      background: var(--yellow-light)
+    }
+
+    .stat-icon.yellow i {
+      color: var(--orange)
+    }
+
+    .stat-icon.orange {
+      background: var(--orange-light)
+    }
+
+    .stat-icon.orange i {
+      color: var(--orange)
+    }
+
+    /* ── CARDS ── */
+    .g-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-1);
+      padding: 20px
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px
+    }
+
+    .card-title {
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--gray900);
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .card-title i {
+      font-size: 18px;
+      color: var(--blue)
+    }
+
+    .chip {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 10px;
+      font-family: var(--font);
+      font-weight: 500
+    }
+
+    .chip-green {
+      background: var(--green-light);
+      color: var(--green)
+    }
+
+    .chip-red {
+      background: var(--red-light);
+      color: var(--red)
+    }
+
+    .chip-blue {
+      background: var(--blue-light);
+      color: var(--blue)
+    }
+
+    .chip-yellow {
+      background: var(--yellow-light);
+      color: var(--orange)
+    }
+
+    /* ── MAP CANVAS ── */
+    #mapCanvas {
+      width: 100%;
+      height: 340px;
+      border-radius: var(--radius);
+      cursor: crosshair;
+      display: block
+    }
+
+    .map-wrap {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--gray100)
+    }
+
+    .map-legend {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      box-shadow: var(--shadow-1)
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: var(--gray800);
+      margin-bottom: 4px;
+      font-family: var(--font)
+    }
+
+    .legend-item:last-child {
+      margin-bottom: 0
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0
+    }
+
+    #wardTooltip {
+      position: absolute;
+      background: var(--gray900);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-size: 12px;
+      pointer-events: none;
+      display: none;
+      min-width: 140px;
+      z-index: 10
+    }
+
+    #wardTooltip .tt-name {
+      font-family: var(--font);
+      font-weight: 500;
+      margin-bottom: 5px;
+      font-size: 13px
+    }
+
+    #wardTooltip .tt-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 3px
+    }
+
+    /* ── WARD TABLE ── */
+    .ward-table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    .ward-table th {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gray600);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray200)
+    }
+
+    .ward-table td {
+      padding: 11px 12px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--gray100);
+      vertical-align: middle
+    }
+
+    .ward-table tr:hover td {
+      background: var(--gray50)
+    }
+
+    .ward-table tr:last-child td {
+      border-bottom: none
+    }
+
+    .risk-chip {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 10px;
+      font-family: var(--font);
+      font-weight: 500;
+      white-space: nowrap
+    }
+
+    .risk-chip.critical {
+      background: var(--red-light);
+      color: var(--red)
+    }
+
+    .risk-chip.high {
+      background: var(--orange-light);
+      color: var(--orange)
+    }
+
+    .risk-chip.moderate {
+      background: var(--yellow-light);
+      color: var(--orange)
+    }
+
+    .risk-chip.low {
+      background: var(--green-light);
+      color: var(--green)
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--gray200);
+      border-radius: 3px;
+      overflow: hidden;
+      min-width: 80px
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px
+    }
+
+    /* ── ALERT CARDS ── */
+    .alert-item {
+      display: flex;
+      gap: 12px;
+      padding: 14px;
+      border-radius: var(--radius);
+      margin-bottom: 8px;
+      border-left: 3px solid;
+      cursor: pointer;
+      transition: box-shadow 0.15s
+    }
+
+    .alert-item:hover {
+      box-shadow: var(--shadow-1)
+    }
+
+    .alert-item.critical {
+      background: #fef7f7;
+      border-left-color: var(--red)
+    }
+
+    .alert-item.high {
+      background: #fff8f2;
+      border-left-color: var(--orange)
+    }
+
+    .alert-item.info {
+      background: #f0f6ff;
+      border-left-color: var(--blue)
+    }
+
+    .alert-item.resolved {
+      background: var(--gray50);
+      border-left-color: var(--green)
+    }
+
+    .alert-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
+
+    .alert-item.critical .alert-icon {
+      background: var(--red-light)
+    }
+
+    .alert-item.critical .alert-icon i {
+      color: var(--red);
+      font-size: 18px
+    }
+
+    .alert-item.high .alert-icon {
+      background: var(--orange-light)
+    }
+
+    .alert-item.high .alert-icon i {
+      color: var(--orange);
+      font-size: 18px
+    }
+
+    .alert-item.info .alert-icon {
+      background: var(--blue-light)
+    }
+
+    .alert-item.info .alert-icon i {
+      color: var(--blue);
+      font-size: 18px
+    }
+
+    .alert-item.resolved .alert-icon {
+      background: var(--green-light)
+    }
+
+    .alert-item.resolved .alert-icon i {
+      color: var(--green);
+      font-size: 18px
+    }
+
+    .alert-title {
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray900);
+      margin-bottom: 3px
+    }
+
+    .alert-desc {
+      font-size: 12px;
+      color: var(--gray600);
+      line-height: 1.5
+    }
+
+    .alert-meta {
+      font-size: 11px;
+      color: var(--gray400);
+      margin-top: 5px
+    }
+
+    /* ── COMPLAINT FORM ── */
+    .complaint-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray700);
+      font-family: var(--font)
+    }
+
+    .g-select {
+      width: 100%;
+      border: 1px solid var(--gray400);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font-size: 14px;
+      font-family: var(--font-body);
+      color: var(--gray900);
+      outline: none;
+      background: var(--white);
+      transition: border-color 0.2s;
+      cursor: pointer
+    }
+
+    .g-select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.12)
+    }
+
+    .g-textarea {
+      width: 100%;
+      border: 1px solid var(--gray400);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font-size: 14px;
+      font-family: var(--font-body);
+      color: var(--gray900);
+      outline: none;
+      resize: vertical;
+      min-height: 80px;
+      transition: border-color 0.2s
+    }
+
+    .g-textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.12)
+    }
+
+    /* ── FORECAST PANEL ── */
+    .forecast-slider-wrap {
+      padding: 8px 4px
+    }
+
+    .forecast-track {
+      position: relative;
+      height: 8px;
+      background: var(--gray200);
+      border-radius: 4px;
+      margin: 20px 0 10px
+    }
+
+    .forecast-fill {
+      position: absolute;
+      left: 0;
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s;
+      background: linear-gradient(90deg, var(--green), var(--yellow), var(--red))
+    }
+
+    .forecast-thumb {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--blue);
+      top: 50%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      box-shadow: var(--shadow-2);
+      border: 3px solid var(--white)
+    }
+
+    .forecast-ticks {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--gray600);
+      font-family: var(--font)
+    }
+
+    .forecast-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px
+    }
+
+    .fc-card {
+      background: var(--gray50);
+      border-radius: var(--radius);
+      padding: 14px;
+      border: 1px solid var(--gray200)
+    }
+
+    .fc-day {
+      font-size: 12px;
+      color: var(--gray600);
+      font-family: var(--font);
+      margin-bottom: 6px
+    }
+
+    .fc-risk {
+      font-family: var(--font);
+      font-size: 16px;
+      font-weight: 500
+    }
+
+    /* ── WATER BUDGET ── */
+    .budget-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    .budget-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: var(--gray50);
+      border-radius: var(--radius);
+      border: 1px solid var(--gray200)
+    }
+
+    .budget-item-label {
+      font-size: 13px;
+      color: var(--gray700);
+      font-family: var(--font)
+    }
+
+    .budget-item-val {
+      font-family: var(--font);
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--gray900)
+    }
+
+    .budget-item-unit {
+      font-size: 11px;
+      color: var(--gray600);
+      font-weight: 400
+    }
+
+    .budget-total {
+      background: var(--blue-light);
+      border: 1px solid var(--blue);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      text-align: center;
+      margin-top: 12px
+    }
+
+    .budget-total-label {
+      font-size: 13px;
+      color: var(--blue);
+      font-family: var(--font);
+      margin-bottom: 4px
+    }
+
+    .budget-total-val {
+      font-family: var(--font);
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--blue)
+    }
+
+    .budget-score {
+      display: inline-block;
+      background: var(--green-light);
+      color: var(--green);
+      font-size: 12px;
+      padding: 3px 12px;
+      border-radius: 10px;
+      font-family: var(--font);
+      font-weight: 500;
+      margin-top: 6px
+    }
+
+    /* ── GAMIFICATION ── */
+    .badge-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px
+    }
+
+    .badge-card {
+      background: var(--gray50);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      text-align: center;
+      border: 1px solid var(--gray200)
+    }
+
+    .badge-card.earned {
+      background: var(--blue-light);
+      border-color: var(--blue)
+    }
+
+    .badge-icon {
+      font-size: 32px;
+      margin-bottom: 8px
+    }
+
+    .badge-title {
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray800)
+    }
+
+    .badge-card.earned .badge-title {
+      color: var(--blue)
+    }
+
+    .badge-sub {
+      font-size: 11px;
+      color: var(--gray500);
+      margin-top: 2px
+    }
+
+    /* ── ADMIN PANEL EXTRAS ── */
+    .admin-action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px
+    }
+
+    .admin-action {
+      background: var(--white);
+      border: 1px solid var(--gray200);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .admin-action:hover {
+      border-color: var(--blue);
+      box-shadow: var(--shadow-1)
+    }
+
+    .admin-action-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
+
+    .admin-action-text {
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray800)
+    }
+
+    .admin-action-sub {
+      font-size: 11px;
+      color: var(--gray600);
+      margin-top: 2px
+    }
+
+    /* ── CITIZEN WARD CARD ── */
+    .ward-report-card {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+      color: #fff;
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .ward-report-card::after {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06)
+    }
+
+    .ward-rc-label {
+      font-size: 12px;
+      opacity: 0.8;
+      font-family: var(--font);
+      margin-bottom: 4px
+    }
+
+    .ward-rc-name {
+      font-family: var(--font);
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 20px
+    }
+
+    .ward-rc-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px
+    }
+
+    .ward-rc-stat-val {
+      font-family: var(--font);
+      font-size: 20px;
+      font-weight: 500
+    }
+
+    .ward-rc-stat-label {
+      font-size: 11px;
+      opacity: 0.75;
+      margin-top: 2px
+    }
+
+    .ward-risk-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(234, 67, 53, 0.2);
+      border: 1px solid rgba(234, 67, 53, 0.4);
+      border-radius: 24px;
+      padding: 5px 14px;
+      margin-top: 16px;
+      font-size: 13px;
+      font-family: var(--font)
+    }
+
+    /* ── TABS ── */
+    .tab-row {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--gray200);
+      margin-bottom: 20px
+    }
+
+    .tab {
+      padding: 10px 18px;
+      font-size: 13px;
+      font-family: var(--font);
+      font-weight: 500;
+      color: var(--gray600);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.15s
+    }
+
+    .tab:hover {
+      color: var(--blue)
+    }
+
+    .tab.active {
+      color: var(--blue);
+      border-bottom-color: var(--blue)
+    }
+
+    /* ── REPORT FEED ── */
+    .report-item {
+      display: flex;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--gray100)
+    }
+
+    .report-item:last-child {
+      border-bottom: none
+    }
+
+    .report-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--blue-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
+
+    .report-avatar i {
+      font-size: 17px;
+      color: var(--blue)
+    }
+
+    .report-status {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-family: var(--font);
+      font-weight: 500;
+      display: inline-block;
+      margin-top: 5px
+    }
+
+    .report-status.pending {
+      background: var(--yellow-light);
+      color: var(--orange)
+    }
+
+    .report-status.resolved {
+      background: var(--green-light);
+      color: var(--green)
+    }
+
+    .report-status.investigating {
+      background: var(--blue-light);
+      color: var(--blue)
+    }
+
+    /* ── CHARTS ── */
+    .chart-wrap {
+      position: relative;
+      height: 220px
+    }
+
+    /* ── SECTION DIVIDER ── */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--gray400);
+      border-radius: 3px
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- TOAST CONTAINER -->
-<div id="toast-container"></div>
+  <!-- TOAST CONTAINER -->
+  <div id="toast-container"></div>
 
-<!-- ═══ SCREEN 1: LOGIN ═══ -->
-<div id="login-screen" class="screen active">
-  <div class="login-left">
-    <svg class="login-illustration" viewBox="0 0 320 260" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- City skyline -->
-      <rect x="20" y="160" width="30" height="80" fill="#b3d2f5" rx="2"/>
-      <rect x="55" y="140" width="25" height="100" fill="#85b7eb" rx="2"/>
-      <rect x="85" y="150" width="35" height="90" fill="#b3d2f5" rx="2"/>
-      <rect x="125" y="120" width="40" height="120" fill="#85b7eb" rx="2"/>
-      <rect x="170" y="145" width="28" height="95" fill="#b3d2f5" rx="2"/>
-      <rect x="203" y="130" width="35" height="110" fill="#85b7eb" rx="2"/>
-      <rect x="243" y="155" width="25" height="85" fill="#b3d2f5" rx="2"/>
-      <rect x="272" y="145" width="28" height="95" fill="#85b7eb" rx="2"/>
-      <!-- Water waves -->
-      <path d="M0 210 Q40 195 80 210 Q120 225 160 210 Q200 195 240 210 Q280 225 320 210 L320 260 L0 260 Z" fill="#1a73e8" opacity="0.15"/>
-      <path d="M0 220 Q40 205 80 220 Q120 235 160 220 Q200 205 240 220 Q280 235 320 220 L320 260 L0 260 Z" fill="#1a73e8" opacity="0.25"/>
-      <!-- Water droplets -->
-      <ellipse cx="80" cy="80" rx="16" ry="22" fill="#1a73e8" opacity="0.7"/>
-      <polygon points="80,52 70,80 90,80" fill="#1a73e8" opacity="0.7"/>
-      <ellipse cx="160" cy="55" rx="20" ry="27" fill="#1a73e8"/>
-      <polygon points="160,22 148,55 172,55" fill="#1a73e8"/>
-      <ellipse cx="240" cy="75" rx="14" ry="19" fill="#1a73e8" opacity="0.6"/>
-      <polygon points="240,50 232,75 248,75" fill="#1a73e8" opacity="0.6"/>
-      <!-- AI signal rings -->
-      <circle cx="160" cy="50" r="34" stroke="#1a73e8" stroke-width="1.5" fill="none" opacity="0.3"/>
-      <circle cx="160" cy="50" r="48" stroke="#1a73e8" stroke-width="1" fill="none" opacity="0.15"/>
-    </svg>
-    <div style="text-align:center">
-      <div style="font-family:var(--font);font-size:20px;font-weight:500;color:var(--blue-dark);margin-bottom:8px">Bengaluru Water Intelligence</div>
-      <div style="font-size:14px;color:var(--gray600);max-width:280px;line-height:1.6">AI-powered early warning system — 30 to 60 day ward-level predictions for proactive water management.</div>
+  <!-- ═══ SCREEN 1: LOGIN ═══ -->
+  <div id="login-screen" class="screen active">
+    <div class="login-right">
+      <div class="login-logo">
+        <div class="login-logo-mark"><i class="ti ti-droplet"></i></div>
+        <div>
+          <div class="login-logo-text">AquaSense</div>
+          <div class="login-logo-sub" style="font-size:11px;color:var(--gray600)">BWSSB · IMD · India-WRIS</div>
+        </div>
+      </div>
+
+      <div class="login-card">
+        <div class="login-title">Sign in to AquaSense</div>
+        <div class="login-sub">Select your role to continue</div>
+
+        <div class="role-grid">
+          <div class="role-card selected" id="role-admin" onclick="selectRole('admin')">
+            <i class="ti ti-shield-check"></i>
+            <div class="role-card-title">Administrator</div>
+            <div class="role-card-sub">Full city access</div>
+          </div>
+          <div class="role-card" id="role-citizen" onclick="selectRole('citizen')">
+            <i class="ti ti-user"></i>
+            <div class="role-card-title">Citizen</div>
+            <div class="role-card-sub">Ward-level view</div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Email</label>
+          <input class="g-input" type="email" id="login-email" placeholder="you@example.com"
+            value="admin@bwssb.gov.in" />
+        </div>
+        <div class="input-group">
+          <label class="input-label">Password</label>
+          <input class="g-input" type="password" id="login-pass" placeholder="••••••••" value="••••••••" />
+        </div>
+
+        <div class="ward-select-wrap" id="ward-select-wrap">
+          <div class="input-group">
+            <label class="input-label">Your Ward</label>
+            <select class="g-select" id="ward-select">
+              <option>Koramangala</option>
+              <option>Whitefield</option>
+              <option>Yelahanka</option>
+              <option>Marathahalli</option>
+              <option>HSR Layout</option>
+              <option>Jayanagar</option>
+              <option>Rajajinagar</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="doLogin()">
+          Sign In →
+        </button>
+
+        <div class="demo-creds">
+          <strong>Demo Admin:</strong> admin@bwssb.gov.in / any password<br>
+          <strong>Demo Citizen:</strong> Select Citizen role, choose a ward
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="login-right">
-    <div class="login-logo">
-      <div class="login-logo-mark"><i class="ti ti-droplet"></i></div>
-      <div>
-        <div class="login-logo-text">AquaSense</div>
-        <div class="login-logo-sub" style="font-size:11px;color:var(--gray600)">BWSSB · IMD · India-WRIS</div>
+  <!-- ═══ SCREEN 2: MAIN APP ═══ -->
+  <div id="app-screen" class="screen">
+
+    <!-- TOP BAR -->
+    <div class="g-topbar">
+      <a class="top-logo">
+        <div class="top-logo-mark"><i class="ti ti-droplet"></i></div>
+        <div class="top-logo-text">AquaSense</div>
+      </a>
+
+      <div class="top-search">
+        <i class="ti ti-search"></i>
+        <input type="text" placeholder="Search wards, alerts, reports..." />
+      </div>
+
+      <div class="top-right">
+        <div class="live-chip"><span class="live-dot"></span> Live</div>
+        <div class="icon-btn" onclick="triggerTestNotification()" title="Test Notifications">
+          <i class="ti ti-bell"></i>
+          <span class="notif-badge" id="notif-count">3</span>
+        </div>
+        <div class="user-chip" id="user-chip" onclick="logout()">
+          <div class="user-avatar" id="user-avatar" style="background:var(--blue)">A</div>
+          <div>
+            <div class="user-name" id="user-name-display">Admin User</div>
+            <div class="role-badge" id="role-badge-display">ADMIN</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="login-card">
-      <div class="login-title">Sign in to AquaSense</div>
-      <div class="login-sub">Select your role to continue</div>
+    <!-- BODY -->
+    <div class="g-body">
 
-      <div class="role-grid">
-        <div class="role-card selected" id="role-admin" onclick="selectRole('admin')">
-          <i class="ti ti-shield-check"></i>
-          <div class="role-card-title">Administrator</div>
-          <div class="role-card-sub">Full city access</div>
+      <!-- SIDEBAR -->
+      <div class="g-sidebar" id="sidebar">
+        <div class="nav-section">Overview</div>
+        <div class="nav-item active" onclick="showPage('dashboard')"><i class="ti ti-layout-dashboard"></i> Dashboard
         </div>
-        <div class="role-card" id="role-citizen" onclick="selectRole('citizen')">
-          <i class="ti ti-user"></i>
-          <div class="role-card-title">Citizen</div>
-          <div class="role-card-sub">Ward-level view</div>
+        <div class="nav-item" onclick="showPage('map')"><i class="ti ti-map-2"></i> Ward Risk Map</div>
+        <div class="nav-item" onclick="showPage('forecast')"><i class="ti ti-chart-area-line"></i> AI Forecast</div>
+
+        <div class="nav-section" id="admin-section">Management</div>
+        <div class="nav-item" id="nav-alerts" onclick="showPage('alerts')"><i class="ti ti-alert-triangle"></i> Active
+          Alerts <span class="nav-pill">5</span></div>
+        <div class="nav-item admin-only" id="nav-admin" onclick="showPage('admin')"><i class="ti ti-settings"></i> Admin
+          Panel</div>
+        <div class="nav-item" onclick="showPage('complaints')"><i class="ti ti-message-report"></i> Community Reports
+          <span class="nav-pill amber">8</span></div>
+
+        <div class="nav-section">Personal</div>
+        <div class="nav-item citizen-only" onclick="showPage('myward')"><i class="ti ti-home"></i> My Ward</div>
+        <div class="nav-item citizen-only" onclick="showPage('budget')"><i class="ti ti-droplet"></i> Water Budget</div>
+        <div class="nav-item citizen-only" onclick="showPage('badges')"><i class="ti ti-award"></i> My Badges</div>
+
+        <div class="sidebar-bottom">
+          <div class="model-chip">
+            <i class="ti ti-cpu"></i>
+            <div>
+              <div style="font-size:12px;font-weight:500;color:var(--gray800);font-family:var(--font)">Random Forest
+              </div>
+              <div style="font-size:11px;color:var(--green);margin-top:1px">91.4% accuracy</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="input-group">
-        <label class="input-label">Email</label>
-        <input class="g-input" type="email" id="login-email" placeholder="you@example.com" value="admin@bwssb.gov.in"/>
-      </div>
-      <div class="input-group">
-        <label class="input-label">Password</label>
-        <input class="g-input" type="password" id="login-pass" placeholder="••••••••" value="••••••••"/>
-      </div>
+      <!-- MAIN -->
+      <div class="g-main" id="g-main">
 
-      <div class="ward-select-wrap" id="ward-select-wrap">
-        <div class="input-group">
-          <label class="input-label">Your Ward</label>
-          <select class="g-select" id="ward-select">
-            <option>Koramangala</option>
-            <option>Whitefield</option>
-            <option>Yelahanka</option>
-            <option>Marathahalli</option>
-            <option>HSR Layout</option>
-            <option>Jayanagar</option>
-            <option>Rajajinagar</option>
+        <!-- ── DASHBOARD PAGE ── -->
+        <div class="page active" id="page-dashboard">
+          <div class="page-header">
+            <div>
+              <div class="page-title">City Water Dashboard</div>
+              <div class="page-sub" id="dash-subtitle">Bengaluru — Real-time overview · Updated 2 min ago</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn-outlined" onclick="showPage('forecast')"><i class="ti ti-chart-area-line"></i> View
+                Forecast</button>
+              <button class="btn-contained admin-only" onclick="pushAlertModal()"><i class="ti ti-bell-ringing"></i>
+                Push Alert</button>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <div class="stat-card">
+              <div class="stat-label">Reservoir Level</div>
+              <div class="stat-val">62<span class="unit">%</span></div>
+              <div class="stat-change down"><i class="ti ti-trending-down" style="font-size:13px"></i> −4% this week
+              </div>
+              <div class="stat-icon blue"><i class="ti ti-waves"></i></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Critical Wards</div>
+              <div class="stat-val" style="color:var(--red)">7</div>
+              <div class="stat-change up"><i class="ti ti-arrow-up" style="font-size:13px"></i> 2 new today</div>
+              <div class="stat-icon red"><i class="ti ti-alert-circle"></i></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Rainfall (30-day)</div>
+              <div class="stat-val">28<span class="unit">mm</span></div>
+              <div class="stat-change up"><i class="ti ti-trending-down" style="font-size:13px"></i> 60% below avg</div>
+              <div class="stat-icon yellow"><i class="ti ti-cloud-rain"></i></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Wards Monitored</div>
+              <div class="stat-val">198</div>
+              <div class="stat-change neutral">All BBMP wards</div>
+              <div class="stat-icon green"><i class="ti ti-map-pin"></i></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Avg WSI Score</div>
+              <div class="stat-val" style="color:var(--orange)">0.64</div>
+              <div class="stat-change up"><i class="ti ti-arrow-up" style="font-size:13px"></i> High stress zone</div>
+              <div class="stat-icon orange"><i class="ti ti-activity"></i></div>
+            </div>
+          </div>
+
+          <div class="grid-3">
+            <div class="g-card">
+              <div class="card-head">
+                <div class="card-title"><i class="ti ti-map-2"></i> Ward Risk Map</div>
+                <span class="chip chip-red">7 Critical</span>
+              </div>
+              <div class="map-wrap">
+                <canvas id="mapCanvas"></canvas>
+                <div class="map-legend">
+                  <div
+                    style="font-size:11px;font-weight:500;color:var(--gray600);font-family:var(--font);margin-bottom:6px">
+                    Risk Level</div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#ea4335"></div> Critical
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#fa7b17"></div> High
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#fbbc04"></div> Moderate
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#34a853"></div> Low
+                  </div>
+                </div>
+                <div id="wardTooltip"></div>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div class="g-card" style="flex:1">
+                <div class="card-head">
+                  <div class="card-title"><i class="ti ti-alert-triangle"></i> Latest Alerts</div>
+                  <span class="chip chip-red">5 Active</span>
+                </div>
+                <div class="alert-item critical">
+                  <div class="alert-icon"><i class="ti ti-alert-circle"></i></div>
+                  <div>
+                    <div class="alert-title">Whitefield — Critical WSI</div>
+                    <div class="alert-desc">WSI 0.91 · Borewell depleted 78% · Immediate action required</div>
+                    <div class="alert-meta">2 min ago · Ward 112</div>
+                  </div>
+                </div>
+                <div class="alert-item high">
+                  <div class="alert-icon"><i class="ti ti-droplet-off"></i></div>
+                  <div>
+                    <div class="alert-title">Yelahanka — Supply Cut Risk</div>
+                    <div class="alert-desc">Reservoir at 35% · 60-day forecast: Critical</div>
+                    <div class="alert-meta">18 min ago · Ward 67</div>
+                  </div>
+                </div>
+                <div class="alert-item info">
+                  <div class="alert-icon"><i class="ti ti-cloud"></i></div>
+                  <div>
+                    <div class="alert-title">IMD Forecast Updated</div>
+                    <div class="alert-desc">Below normal rainfall predicted next 30 days for Bengaluru</div>
+                    <div class="alert-meta">1 hr ago · IMD Data Feed</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="g-card">
+            <div class="card-head">
+              <div class="card-title"><i class="ti ti-list"></i> Ward Risk Overview</div>
+              <button class="btn-outlined" style="font-size:12px;padding:6px 14px" onclick="showPage('map')">See All
+                Wards</button>
+            </div>
+            <table class="ward-table">
+              <thead>
+                <tr>
+                  <th>Ward</th>
+                  <th>WSI Score</th>
+                  <th>Borewell</th>
+                  <th>Supply (MLD)</th>
+                  <th>30-Day Risk</th>
+                  <th>60-Day Risk</th>
+                </tr>
+              </thead>
+              <tbody id="ward-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── MAP PAGE ── -->
+        <div class="page" id="page-map">
+          <div class="page-header">
+            <div>
+              <div class="page-title">Ward Risk Map — Full View</div>
+              <div class="page-sub">Interactive ward-level Water Stress Index visualization</div>
+            </div>
+          </div>
+          <div class="g-card">
+            <canvas id="mapCanvas2"
+              style="width:100%;height:500px;border-radius:var(--radius);cursor:crosshair;display:block"></canvas>
+          </div>
+        </div>
+
+        <!-- ── FORECAST PAGE ── -->
+        <div class="page" id="page-forecast">
+          <div class="page-header">
+            <div>
+              <div class="page-title">AI Predictive Forecast</div>
+              <div class="page-sub">30-day and 60-day Water Stress Index predictions powered by Random Forest Regressor
+              </div>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="g-card">
+              <div class="card-head">
+                <div class="card-title"><i class="ti ti-chart-area-line"></i> Reservoir Trend Forecast</div>
+                <span class="chip chip-yellow">Declining</span>
+              </div>
+              <div class="chart-wrap">
+                <canvas id="forecastChart"></canvas>
+              </div>
+            </div>
+            <div class="g-card">
+              <div class="card-head">
+                <div class="card-title"><i class="ti ti-clock-play"></i> Forecast Timeline</div>
+                <span class="chip chip-blue">Interactive</span>
+              </div>
+              <div style="font-size:13px;color:var(--gray600);margin-bottom:12px">Drag to explore predicted conditions
+                at different forecast horizons</div>
+              <input type="range" min="0" max="60" value="30" id="forecast-slider" style="width:100%"
+                oninput="updateForecastCards(this.value)" />
+              <div class="forecast-ticks">
+                <span>Now</span><span>15 days</span><span>30 days</span><span>45 days</span><span>60 days</span>
+              </div>
+              <div class="forecast-cards" id="forecast-cards"></div>
+            </div>
+          </div>
+          <div class="g-card">
+            <div class="card-head">
+              <div class="card-title"><i class="ti ti-brain"></i> AI Insight Summary</div>
+              <span class="chip chip-blue">ML Generated</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+              <div
+                style="background:var(--red-light);border-radius:var(--radius);padding:14px;border-left:3px solid var(--red)">
+                <div
+                  style="font-size:11px;font-weight:500;color:var(--red);font-family:var(--font);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em">
+                  Critical Prediction</div>
+                <div style="font-size:13px;color:var(--gray800)">7 wards projected to reach Critical WSI within 30 days
+                  if current extraction rates persist</div>
+              </div>
+              <div
+                style="background:var(--yellow-light);border-radius:var(--radius);padding:14px;border-left:3px solid var(--yellow)">
+                <div
+                  style="font-size:11px;font-weight:500;color:var(--orange);font-family:var(--font);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em">
+                  Watch Zone</div>
+                <div style="font-size:13px;color:var(--gray800)">12 wards showing accelerating WSI rise. Demand
+                  management advised before June 15</div>
+              </div>
+              <div
+                style="background:var(--green-light);border-radius:var(--radius);padding:14px;border-left:3px solid var(--green)">
+                <div
+                  style="font-size:11px;font-weight:500;color:var(--green);font-family:var(--font);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em">
+                  Good Status</div>
+                <div style="font-size:13px;color:var(--gray800)">134 wards remain in Low-Moderate range. Proactive
+                  conservation can maintain status</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ALERTS PAGE ── -->
+        <div class="page" id="page-alerts">
+          <div class="page-header">
+            <div>
+              <div class="page-title">Active Alerts</div>
+              <div class="page-sub">Real-time critical notifications across all wards</div>
+            </div>
+            <button class="btn-contained admin-only" onclick="pushAlertModal()"><i class="ti ti-bell-plus"></i> Push New
+              Alert</button>
+          </div>
+          <div class="g-card">
+            <div id="all-alerts-list"></div>
+          </div>
+        </div>
+
+        <!-- ── ADMIN PANEL PAGE ── -->
+        <div class="page admin-only-page" id="page-admin">
+          <div class="page-header">
+            <div>
+              <div class="page-title">Admin Control Panel</div>
+              <div class="page-sub">Manage ward data, push alerts, and oversee city-wide operations</div>
+            </div>
+          </div>
+          <div class="admin-action-grid">
+            <div class="admin-action"
+              onclick="showToast('alert','Ward Data Sync initiated — fetching from BWSSB portal','Data Sync')">
+              <div class="admin-action-icon" style="background:var(--blue-light)"><i class="ti ti-refresh"
+                  style="font-size:20px;color:var(--blue)"></i></div>
+              <div>
+                <div class="admin-action-text">Sync Ward Data</div>
+                <div class="admin-action-sub">Pull latest from BWSSB & IMD</div>
+              </div>
+            </div>
+            <div class="admin-action"
+              onclick="showToast('critical','Manual alert pushed to all Critical wards','Push Alert')">
+              <div class="admin-action-icon" style="background:var(--red-light)"><i class="ti ti-bell-ringing"
+                  style="font-size:20px;color:var(--red)"></i></div>
+              <div>
+                <div class="admin-action-text">Push Emergency Alert</div>
+                <div class="admin-action-sub">Broadcast to Critical wards</div>
+              </div>
+            </div>
+            <div class="admin-action"
+              onclick="showToast('success','ML model retrained — new accuracy: 91.8%','Model Retrain')">
+              <div class="admin-action-icon" style="background:var(--green-light)"><i class="ti ti-cpu"
+                  style="font-size:20px;color:var(--green)"></i></div>
+              <div>
+                <div class="admin-action-text">Retrain ML Model</div>
+                <div class="admin-action-sub">Update Random Forest on new data</div>
+              </div>
+            </div>
+            <div class="admin-action" onclick="showToast('info','PDF report generated for May 2026','Export Report')">
+              <div class="admin-action-icon" style="background:var(--yellow-light)"><i class="ti ti-file-type-pdf"
+                  style="font-size:20px;color:var(--orange)"></i></div>
+              <div>
+                <div class="admin-action-text">Export Risk Report</div>
+                <div class="admin-action-sub">PDF for all ward assessments</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="g-card">
+            <div class="card-head">
+              <div class="card-title"><i class="ti ti-settings-2"></i> Manual WSI Override</div>
+              <span class="chip chip-yellow">Admin Only</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end">
+              <div class="form-group">
+                <label class="form-label">Select Ward</label>
+                <select class="g-select" id="override-ward">
+                  <option>Whitefield</option>
+                  <option>Koramangala</option>
+                  <option>Yelahanka</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">New WSI Score (0–1)</label>
+                <input class="g-input" type="number" min="0" max="1" step="0.01" value="0.72" id="override-wsi" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Risk Tier</label>
+                <select class="g-select">
+                  <option>High</option>
+                  <option>Critical</option>
+                  <option>Moderate</option>
+                  <option>Low</option>
+                </select>
+              </div>
+              <button class="btn-contained" style="white-space:nowrap;margin-bottom:0"
+                onclick="showToast('success','WSI updated for selected ward','Override Applied')">Apply</button>
+            </div>
+          </div>
+
+          <div class="g-card">
+            <div class="card-head">
+              <div class="card-title"><i class="ti ti-chart-bar"></i> Model Performance</div>
+              <span class="chip chip-green">91.4% Accuracy</span>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="modelChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── COMPLAINTS / COMMUNITY REPORTS PAGE ── -->
+        <div class="page" id="page-complaints">
+          <div class="page-header">
+            <div>
+              <div class="page-title">Community Reports</div>
+              <div class="page-sub">Citizen-submitted water issues — verified and tracked by admin</div>
+            </div>
+            <button class="btn-contained" onclick="showPage('report-submit')"><i class="ti ti-plus"></i> Submit
+              Report</button>
+          </div>
+
+          <div class="grid-2">
+            <div class="g-card">
+              <div class="card-head">
+                <div class="card-title"><i class="ti ti-list-check"></i> Recent Reports</div>
+                <span class="chip chip-yellow">8 Pending</span>
+              </div>
+              <div id="report-feed"></div>
+            </div>
+            <div class="g-card">
+              <div class="card-head">
+                <div class="card-title"><i class="ti ti-chart-donut"></i> Report Stats</div>
+              </div>
+              <div class="chart-wrap">
+                <canvas id="reportsChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SUBMIT REPORT PAGE ── -->
+        <div class="page" id="page-report-submit">
+          <div class="page-header">
+            <div>
+              <div class="page-title">Submit Water Issue</div>
+              <div class="page-sub">Report a water problem in your area — our team will investigate</div>
+            </div>
+            <button class="btn-outlined" onclick="showPage('complaints')"><i class="ti ti-arrow-left"></i> Back</button>
+          </div>
+          <div class="g-card" style="max-width:600px">
+            <div class="complaint-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Ward / Area</label>
+                  <select class="g-select">
+                    <option>Koramangala</option>
+                    <option>Whitefield</option>
+                    <option>Yelahanka</option>
+                    <option>Marathahalli</option>
+                    <option>HSR Layout</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Issue Type</label>
+                  <select class="g-select">
+                    <option>Dry Tap / No Supply</option>
+                    <option>Illegal Borewell Drilling</option>
+                    <option>Water Quality Problem</option>
+                    <option>Supply Leak / Wastage</option>
+                    <option>Tanker Overcharging</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea class="g-textarea" placeholder="Describe the issue in detail..."></textarea>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Severity</label>
+                  <select class="g-select">
+                    <option>Low — Minor inconvenience</option>
+                    <option>Medium — Affects daily needs</option>
+                    <option>High — Complete disruption</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Contact Number (optional)</label>
+                  <input class="g-input" type="tel" placeholder="+91 98765 43210" />
+                </div>
+              </div>
+              <button class="btn-contained" style="width:auto;align-self:flex-start" onclick="submitReport()">
+                <i class="ti ti-send"></i> Submit Report
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── MY WARD PAGE (CITIZEN) ── -->
+        <div class="page citizen-only-page" id="page-myward">
+          <div class="page-header">
+            <div>
+              <div class="page-title">My Ward Status</div>
+              <div class="page-sub" id="myward-sub">Personalized water status for your area</div>
+            </div>
+          </div>
+
+          <div class="ward-report-card" id="ward-report-card">
+            <div class="ward-rc-label">YOUR WARD</div>
+            <div class="ward-rc-name" id="ward-rc-name">Koramangala</div>
+            <div class="ward-rc-stats">
+              <div>
+                <div class="ward-rc-stat-val">0.74</div>
+                <div class="ward-rc-stat-label">WSI Score</div>
+              </div>
+              <div>
+                <div class="ward-rc-stat-val">52%</div>
+                <div class="ward-rc-stat-label">Borewell Level</div>
+              </div>
+              <div>
+                <div class="ward-rc-stat-val">14.2 MLD</div>
+                <div class="ward-rc-stat-label">Daily Supply</div>
+              </div>
+            </div>
+            <div class="ward-risk-banner">
+              <i class="ti ti-alert-triangle" style="font-size:14px"></i>
+              HIGH RISK — Action recommended in 30 days
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="g-card">
+              <div class="card-head">
+                <div class="card-title"><i class="ti ti-chart-area-line"></i> Your Ward Trend</div>
+              </div>
+              <div class="chart-wrap">
+                <canvas id="wardChart"></canvas>
+              </div>
+            </div>
+            <div class="g-card">
+              <div class="card-head">
+                <div class="card-title"><i class="ti ti-bulb"></i> Advisory for You</div>
+                <span class="chip chip-yellow">AI Generated</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px" id="advisory-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── WATER BUDGET PAGE (CITIZEN) ── -->
+        <div class="page citizen-only-page" id="page-budget">
+          <div class="page-header">
+            <div>
+              <div class="page-title">Personal Water Budget</div>
+              <div class="page-sub">Track and reduce your daily water consumption</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div class="g-card">
+              <div class="card-head">
+                <div class="card-title"><i class="ti ti-calculator"></i> Daily Usage Calculator</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:14px" id="budget-inputs"></div>
+              <div class="budget-total" id="budget-total">
+                <div class="budget-total-label">Estimated Daily Usage</div>
+                <div class="budget-total-val" id="budget-val">--</div>
+                <div style="font-size:13px;color:var(--blue)">litres per person</div>
+                <div class="budget-score" id="budget-score">Calculate to see score</div>
+              </div>
+            </div>
+            <div class="g-card">
+              <div class="card-head">
+                <div class="card-title"><i class="ti ti-chart-pie"></i> Usage Breakdown</div>
+              </div>
+              <div class="chart-wrap">
+                <canvas id="budgetChart"></canvas>
+              </div>
+              <div style="background:var(--green-light);border-radius:var(--radius);padding:12px;margin-top:12px">
+                <div
+                  style="font-size:13px;font-weight:500;color:var(--green);font-family:var(--font);margin-bottom:4px">💡
+                  Conservation Tip</div>
+                <div style="font-size:12px;color:var(--gray700)">Fixing a leaky tap can save up to 15,000 litres per
+                  year. Report water wastage in your ward.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── BADGES PAGE (CITIZEN) ── -->
+        <div class="page citizen-only-page" id="page-badges">
+          <div class="page-header">
+            <div>
+              <div class="page-title">My Water Saver Badges</div>
+              <div class="page-sub">Earn badges by conserving water and participating in AquaSense</div>
+            </div>
+          </div>
+          <div class="g-card">
+            <div class="card-head">
+              <div class="card-title"><i class="ti ti-trophy"></i> Water Saver Score</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:24px;margin-bottom:24px">
+              <div style="text-align:center">
+                <div style="font-family:var(--font);font-size:56px;font-weight:500;color:var(--blue)">720</div>
+                <div style="font-size:13px;color:var(--gray600)">points this month</div>
+              </div>
+              <div style="flex:1">
+                <div
+                  style="display:flex;justify-content:space-between;font-size:12px;color:var(--gray600);font-family:var(--font);margin-bottom:6px">
+                  <span>Silver Saver</span><span>Gold Saver — 1000 pts</span>
+                </div>
+                <div class="progress-bar" style="height:10px;border-radius:5px">
+                  <div class="progress-fill" style="width:72%;background:linear-gradient(90deg,var(--blue),#34a853)">
+                  </div>
+                </div>
+                <div style="font-size:12px;color:var(--gray600);margin-top:6px">280 points to next level</div>
+              </div>
+            </div>
+            <div class="badge-grid">
+              <div class="badge-card earned">
+                <div class="badge-icon">💧</div>
+                <div class="badge-title">First Reporter</div>
+                <div class="badge-sub" style="color:var(--blue)">Earned</div>
+              </div>
+              <div class="badge-card earned">
+                <div class="badge-icon">🌱</div>
+                <div class="badge-title">Below 100L/day</div>
+                <div class="badge-sub" style="color:var(--blue)">Earned</div>
+              </div>
+              <div class="badge-card earned">
+                <div class="badge-icon">📊</div>
+                <div class="badge-title">Data Citizen</div>
+                <div class="badge-sub" style="color:var(--blue)">Earned</div>
+              </div>
+              <div class="badge-card">
+                <div class="badge-icon" style="opacity:0.35">🏆</div>
+                <div class="badge-title">Gold Saver</div>
+                <div class="badge-sub">1000 pts needed</div>
+              </div>
+              <div class="badge-card">
+                <div class="badge-icon" style="opacity:0.35">🚿</div>
+                <div class="badge-title">Shower Champ</div>
+                <div class="badge-sub">3-min shower 7 days</div>
+              </div>
+              <div class="badge-card">
+                <div class="badge-icon" style="opacity:0.35">🔔</div>
+                <div class="badge-title">Alert Responder</div>
+                <div class="badge-sub">Act on 5 alerts</div>
+              </div>
+              <div class="badge-card">
+                <div class="badge-icon" style="opacity:0.35">🌍</div>
+                <div class="badge-title">Community Hero</div>
+                <div class="badge-sub">10 reports verified</div>
+              </div>
+              <div class="badge-card">
+                <div class="badge-icon" style="opacity:0.35">⚡</div>
+                <div class="badge-title">Early Adopter</div>
+                <div class="badge-sub">30-day streak</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /g-main -->
+    </div><!-- /g-body -->
+  </div><!-- /app-screen -->
+
+  <!-- PUSH ALERT MODAL OVERLAY -->
+  <div id="modal-overlay"
+    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center">
+    <div
+      style="background:var(--white);border-radius:var(--radius-xl);padding:28px;width:440px;box-shadow:var(--shadow-3)">
+      <div style="font-family:var(--font);font-size:18px;font-weight:500;color:var(--gray900);margin-bottom:6px">Push
+        Emergency Alert</div>
+      <div style="font-size:13px;color:var(--gray600);margin-bottom:20px">Broadcast a water shortage alert to specific
+        wards</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="form-group">
+          <label class="form-label">Target Wards</label>
+          <select class="g-select">
+            <option>All Critical Wards (7)</option>
+            <option>Whitefield (Ward 112)</option>
+            <option>Yelahanka (Ward 67)</option>
+            <option>All 198 Wards</option>
           </select>
         </div>
-      </div>
-
-      <button class="btn-primary" onclick="doLogin()">
-        Sign In →
-      </button>
-
-      <div class="demo-creds">
-        <strong>Demo Admin:</strong> admin@bwssb.gov.in / any password<br>
-        <strong>Demo Citizen:</strong> Select Citizen role, choose a ward
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ SCREEN 2: MAIN APP ═══ -->
-<div id="app-screen" class="screen">
-
-  <!-- TOP BAR -->
-  <div class="g-topbar">
-    <a class="top-logo">
-      <div class="top-logo-mark"><i class="ti ti-droplet"></i></div>
-      <div class="top-logo-text">AquaSense</div>
-    </a>
-
-    <div class="top-search">
-      <i class="ti ti-search"></i>
-      <input type="text" placeholder="Search wards, alerts, reports..."/>
-    </div>
-
-    <div class="top-right">
-      <div class="live-chip"><span class="live-dot"></span> Live</div>
-      <div class="icon-btn" onclick="triggerTestNotification()" title="Test Notifications">
-        <i class="ti ti-bell"></i>
-        <span class="notif-badge" id="notif-count">3</span>
-      </div>
-      <div class="user-chip" id="user-chip" onclick="logout()">
-        <div class="user-avatar" id="user-avatar" style="background:var(--blue)">A</div>
-        <div>
-          <div class="user-name" id="user-name-display">Admin User</div>
-          <div class="role-badge" id="role-badge-display">ADMIN</div>
+        <div class="form-group">
+          <label class="form-label">Alert Message</label>
+          <textarea class="g-textarea"
+            style="min-height:70px">Critical water shortage predicted in your ward within 30 days. Please conserve water and report issues.</textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Priority</label>
+          <select class="g-select">
+            <option>🔴 Critical</option>
+            <option>🟠 High</option>
+            <option>🟡 Moderate</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+          <button class="btn-outlined" onclick="closeModal()">Cancel</button>
+          <button class="btn-contained" onclick="sendAlert()"><i class="ti ti-send"></i> Send Alert</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- BODY -->
-  <div class="g-body">
+  <script>
+    // ─── DATA ───────────────────────────────────────────
+    const WARDS = [
+      { name: 'Whitefield', wsi: 0.91, borewell: 22, supply: 8.4, r30: 'Critical', r60: 'Critical', color: '#ea4335', x: 72, y: 40 },
+      { name: 'Yelahanka', wsi: 0.82, borewell: 35, supply: 11.2, r30: 'Critical', r60: 'Critical', color: '#ea4335', x: 28, y: 18 },
+      { name: 'Marathahalli', wsi: 0.76, borewell: 41, supply: 12.8, r30: 'High', r60: 'Critical', color: '#fa7b17', x: 66, y: 55 },
+      { name: 'Koramangala', wsi: 0.74, borewell: 52, supply: 14.2, r30: 'High', r60: 'Critical', color: '#fa7b17', x: 45, y: 65 },
+      { name: 'HSR Layout', wsi: 0.68, borewell: 58, supply: 15.6, r30: 'High', r60: 'High', color: '#fa7b17', x: 42, y: 75 },
+      { name: 'Hebbal', wsi: 0.61, borewell: 63, supply: 17.1, r30: 'Moderate', r60: 'High', color: '#fbbc04', x: 38, y: 25 },
+      { name: 'Jayanagar', wsi: 0.55, borewell: 70, supply: 18.4, r30: 'Moderate', r60: 'Moderate', color: '#fbbc04', x: 34, y: 72 },
+      { name: 'Rajajinagar', wsi: 0.47, borewell: 78, supply: 20.1, r30: 'Moderate', r60: 'Moderate', color: '#fbbc04', x: 22, y: 50 },
+      { name: 'Malleswaram', wsi: 0.38, borewell: 85, supply: 22.5, r30: 'Low', r60: 'Moderate', color: '#34a853', x: 28, y: 58 },
+      { name: 'Basavanagudi', wsi: 0.31, borewell: 90, supply: 24.3, r30: 'Low', r60: 'Low', color: '#34a853', x: 33, y: 82 },
+    ];
 
-    <!-- SIDEBAR -->
-    <div class="g-sidebar" id="sidebar">
-      <div class="nav-section">Overview</div>
-      <div class="nav-item active" onclick="showPage('dashboard')"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-      <div class="nav-item" onclick="showPage('map')"><i class="ti ti-map-2"></i> Ward Risk Map</div>
-      <div class="nav-item" onclick="showPage('forecast')"><i class="ti ti-chart-area-line"></i> AI Forecast</div>
+    let currentRole = 'admin';
+    let currentWard = 'Koramangala';
+    let notifCount = 3;
+    let charts = {};
 
-      <div class="nav-section" id="admin-section">Management</div>
-      <div class="nav-item" id="nav-alerts" onclick="showPage('alerts')"><i class="ti ti-alert-triangle"></i> Active Alerts <span class="nav-pill">5</span></div>
-      <div class="nav-item admin-only" id="nav-admin" onclick="showPage('admin')"><i class="ti ti-settings"></i> Admin Panel</div>
-      <div class="nav-item" onclick="showPage('complaints')"><i class="ti ti-message-report"></i> Community Reports <span class="nav-pill amber">8</span></div>
-
-      <div class="nav-section">Personal</div>
-      <div class="nav-item citizen-only" onclick="showPage('myward')"><i class="ti ti-home"></i> My Ward</div>
-      <div class="nav-item citizen-only" onclick="showPage('budget')"><i class="ti ti-droplet"></i> Water Budget</div>
-      <div class="nav-item citizen-only" onclick="showPage('badges')"><i class="ti ti-award"></i> My Badges</div>
-
-      <div class="sidebar-bottom">
-        <div class="model-chip">
-          <i class="ti ti-cpu"></i>
-          <div>
-            <div style="font-size:12px;font-weight:500;color:var(--gray800);font-family:var(--font)">Random Forest</div>
-            <div style="font-size:11px;color:var(--green);margin-top:1px">91.4% accuracy</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MAIN -->
-    <div class="g-main" id="g-main">
-
-      <!-- ── DASHBOARD PAGE ── -->
-      <div class="page active" id="page-dashboard">
-        <div class="page-header">
-          <div>
-            <div class="page-title">City Water Dashboard</div>
-            <div class="page-sub" id="dash-subtitle">Bengaluru — Real-time overview · Updated 2 min ago</div>
-          </div>
-          <div style="display:flex;gap:8px">
-            <button class="btn-outlined" onclick="showPage('forecast')"><i class="ti ti-chart-area-line"></i> View Forecast</button>
-            <button class="btn-contained admin-only" onclick="pushAlertModal()"><i class="ti ti-bell-ringing"></i> Push Alert</button>
-          </div>
-        </div>
-
-        <div class="stat-row">
-          <div class="stat-card">
-            <div class="stat-label">Reservoir Level</div>
-            <div class="stat-val">62<span class="unit">%</span></div>
-            <div class="stat-change down"><i class="ti ti-trending-down" style="font-size:13px"></i> −4% this week</div>
-            <div class="stat-icon blue"><i class="ti ti-waves"></i></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Critical Wards</div>
-            <div class="stat-val" style="color:var(--red)">7</div>
-            <div class="stat-change up"><i class="ti ti-arrow-up" style="font-size:13px"></i> 2 new today</div>
-            <div class="stat-icon red"><i class="ti ti-alert-circle"></i></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Rainfall (30-day)</div>
-            <div class="stat-val">28<span class="unit">mm</span></div>
-            <div class="stat-change up"><i class="ti ti-trending-down" style="font-size:13px"></i> 60% below avg</div>
-            <div class="stat-icon yellow"><i class="ti ti-cloud-rain"></i></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Wards Monitored</div>
-            <div class="stat-val">198</div>
-            <div class="stat-change neutral">All BBMP wards</div>
-            <div class="stat-icon green"><i class="ti ti-map-pin"></i></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Avg WSI Score</div>
-            <div class="stat-val" style="color:var(--orange)">0.64</div>
-            <div class="stat-change up"><i class="ti ti-arrow-up" style="font-size:13px"></i> High stress zone</div>
-            <div class="stat-icon orange"><i class="ti ti-activity"></i></div>
-          </div>
-        </div>
-
-        <div class="grid-3">
-          <div class="g-card">
-            <div class="card-head">
-              <div class="card-title"><i class="ti ti-map-2"></i> Ward Risk Map</div>
-              <span class="chip chip-red">7 Critical</span>
-            </div>
-            <div class="map-wrap">
-              <canvas id="mapCanvas"></canvas>
-              <div class="map-legend">
-                <div style="font-size:11px;font-weight:500;color:var(--gray600);font-family:var(--font);margin-bottom:6px">Risk Level</div>
-                <div class="legend-item"><div class="legend-dot" style="background:#ea4335"></div> Critical</div>
-                <div class="legend-item"><div class="legend-dot" style="background:#fa7b17"></div> High</div>
-                <div class="legend-item"><div class="legend-dot" style="background:#fbbc04"></div> Moderate</div>
-                <div class="legend-item"><div class="legend-dot" style="background:#34a853"></div> Low</div>
-              </div>
-              <div id="wardTooltip"></div>
-            </div>
-          </div>
-
-          <div style="display:flex;flex-direction:column;gap:16px">
-            <div class="g-card" style="flex:1">
-              <div class="card-head">
-                <div class="card-title"><i class="ti ti-alert-triangle"></i> Latest Alerts</div>
-                <span class="chip chip-red">5 Active</span>
-              </div>
-              <div class="alert-item critical">
-                <div class="alert-icon"><i class="ti ti-alert-circle"></i></div>
-                <div>
-                  <div class="alert-title">Whitefield — Critical WSI</div>
-                  <div class="alert-desc">WSI 0.91 · Borewell depleted 78% · Immediate action required</div>
-                  <div class="alert-meta">2 min ago · Ward 112</div>
-                </div>
-              </div>
-              <div class="alert-item high">
-                <div class="alert-icon"><i class="ti ti-droplet-off"></i></div>
-                <div>
-                  <div class="alert-title">Yelahanka — Supply Cut Risk</div>
-                  <div class="alert-desc">Reservoir at 35% · 60-day forecast: Critical</div>
-                  <div class="alert-meta">18 min ago · Ward 67</div>
-                </div>
-              </div>
-              <div class="alert-item info">
-                <div class="alert-icon"><i class="ti ti-cloud"></i></div>
-                <div>
-                  <div class="alert-title">IMD Forecast Updated</div>
-                  <div class="alert-desc">Below normal rainfall predicted next 30 days for Bengaluru</div>
-                  <div class="alert-meta">1 hr ago · IMD Data Feed</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="g-card">
-          <div class="card-head">
-            <div class="card-title"><i class="ti ti-list"></i> Ward Risk Overview</div>
-            <button class="btn-outlined" style="font-size:12px;padding:6px 14px" onclick="showPage('map')">See All Wards</button>
-          </div>
-          <table class="ward-table">
-            <thead>
-              <tr><th>Ward</th><th>WSI Score</th><th>Borewell</th><th>Supply (MLD)</th><th>30-Day Risk</th><th>60-Day Risk</th></tr>
-            </thead>
-            <tbody id="ward-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- ── MAP PAGE ── -->
-      <div class="page" id="page-map">
-        <div class="page-header">
-          <div>
-            <div class="page-title">Ward Risk Map — Full View</div>
-            <div class="page-sub">Interactive ward-level Water Stress Index visualization</div>
-          </div>
-        </div>
-        <div class="g-card">
-          <canvas id="mapCanvas2" style="width:100%;height:500px;border-radius:var(--radius);cursor:crosshair;display:block"></canvas>
-        </div>
-      </div>
-
-      <!-- ── FORECAST PAGE ── -->
-      <div class="page" id="page-forecast">
-        <div class="page-header">
-          <div>
-            <div class="page-title">AI Predictive Forecast</div>
-            <div class="page-sub">30-day and 60-day Water Stress Index predictions powered by Random Forest Regressor</div>
-          </div>
-        </div>
-        <div class="grid-2">
-          <div class="g-card">
-            <div class="card-head">
-              <div class="card-title"><i class="ti ti-chart-area-line"></i> Reservoir Trend Forecast</div>
-              <span class="chip chip-yellow">Declining</span>
-            </div>
-            <div class="chart-wrap">
-              <canvas id="forecastChart"></canvas>
-            </div>
-          </div>
-          <div class="g-card">
-            <div class="card-head">
-              <div class="card-title"><i class="ti ti-clock-play"></i> Forecast Timeline</div>
-              <span class="chip chip-blue">Interactive</span>
-            </div>
-            <div style="font-size:13px;color:var(--gray600);margin-bottom:12px">Drag to explore predicted conditions at different forecast horizons</div>
-            <input type="range" min="0" max="60" value="30" id="forecast-slider" style="width:100%"
-              oninput="updateForecastCards(this.value)"/>
-            <div class="forecast-ticks">
-              <span>Now</span><span>15 days</span><span>30 days</span><span>45 days</span><span>60 days</span>
-            </div>
-            <div class="forecast-cards" id="forecast-cards"></div>
-          </div>
-        </div>
-        <div class="g-card">
-          <div class="card-head">
-            <div class="card-title"><i class="ti ti-brain"></i> AI Insight Summary</div>
-            <span class="chip chip-blue">ML Generated</span>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
-            <div style="background:var(--red-light);border-radius:var(--radius);padding:14px;border-left:3px solid var(--red)">
-              <div style="font-size:11px;font-weight:500;color:var(--red);font-family:var(--font);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em">Critical Prediction</div>
-              <div style="font-size:13px;color:var(--gray800)">7 wards projected to reach Critical WSI within 30 days if current extraction rates persist</div>
-            </div>
-            <div style="background:var(--yellow-light);border-radius:var(--radius);padding:14px;border-left:3px solid var(--yellow)">
-              <div style="font-size:11px;font-weight:500;color:var(--orange);font-family:var(--font);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em">Watch Zone</div>
-              <div style="font-size:13px;color:var(--gray800)">12 wards showing accelerating WSI rise. Demand management advised before June 15</div>
-            </div>
-            <div style="background:var(--green-light);border-radius:var(--radius);padding:14px;border-left:3px solid var(--green)">
-              <div style="font-size:11px;font-weight:500;color:var(--green);font-family:var(--font);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em">Good Status</div>
-              <div style="font-size:13px;color:var(--gray800)">134 wards remain in Low-Moderate range. Proactive conservation can maintain status</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── ALERTS PAGE ── -->
-      <div class="page" id="page-alerts">
-        <div class="page-header">
-          <div>
-            <div class="page-title">Active Alerts</div>
-            <div class="page-sub">Real-time critical notifications across all wards</div>
-          </div>
-          <button class="btn-contained admin-only" onclick="pushAlertModal()"><i class="ti ti-bell-plus"></i> Push New Alert</button>
-        </div>
-        <div class="g-card">
-          <div id="all-alerts-list"></div>
-        </div>
-      </div>
-
-      <!-- ── ADMIN PANEL PAGE ── -->
-      <div class="page admin-only-page" id="page-admin">
-        <div class="page-header">
-          <div>
-            <div class="page-title">Admin Control Panel</div>
-            <div class="page-sub">Manage ward data, push alerts, and oversee city-wide operations</div>
-          </div>
-        </div>
-        <div class="admin-action-grid">
-          <div class="admin-action" onclick="showToast('alert','Ward Data Sync initiated — fetching from BWSSB portal','Data Sync')">
-            <div class="admin-action-icon" style="background:var(--blue-light)"><i class="ti ti-refresh" style="font-size:20px;color:var(--blue)"></i></div>
-            <div>
-              <div class="admin-action-text">Sync Ward Data</div>
-              <div class="admin-action-sub">Pull latest from BWSSB & IMD</div>
-            </div>
-          </div>
-          <div class="admin-action" onclick="showToast('critical','Manual alert pushed to all Critical wards','Push Alert')">
-            <div class="admin-action-icon" style="background:var(--red-light)"><i class="ti ti-bell-ringing" style="font-size:20px;color:var(--red)"></i></div>
-            <div>
-              <div class="admin-action-text">Push Emergency Alert</div>
-              <div class="admin-action-sub">Broadcast to Critical wards</div>
-            </div>
-          </div>
-          <div class="admin-action" onclick="showToast('success','ML model retrained — new accuracy: 91.8%','Model Retrain')">
-            <div class="admin-action-icon" style="background:var(--green-light)"><i class="ti ti-cpu" style="font-size:20px;color:var(--green)"></i></div>
-            <div>
-              <div class="admin-action-text">Retrain ML Model</div>
-              <div class="admin-action-sub">Update Random Forest on new data</div>
-            </div>
-          </div>
-          <div class="admin-action" onclick="showToast('info','PDF report generated for May 2026','Export Report')">
-            <div class="admin-action-icon" style="background:var(--yellow-light)"><i class="ti ti-file-type-pdf" style="font-size:20px;color:var(--orange)"></i></div>
-            <div>
-              <div class="admin-action-text">Export Risk Report</div>
-              <div class="admin-action-sub">PDF for all ward assessments</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="g-card">
-          <div class="card-head">
-            <div class="card-title"><i class="ti ti-settings-2"></i> Manual WSI Override</div>
-            <span class="chip chip-yellow">Admin Only</span>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end">
-            <div class="form-group">
-              <label class="form-label">Select Ward</label>
-              <select class="g-select" id="override-ward">
-                <option>Whitefield</option><option>Koramangala</option><option>Yelahanka</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">New WSI Score (0–1)</label>
-              <input class="g-input" type="number" min="0" max="1" step="0.01" value="0.72" id="override-wsi"/>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Risk Tier</label>
-              <select class="g-select">
-                <option>High</option><option>Critical</option><option>Moderate</option><option>Low</option>
-              </select>
-            </div>
-            <button class="btn-contained" style="white-space:nowrap;margin-bottom:0" onclick="showToast('success','WSI updated for selected ward','Override Applied')">Apply</button>
-          </div>
-        </div>
-
-        <div class="g-card">
-          <div class="card-head">
-            <div class="card-title"><i class="ti ti-chart-bar"></i> Model Performance</div>
-            <span class="chip chip-green">91.4% Accuracy</span>
-          </div>
-          <div class="chart-wrap">
-            <canvas id="modelChart"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── COMPLAINTS / COMMUNITY REPORTS PAGE ── -->
-      <div class="page" id="page-complaints">
-        <div class="page-header">
-          <div>
-            <div class="page-title">Community Reports</div>
-            <div class="page-sub">Citizen-submitted water issues — verified and tracked by admin</div>
-          </div>
-          <button class="btn-contained" onclick="showPage('report-submit')"><i class="ti ti-plus"></i> Submit Report</button>
-        </div>
-
-        <div class="grid-2">
-          <div class="g-card">
-            <div class="card-head">
-              <div class="card-title"><i class="ti ti-list-check"></i> Recent Reports</div>
-              <span class="chip chip-yellow">8 Pending</span>
-            </div>
-            <div id="report-feed"></div>
-          </div>
-          <div class="g-card">
-            <div class="card-head">
-              <div class="card-title"><i class="ti ti-chart-donut"></i> Report Stats</div>
-            </div>
-            <div class="chart-wrap">
-              <canvas id="reportsChart"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── SUBMIT REPORT PAGE ── -->
-      <div class="page" id="page-report-submit">
-        <div class="page-header">
-          <div>
-            <div class="page-title">Submit Water Issue</div>
-            <div class="page-sub">Report a water problem in your area — our team will investigate</div>
-          </div>
-          <button class="btn-outlined" onclick="showPage('complaints')"><i class="ti ti-arrow-left"></i> Back</button>
-        </div>
-        <div class="g-card" style="max-width:600px">
-          <div class="complaint-form">
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">Ward / Area</label>
-                <select class="g-select">
-                  <option>Koramangala</option><option>Whitefield</option><option>Yelahanka</option>
-                  <option>Marathahalli</option><option>HSR Layout</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Issue Type</label>
-                <select class="g-select">
-                  <option>Dry Tap / No Supply</option>
-                  <option>Illegal Borewell Drilling</option>
-                  <option>Water Quality Problem</option>
-                  <option>Supply Leak / Wastage</option>
-                  <option>Tanker Overcharging</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Description</label>
-              <textarea class="g-textarea" placeholder="Describe the issue in detail..."></textarea>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">Severity</label>
-                <select class="g-select">
-                  <option>Low — Minor inconvenience</option>
-                  <option>Medium — Affects daily needs</option>
-                  <option>High — Complete disruption</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Contact Number (optional)</label>
-                <input class="g-input" type="tel" placeholder="+91 98765 43210"/>
-              </div>
-            </div>
-            <button class="btn-contained" style="width:auto;align-self:flex-start" onclick="submitReport()">
-              <i class="ti ti-send"></i> Submit Report
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── MY WARD PAGE (CITIZEN) ── -->
-      <div class="page citizen-only-page" id="page-myward">
-        <div class="page-header">
-          <div>
-            <div class="page-title">My Ward Status</div>
-            <div class="page-sub" id="myward-sub">Personalized water status for your area</div>
-          </div>
-        </div>
-
-        <div class="ward-report-card" id="ward-report-card">
-          <div class="ward-rc-label">YOUR WARD</div>
-          <div class="ward-rc-name" id="ward-rc-name">Koramangala</div>
-          <div class="ward-rc-stats">
-            <div>
-              <div class="ward-rc-stat-val">0.74</div>
-              <div class="ward-rc-stat-label">WSI Score</div>
-            </div>
-            <div>
-              <div class="ward-rc-stat-val">52%</div>
-              <div class="ward-rc-stat-label">Borewell Level</div>
-            </div>
-            <div>
-              <div class="ward-rc-stat-val">14.2 MLD</div>
-              <div class="ward-rc-stat-label">Daily Supply</div>
-            </div>
-          </div>
-          <div class="ward-risk-banner">
-            <i class="ti ti-alert-triangle" style="font-size:14px"></i>
-            HIGH RISK — Action recommended in 30 days
-          </div>
-        </div>
-
-        <div class="grid-2">
-          <div class="g-card">
-            <div class="card-head">
-              <div class="card-title"><i class="ti ti-chart-area-line"></i> Your Ward Trend</div>
-            </div>
-            <div class="chart-wrap">
-              <canvas id="wardChart"></canvas>
-            </div>
-          </div>
-          <div class="g-card">
-            <div class="card-head">
-              <div class="card-title"><i class="ti ti-bulb"></i> Advisory for You</div>
-              <span class="chip chip-yellow">AI Generated</span>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:10px" id="advisory-list"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── WATER BUDGET PAGE (CITIZEN) ── -->
-      <div class="page citizen-only-page" id="page-budget">
-        <div class="page-header">
-          <div>
-            <div class="page-title">Personal Water Budget</div>
-            <div class="page-sub">Track and reduce your daily water consumption</div>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-          <div class="g-card">
-            <div class="card-head">
-              <div class="card-title"><i class="ti ti-calculator"></i> Daily Usage Calculator</div>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:14px" id="budget-inputs"></div>
-            <div class="budget-total" id="budget-total">
-              <div class="budget-total-label">Estimated Daily Usage</div>
-              <div class="budget-total-val" id="budget-val">--</div>
-              <div style="font-size:13px;color:var(--blue)">litres per person</div>
-              <div class="budget-score" id="budget-score">Calculate to see score</div>
-            </div>
-          </div>
-          <div class="g-card">
-            <div class="card-head">
-              <div class="card-title"><i class="ti ti-chart-pie"></i> Usage Breakdown</div>
-            </div>
-            <div class="chart-wrap">
-              <canvas id="budgetChart"></canvas>
-            </div>
-            <div style="background:var(--green-light);border-radius:var(--radius);padding:12px;margin-top:12px">
-              <div style="font-size:13px;font-weight:500;color:var(--green);font-family:var(--font);margin-bottom:4px">💡 Conservation Tip</div>
-              <div style="font-size:12px;color:var(--gray700)">Fixing a leaky tap can save up to 15,000 litres per year. Report water wastage in your ward.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── BADGES PAGE (CITIZEN) ── -->
-      <div class="page citizen-only-page" id="page-badges">
-        <div class="page-header">
-          <div>
-            <div class="page-title">My Water Saver Badges</div>
-            <div class="page-sub">Earn badges by conserving water and participating in AquaSense</div>
-          </div>
-        </div>
-        <div class="g-card">
-          <div class="card-head">
-            <div class="card-title"><i class="ti ti-trophy"></i> Water Saver Score</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:24px;margin-bottom:24px">
-            <div style="text-align:center">
-              <div style="font-family:var(--font);font-size:56px;font-weight:500;color:var(--blue)">720</div>
-              <div style="font-size:13px;color:var(--gray600)">points this month</div>
-            </div>
-            <div style="flex:1">
-              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--gray600);font-family:var(--font);margin-bottom:6px">
-                <span>Silver Saver</span><span>Gold Saver — 1000 pts</span>
-              </div>
-              <div class="progress-bar" style="height:10px;border-radius:5px">
-                <div class="progress-fill" style="width:72%;background:linear-gradient(90deg,var(--blue),#34a853)"></div>
-              </div>
-              <div style="font-size:12px;color:var(--gray600);margin-top:6px">280 points to next level</div>
-            </div>
-          </div>
-          <div class="badge-grid">
-            <div class="badge-card earned">
-              <div class="badge-icon">💧</div>
-              <div class="badge-title">First Reporter</div>
-              <div class="badge-sub" style="color:var(--blue)">Earned</div>
-            </div>
-            <div class="badge-card earned">
-              <div class="badge-icon">🌱</div>
-              <div class="badge-title">Below 100L/day</div>
-              <div class="badge-sub" style="color:var(--blue)">Earned</div>
-            </div>
-            <div class="badge-card earned">
-              <div class="badge-icon">📊</div>
-              <div class="badge-title">Data Citizen</div>
-              <div class="badge-sub" style="color:var(--blue)">Earned</div>
-            </div>
-            <div class="badge-card">
-              <div class="badge-icon" style="opacity:0.35">🏆</div>
-              <div class="badge-title">Gold Saver</div>
-              <div class="badge-sub">1000 pts needed</div>
-            </div>
-            <div class="badge-card">
-              <div class="badge-icon" style="opacity:0.35">🚿</div>
-              <div class="badge-title">Shower Champ</div>
-              <div class="badge-sub">3-min shower 7 days</div>
-            </div>
-            <div class="badge-card">
-              <div class="badge-icon" style="opacity:0.35">🔔</div>
-              <div class="badge-title">Alert Responder</div>
-              <div class="badge-sub">Act on 5 alerts</div>
-            </div>
-            <div class="badge-card">
-              <div class="badge-icon" style="opacity:0.35">🌍</div>
-              <div class="badge-title">Community Hero</div>
-              <div class="badge-sub">10 reports verified</div>
-            </div>
-            <div class="badge-card">
-              <div class="badge-icon" style="opacity:0.35">⚡</div>
-              <div class="badge-title">Early Adopter</div>
-              <div class="badge-sub">30-day streak</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /g-main -->
-  </div><!-- /g-body -->
-</div><!-- /app-screen -->
-
-<!-- PUSH ALERT MODAL OVERLAY -->
-<div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center">
-  <div style="background:var(--white);border-radius:var(--radius-xl);padding:28px;width:440px;box-shadow:var(--shadow-3)">
-    <div style="font-family:var(--font);font-size:18px;font-weight:500;color:var(--gray900);margin-bottom:6px">Push Emergency Alert</div>
-    <div style="font-size:13px;color:var(--gray600);margin-bottom:20px">Broadcast a water shortage alert to specific wards</div>
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div class="form-group">
-        <label class="form-label">Target Wards</label>
-        <select class="g-select">
-          <option>All Critical Wards (7)</option>
-          <option>Whitefield (Ward 112)</option>
-          <option>Yelahanka (Ward 67)</option>
-          <option>All 198 Wards</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Alert Message</label>
-        <textarea class="g-textarea" style="min-height:70px">Critical water shortage predicted in your ward within 30 days. Please conserve water and report issues.</textarea>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Priority</label>
-        <select class="g-select"><option>🔴 Critical</option><option>🟠 High</option><option>🟡 Moderate</option></select>
-      </div>
-      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
-        <button class="btn-outlined" onclick="closeModal()">Cancel</button>
-        <button class="btn-contained" onclick="sendAlert()"><i class="ti ti-send"></i> Send Alert</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-// ─── DATA ───────────────────────────────────────────
-const WARDS = [
-  {name:'Whitefield',wsi:0.91,borewell:22,supply:8.4,r30:'Critical',r60:'Critical',color:'#ea4335',x:72,y:40},
-  {name:'Yelahanka',wsi:0.82,borewell:35,supply:11.2,r30:'Critical',r60:'Critical',color:'#ea4335',x:28,y:18},
-  {name:'Marathahalli',wsi:0.76,borewell:41,supply:12.8,r30:'High',r60:'Critical',color:'#fa7b17',x:66,y:55},
-  {name:'Koramangala',wsi:0.74,borewell:52,supply:14.2,r30:'High',r60:'Critical',color:'#fa7b17',x:45,y:65},
-  {name:'HSR Layout',wsi:0.68,borewell:58,supply:15.6,r30:'High',r60:'High',color:'#fa7b17',x:42,y:75},
-  {name:'Hebbal',wsi:0.61,borewell:63,supply:17.1,r30:'Moderate',r60:'High',color:'#fbbc04',x:38,y:25},
-  {name:'Jayanagar',wsi:0.55,borewell:70,supply:18.4,r30:'Moderate',r60:'Moderate',color:'#fbbc04',x:34,y:72},
-  {name:'Rajajinagar',wsi:0.47,borewell:78,supply:20.1,r30:'Moderate',r60:'Moderate',color:'#fbbc04',x:22,y:50},
-  {name:'Malleswaram',wsi:0.38,borewell:85,supply:22.5,r30:'Low',r60:'Moderate',color:'#34a853',x:28,y:58},
-  {name:'Basavanagudi',wsi:0.31,borewell:90,supply:24.3,r30:'Low',r60:'Low',color:'#34a853',x:33,y:82},
-];
-
-let currentRole = 'admin';
-let currentWard = 'Koramangala';
-let notifCount = 3;
-let charts = {};
-
-// ─── LOGIN ───────────────────────────────────────────
-function selectRole(r){
-  currentRole = r;
-  document.getElementById('role-admin').classList.toggle('selected', r==='admin');
-  document.getElementById('role-citizen').classList.toggle('selected', r==='citizen');
-  document.getElementById('ward-select-wrap').classList.toggle('visible', r==='citizen');
-  document.getElementById('login-email').value = r==='admin' ? 'admin@bwssb.gov.in' : 'citizen@gmail.com';
-}
-
-function doLogin(){
-  const ward = document.getElementById('ward-select') ? document.getElementById('ward-select').value : 'Koramangala';
-  currentWard = ward;
-  document.getElementById('login-screen').classList.remove('active');
-  document.getElementById('app-screen').classList.add('active');
-
-  if(currentRole === 'admin'){
-    document.getElementById('user-avatar').textContent = 'A';
-    document.getElementById('user-avatar').style.background = '#1a73e8';
-    document.getElementById('user-name-display').textContent = 'Admin — BWSSB';
-    document.getElementById('role-badge-display').textContent = 'ADMIN';
-    document.getElementById('role-badge-display').style.background = '#fce8e6';
-    document.getElementById('role-badge-display').style.color = '#ea4335';
-    document.querySelectorAll('.citizen-only').forEach(e=>e.style.display='none');
-    document.querySelectorAll('.admin-only').forEach(e=>e.style.display='flex');
-    document.querySelectorAll('.admin-only-page').forEach(e=>e.style.display='');
-    document.querySelectorAll('.citizen-only-page').forEach(e=>e.dataset.hidden='true');
-  } else {
-    document.getElementById('user-avatar').textContent = ward[0];
-    document.getElementById('user-avatar').style.background = '#34a853';
-    document.getElementById('user-name-display').textContent = 'Citizen — '+ward;
-    document.getElementById('role-badge-display').textContent = 'CITIZEN';
-    document.getElementById('role-badge-display').style.background = '#e6f4ea';
-    document.getElementById('role-badge-display').style.color = '#34a853';
-    document.getElementById('ward-rc-name').textContent = ward;
-    document.getElementById('myward-sub').textContent = 'Personalized water status for '+ward;
-    document.querySelectorAll('.admin-only').forEach(e=>e.style.display='none');
-    document.querySelectorAll('.citizen-only').forEach(e=>e.style.display='flex');
-    document.querySelectorAll('.admin-only-page').forEach(e=>e.dataset.hidden='true');
-    document.querySelectorAll('.citizen-only-page').forEach(e=>e.dataset.hidden='');
-    document.getElementById('dash-subtitle').textContent = ward+' — Your ward status · Updated 2 min ago';
-    showPage('myward');
-  }
-
-  initApp();
-  setTimeout(()=>{
-    showToast('info', currentRole==='admin' ? 'Welcome back, BWSSB Admin' : 'Welcome! Showing data for '+ward, 'Signed In');
-    setTimeout(()=>showToast('critical','Whitefield WSI crossed 0.90 threshold','Critical Alert 🔴'),2500);
-    if(currentRole==='citizen'){
-      setTimeout(()=>showToast('alert','Your ward '+ward+' needs attention in 30 days','Ward Advisory'),5000);
+    // ─── LOGIN ───────────────────────────────────────────
+    function selectRole(r) {
+      currentRole = r;
+      document.getElementById('role-admin').classList.toggle('selected', r === 'admin');
+      document.getElementById('role-citizen').classList.toggle('selected', r === 'citizen');
+      document.getElementById('ward-select-wrap').classList.toggle('visible', r === 'citizen');
+      document.getElementById('login-email').value = r === 'admin' ? 'admin@bwssb.gov.in' : 'citizen@gmail.com';
     }
-  }, 400);
-}
 
-function logout(){
-  location.reload();
-}
+    function doLogin() {
+      const ward = document.getElementById('ward-select') ? document.getElementById('ward-select').value : 'Koramangala';
+      currentWard = ward;
+      document.getElementById('login-screen').classList.remove('active');
+      document.getElementById('app-screen').classList.add('active');
 
-// ─── PAGE NAVIGATION ─────────────────────────────────
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>{
-    p.classList.remove('active');
-  });
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const page = document.getElementById('page-'+id);
-  if(page && page.dataset.hidden !== 'true') page.classList.add('active');
-  else if(page) page.classList.add('active');
-  // activate nav
-  event && event.currentTarget && event.currentTarget.classList.add('active');
-  // init charts for page
-  if(id==='forecast') initForecastCharts();
-  if(id==='admin') initAdminCharts();
-  if(id==='complaints') initReportsChart();
-  if(id==='budget') initBudgetChart();
-  if(id==='myward') initWardChart();
-}
+      if (currentRole === 'admin') {
+        document.getElementById('user-avatar').textContent = 'A';
+        document.getElementById('user-avatar').style.background = '#1a73e8';
+        document.getElementById('user-name-display').textContent = 'Admin — BWSSB';
+        document.getElementById('role-badge-display').textContent = 'ADMIN';
+        document.getElementById('role-badge-display').style.background = '#fce8e6';
+        document.getElementById('role-badge-display').style.color = '#ea4335';
+        document.querySelectorAll('.citizen-only').forEach(e => e.style.display = 'none');
+        document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'flex');
+        document.querySelectorAll('.admin-only-page').forEach(e => e.style.display = '');
+        document.querySelectorAll('.citizen-only-page').forEach(e => e.dataset.hidden = 'true');
+      } else {
+        document.getElementById('user-avatar').textContent = ward[0];
+        document.getElementById('user-avatar').style.background = '#34a853';
+        document.getElementById('user-name-display').textContent = 'Citizen — ' + ward;
+        document.getElementById('role-badge-display').textContent = 'CITIZEN';
+        document.getElementById('role-badge-display').style.background = '#e6f4ea';
+        document.getElementById('role-badge-display').style.color = '#34a853';
+        document.getElementById('ward-rc-name').textContent = ward;
+        document.getElementById('myward-sub').textContent = 'Personalized water status for ' + ward;
+        document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'none');
+        document.querySelectorAll('.citizen-only').forEach(e => e.style.display = 'flex');
+        document.querySelectorAll('.admin-only-page').forEach(e => e.dataset.hidden = 'true');
+        document.querySelectorAll('.citizen-only-page').forEach(e => e.dataset.hidden = '');
+        document.getElementById('dash-subtitle').textContent = ward + ' — Your ward status · Updated 2 min ago';
+        showPage('myward');
+      }
 
-// ─── INIT APP ────────────────────────────────────────
-function initApp(){
-  renderWardTable();
-  renderAlerts();
-  renderReportFeed();
-  renderAdvisory();
-  renderBudgetInputs();
-  initMap('mapCanvas');
-  updateForecastCards(30);
-}
+      initApp();
+      setTimeout(() => {
+        showToast('info', currentRole === 'admin' ? 'Welcome back, BWSSB Admin' : 'Welcome! Showing data for ' + ward, 'Signed In');
+        setTimeout(() => showToast('critical', 'Whitefield WSI crossed 0.90 threshold', 'Critical Alert 🔴'), 2500);
+        if (currentRole === 'citizen') {
+          setTimeout(() => showToast('alert', 'Your ward ' + ward + ' needs attention in 30 days', 'Ward Advisory'), 5000);
+        }
+      }, 400);
+    }
 
-// ─── WARD TABLE ──────────────────────────────────────
-function renderWardTable(){
-  const tb = document.getElementById('ward-tbody');
-  if(!tb) return;
-  tb.innerHTML = WARDS.map(w=>`
+    function logout() {
+      location.reload();
+    }
+
+    // ─── PAGE NAVIGATION ─────────────────────────────────
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => {
+        p.classList.remove('active');
+      });
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      const page = document.getElementById('page-' + id);
+      if (page && page.dataset.hidden !== 'true') page.classList.add('active');
+      else if (page) page.classList.add('active');
+      // activate nav
+      event && event.currentTarget && event.currentTarget.classList.add('active');
+      // init charts for page
+      if (id === 'forecast') initForecastCharts();
+      if (id === 'admin') initAdminCharts();
+      if (id === 'complaints') initReportsChart();
+      if (id === 'budget') initBudgetChart();
+      if (id === 'myward') initWardChart();
+      if (id === 'map') setTimeout(() => initMap('mapCanvas2'), 50);
+    }
+
+    // ─── INIT APP ────────────────────────────────────────
+    function initApp() {
+      renderWardTable();
+      renderAlerts();
+      renderReportFeed();
+      renderAdvisory();
+      renderBudgetInputs();
+      initMap('mapCanvas');
+      updateForecastCards(30);
+    }
+
+    // ─── WARD TABLE ──────────────────────────────────────
+    function renderWardTable() {
+      const tb = document.getElementById('ward-tbody');
+      if (!tb) return;
+      tb.innerHTML = WARDS.map(w => `
     <tr>
       <td><strong style="font-family:var(--font)">${w.name}</strong></td>
       <td>
         <div style="display:flex;align-items:center;gap:8px">
-          <div class="progress-bar"><div class="progress-fill" style="width:${w.wsi*100}%;background:${w.color}"></div></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${w.wsi * 100}%;background:${w.color}"></div></div>
           <span style="font-size:12px;font-family:var(--font);font-weight:500;color:${w.color}">${w.wsi}</span>
         </div>
       </td>
-      <td style="color:${w.borewell<50?'var(--red)':w.borewell<70?'var(--orange)':'var(--green)'}">${w.borewell}%</td>
+      <td style="color:${w.borewell < 50 ? 'var(--red)' : w.borewell < 70 ? 'var(--orange)' : 'var(--green)'}">${w.borewell}%</td>
       <td>${w.supply} MLD</td>
       <td><span class="risk-chip ${w.r30.toLowerCase()}">${w.r30}</span></td>
       <td><span class="risk-chip ${w.r60.toLowerCase()}">${w.r60}</span></td>
     </tr>`).join('');
-}
+    }
 
-// ─── ALERTS ──────────────────────────────────────────
-const ALERTS = [
-  {type:'critical',icon:'ti-alert-circle',title:'Whitefield — Critical WSI 0.91',desc:'Borewell depleted 78% · Immediate action required · Push tanker supply',time:'2 min ago'},
-  {type:'critical',icon:'ti-droplet-off',title:'Yelahanka — Supply Disruption Risk',desc:'Reservoir at 35% · 60-day forecast: Critical · Activate emergency plan',time:'18 min ago'},
-  {type:'high',icon:'ti-trending-up',title:'Marathahalli — Rapid WSI Rise',desc:'WSI increased 0.12 in 7 days · Borewell extraction at 180% safe limit',time:'1 hr ago'},
-  {type:'high',icon:'ti-cloud-rain',title:'Below Normal Rainfall — IMD Update',desc:'June 2026 forecast: 60% below normal for Bengaluru division',time:'3 hrs ago'},
-  {type:'info',icon:'ti-refresh',title:'BWSSB Data Sync Complete',desc:'198 wards updated · 3 anomalies detected in Zone 4 supply data',time:'6 hrs ago'},
-  {type:'resolved',icon:'ti-check',title:'Jayanagar — Alert Resolved',desc:'Supply restored to normal levels · WSI dropped to 0.55',time:'Yesterday'},
-];
-function renderAlerts(){
-  const el = document.getElementById('all-alerts-list');
-  if(!el) return;
-  el.innerHTML = ALERTS.map(a=>`
+    // ─── ALERTS ──────────────────────────────────────────
+    const ALERTS = [
+      { type: 'critical', icon: 'ti-alert-circle', title: 'Whitefield — Critical WSI 0.91', desc: 'Borewell depleted 78% · Immediate action required · Push tanker supply', time: '2 min ago' },
+      { type: 'critical', icon: 'ti-droplet-off', title: 'Yelahanka — Supply Disruption Risk', desc: 'Reservoir at 35% · 60-day forecast: Critical · Activate emergency plan', time: '18 min ago' },
+      { type: 'high', icon: 'ti-trending-up', title: 'Marathahalli — Rapid WSI Rise', desc: 'WSI increased 0.12 in 7 days · Borewell extraction at 180% safe limit', time: '1 hr ago' },
+      { type: 'high', icon: 'ti-cloud-rain', title: 'Below Normal Rainfall — IMD Update', desc: 'June 2026 forecast: 60% below normal for Bengaluru division', time: '3 hrs ago' },
+      { type: 'info', icon: 'ti-refresh', title: 'BWSSB Data Sync Complete', desc: '198 wards updated · 3 anomalies detected in Zone 4 supply data', time: '6 hrs ago' },
+      { type: 'resolved', icon: 'ti-check', title: 'Jayanagar — Alert Resolved', desc: 'Supply restored to normal levels · WSI dropped to 0.55', time: 'Yesterday' },
+    ];
+    function renderAlerts() {
+      const el = document.getElementById('all-alerts-list');
+      if (!el) return;
+      el.innerHTML = ALERTS.map(a => `
     <div class="alert-item ${a.type}">
       <div class="alert-icon"><i class="ti ${a.icon}"></i></div>
       <div>
@@ -1214,331 +2604,351 @@ function renderAlerts(){
         <div class="alert-meta">${a.time}</div>
       </div>
     </div>`).join('');
-}
+    }
 
-// ─── REPORT FEED ─────────────────────────────────────
-const REPORTS = [
-  {ward:'Whitefield',type:'Dry Tap',desc:'No water supply for 3 consecutive days',status:'investigating',time:'Today 09:14'},
-  {ward:'Marathahalli',type:'Illegal Borewell',desc:'Unauthorized drilling observed near main road',status:'pending',time:'Today 08:30'},
-  {ward:'Koramangala',type:'Water Quality',desc:'Yellowish water coming from taps since morning',status:'resolved',time:'Yesterday'},
-  {ward:'HSR Layout',type:'Supply Leak',desc:'Major pipe leak at 5th cross, water wastage high',status:'investigating',time:'Yesterday'},
-];
-function renderReportFeed(){
-  const el = document.getElementById('report-feed');
-  if(!el) return;
-  el.innerHTML = REPORTS.map(r=>`
+    // ─── REPORT FEED ─────────────────────────────────────
+    const REPORTS = [
+      { ward: 'Whitefield', type: 'Dry Tap', desc: 'No water supply for 3 consecutive days', status: 'investigating', time: 'Today 09:14' },
+      { ward: 'Marathahalli', type: 'Illegal Borewell', desc: 'Unauthorized drilling observed near main road', status: 'pending', time: 'Today 08:30' },
+      { ward: 'Koramangala', type: 'Water Quality', desc: 'Yellowish water coming from taps since morning', status: 'resolved', time: 'Yesterday' },
+      { ward: 'HSR Layout', type: 'Supply Leak', desc: 'Major pipe leak at 5th cross, water wastage high', status: 'investigating', time: 'Yesterday' },
+    ];
+    function renderReportFeed() {
+      const el = document.getElementById('report-feed');
+      if (!el) return;
+      el.innerHTML = REPORTS.map(r => `
     <div class="report-item">
       <div class="report-avatar"><i class="ti ti-message-report"></i></div>
       <div style="flex:1">
         <div style="font-family:var(--font);font-size:13px;font-weight:500;color:var(--gray900)">${r.ward} — ${r.type}</div>
         <div style="font-size:12px;color:var(--gray600);margin-top:2px">${r.desc}</div>
         <div style="display:flex;align-items:center;gap:8px">
-          <span class="report-status ${r.status}">${r.status.charAt(0).toUpperCase()+r.status.slice(1)}</span>
+          <span class="report-status ${r.status}">${r.status.charAt(0).toUpperCase() + r.status.slice(1)}</span>
           <span style="font-size:11px;color:var(--gray400)">${r.time}</span>
         </div>
       </div>
     </div>`).join('');
-}
+    }
 
-// ─── ADVISORY ────────────────────────────────────────
-function renderAdvisory(){
-  const el = document.getElementById('advisory-list');
-  if(!el) return;
-  const tips = [
-    {icon:'ti-alert-triangle',color:'var(--red)',bg:'var(--red-light)',text:'WSI score 0.74 — reduce borewell extraction immediately'},
-    {icon:'ti-droplet',color:'var(--blue)',bg:'var(--blue-light)',text:'Store 2–3 days of water as buffer before June 1 supply cut risk'},
-    {icon:'ti-tools',color:'var(--orange)',bg:'var(--orange-light)',text:'Fix any leaking taps — save up to 50L/day per household'},
-    {icon:'ti-bell',color:'var(--green)',bg:'var(--green-light)',text:'Enable push notifications to get early shortage alerts'},
-  ];
-  el.innerHTML = tips.map(t=>`
+    // ─── ADVISORY ────────────────────────────────────────
+    function renderAdvisory() {
+      const el = document.getElementById('advisory-list');
+      if (!el) return;
+      const tips = [
+        { icon: 'ti-alert-triangle', color: 'var(--red)', bg: 'var(--red-light)', text: 'WSI score 0.74 — reduce borewell extraction immediately' },
+        { icon: 'ti-droplet', color: 'var(--blue)', bg: 'var(--blue-light)', text: 'Store 2–3 days of water as buffer before June 1 supply cut risk' },
+        { icon: 'ti-tools', color: 'var(--orange)', bg: 'var(--orange-light)', text: 'Fix any leaking taps — save up to 50L/day per household' },
+        { icon: 'ti-bell', color: 'var(--green)', bg: 'var(--green-light)', text: 'Enable push notifications to get early shortage alerts' },
+      ];
+      el.innerHTML = tips.map(t => `
     <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:${t.bg};border-radius:var(--radius)">
       <i class="ti ${t.icon}" style="font-size:16px;color:${t.color};margin-top:1px;flex-shrink:0"></i>
       <div style="font-size:13px;color:var(--gray800)">${t.text}</div>
     </div>`).join('');
-}
+    }
 
-// ─── BUDGET INPUTS ───────────────────────────────────
-const BUDGET_ITEMS = [
-  {label:'Drinking & cooking',key:'drink',val:5,unit:'L/day'},
-  {label:'Bathing / shower',key:'bath',val:50,unit:'L/day'},
-  {label:'Toilet flushes',key:'flush',val:30,unit:'L/day'},
-  {label:'Washing dishes',key:'dishes',val:15,unit:'L/day'},
-  {label:'Laundry (per cycle)',key:'laundry',val:80,unit:'L/wash'},
-  {label:'Garden / plants',key:'garden',val:10,unit:'L/day'},
-];
-function renderBudgetInputs(){
-  const el = document.getElementById('budget-inputs');
-  if(!el) return;
-  el.innerHTML = BUDGET_ITEMS.map(b=>`
+    // ─── BUDGET INPUTS ───────────────────────────────────
+    const BUDGET_ITEMS = [
+      { label: 'Drinking & cooking', key: 'drink', val: 5, unit: 'L/day' },
+      { label: 'Bathing / shower', key: 'bath', val: 50, unit: 'L/day' },
+      { label: 'Toilet flushes', key: 'flush', val: 30, unit: 'L/day' },
+      { label: 'Washing dishes', key: 'dishes', val: 15, unit: 'L/day' },
+      { label: 'Laundry (per cycle)', key: 'laundry', val: 80, unit: 'L/wash' },
+      { label: 'Garden / plants', key: 'garden', val: 10, unit: 'L/day' },
+    ];
+    function renderBudgetInputs() {
+      const el = document.getElementById('budget-inputs');
+      if (!el) return;
+      el.innerHTML = BUDGET_ITEMS.map(b => `
     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
       <label style="font-size:13px;color:var(--gray700);font-family:var(--font);flex:1">${b.label}</label>
       <input type="number" class="g-input" style="width:90px" value="${b.val}" min="0" id="bi-${b.key}"
         oninput="calcBudget()"/>
       <span style="font-size:11px;color:var(--gray600);width:50px">${b.unit}</span>
     </div>`).join('');
-  setTimeout(calcBudget, 100);
-}
-function calcBudget(){
-  let total = 0;
-  BUDGET_ITEMS.forEach(b=>{
-    const el = document.getElementById('bi-'+b.key);
-    if(el) total += parseFloat(el.value)||0;
-  });
-  const el = document.getElementById('budget-val');
-  const sc = document.getElementById('budget-score');
-  if(el) el.textContent = Math.round(total)+' L';
-  if(sc){
-    if(total<100){sc.textContent='🌟 Excellent Saver';sc.style.background='var(--green-light)';sc.style.color='var(--green)'}
-    else if(total<150){sc.textContent='👍 Good';sc.style.background='var(--blue-light)';sc.style.color='var(--blue)'}
-    else if(total<200){sc.textContent='⚠️ Average';sc.style.background='var(--yellow-light)';sc.style.color='var(--orange)'}
-    else{sc.textContent='🔴 High Usage';sc.style.background='var(--red-light)';sc.style.color='var(--red)'}
-  }
-}
+      setTimeout(calcBudget, 100);
+    }
+    function calcBudget() {
+      let total = 0;
+      BUDGET_ITEMS.forEach(b => {
+        const el = document.getElementById('bi-' + b.key);
+        if (el) total += parseFloat(el.value) || 0;
+      });
+      const el = document.getElementById('budget-val');
+      const sc = document.getElementById('budget-score');
+      if (el) el.textContent = Math.round(total) + ' L';
+      if (sc) {
+        if (total < 100) { sc.textContent = '🌟 Excellent Saver'; sc.style.background = 'var(--green-light)'; sc.style.color = 'var(--green)' }
+        else if (total < 150) { sc.textContent = '👍 Good'; sc.style.background = 'var(--blue-light)'; sc.style.color = 'var(--blue)' }
+        else if (total < 200) { sc.textContent = '⚠️ Average'; sc.style.background = 'var(--yellow-light)'; sc.style.color = 'var(--orange)' }
+        else { sc.textContent = '🔴 High Usage'; sc.style.background = 'var(--red-light)'; sc.style.color = 'var(--red)' }
+      }
+    }
 
-// ─── MAP ─────────────────────────────────────────────
-function initMap(canvasId){
-  const canvas = document.getElementById(canvasId);
-  if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const W = canvas.offsetWidth;
-  const H = canvas.offsetHeight || 340;
-  canvas.width = W; canvas.height = H;
+    // ─── MAP ─────────────────────────────────────────────
+    function initMap(canvasId) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const W = canvas.offsetWidth;
+      const H = canvas.offsetHeight || 340;
+      canvas.width = W; canvas.height = H;
 
-  ctx.fillStyle = '#f8f9fa';
-  ctx.fillRect(0,0,W,H);
+      ctx.fillStyle = '#f8f9fa';
+      ctx.fillRect(0, 0, W, H);
 
-  // Draw grid
-  ctx.strokeStyle = '#e8eaed'; ctx.lineWidth = 1;
-  for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}
-  for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+      // Draw grid
+      ctx.strokeStyle = '#e8eaed'; ctx.lineWidth = 1;
+      for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke() }
+      for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke() }
 
-  // Draw wards as circles
-  WARDS.forEach(w=>{
-    const x = w.x/100*W; const y = w.y/100*H;
-    const r = 18 + w.wsi*12;
-    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
-    ctx.fillStyle = w.color+'33'; ctx.fill();
-    ctx.strokeStyle = w.color; ctx.lineWidth = 2.5;
-    ctx.stroke();
-    ctx.fillStyle = w.color;
-    ctx.font = 'bold 11px Google Sans, sans-serif';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText(w.name.split(' ')[0], x, y);
-  });
+      // Draw wards as circles
+      WARDS.forEach(w => {
+        const x = w.x / 100 * W; const y = w.y / 100 * H;
+        const r = 18 + w.wsi * 12;
+        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = w.color + '33'; ctx.fill();
+        ctx.strokeStyle = w.color; ctx.lineWidth = 2.5;
+        ctx.stroke();
+        ctx.fillStyle = w.color;
+        ctx.font = 'bold 11px Google Sans, sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(w.name.split(' ')[0], x, y);
+      });
 
-  const tt = document.getElementById('wardTooltip');
-  if(!tt) return;
-  canvas.onmousemove = (e)=>{
-    const rect = canvas.getBoundingClientRect();
-    const mx = (e.clientX-rect.left)*(W/rect.width);
-    const my = (e.clientY-rect.top)*(H/rect.height);
-    let hit = null;
-    WARDS.forEach(w=>{
-      const wx = w.x/100*W; const wy = w.y/100*H;
-      const d = Math.hypot(mx-wx, my-wy);
-      if(d < 30) hit = w;
-    });
-    if(hit){
-      tt.style.display='block';
-      tt.style.left=(e.clientX-rect.left+12)+'px';
-      tt.style.top=(e.clientY-rect.top-60)+'px';
-      tt.innerHTML=`<div class="tt-name">${hit.name}</div>
+      const tt = document.getElementById('wardTooltip');
+      if (!tt) return;
+      canvas.onmousemove = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const mx = (e.clientX - rect.left) * (W / rect.width);
+        const my = (e.clientY - rect.top) * (H / rect.height);
+        let hit = null;
+        WARDS.forEach(w => {
+          const wx = w.x / 100 * W; const wy = w.y / 100 * H;
+          const d = Math.hypot(mx - wx, my - wy);
+          if (d < 30) hit = w;
+        });
+        if (hit) {
+          tt.style.display = 'block';
+          tt.style.left = (e.clientX - rect.left + 12) + 'px';
+          tt.style.top = (e.clientY - rect.top - 60) + 'px';
+          tt.innerHTML = `<div class="tt-name">${hit.name}</div>
         <div class="tt-row"><span>WSI Score</span><span style="color:${hit.color}">${hit.wsi}</span></div>
         <div class="tt-row"><span>30-Day Risk</span><span style="color:${hit.color}">${hit.r30}</span></div>
         <div class="tt-row"><span>Borewell</span><span>${hit.borewell}%</span></div>`;
-    } else tt.style.display='none';
-  };
-  canvas.onmouseleave = ()=>{ if(tt) tt.style.display='none'; };
-}
+        } else tt.style.display = 'none';
+      };
+      canvas.onmouseleave = () => { if (tt) tt.style.display = 'none'; };
+    }
 
-// ─── FORECAST ────────────────────────────────────────
-function updateForecastCards(days){
-  const el = document.getElementById('forecast-cards');
-  if(!el) return;
-  const d = parseInt(days);
-  const pct = d/60;
-  const wsi30 = Math.min(0.95, 0.64 + 0.20*pct);
-  const wsi60 = Math.min(0.99, 0.64 + 0.35*pct);
-  const rl = (v)=>v>0.8?'Critical':v>0.65?'High':v>0.45?'Moderate':'Low';
-  const rc = (v)=>v>0.8?'var(--red)':v>0.65?'var(--orange)':v>0.45?'var(--orange)':'var(--green)';
-  el.innerHTML = `
+    // ─── FORECAST ────────────────────────────────────────
+    function updateForecastCards(days) {
+      const el = document.getElementById('forecast-cards');
+      if (!el) return;
+      const d = parseInt(days);
+      const pct = d / 60;
+      const wsi30 = Math.min(0.95, 0.64 + 0.20 * pct);
+      const wsi60 = Math.min(0.99, 0.64 + 0.35 * pct);
+      const rl = (v) => v > 0.8 ? 'Critical' : v > 0.65 ? 'High' : v > 0.45 ? 'Moderate' : 'Low';
+      const rc = (v) => v > 0.8 ? 'var(--red)' : v > 0.65 ? 'var(--orange)' : v > 0.45 ? 'var(--orange)' : 'var(--green)';
+      el.innerHTML = `
     <div class="fc-card">
       <div class="fc-day">30-Day Forecast</div>
       <div class="fc-risk" style="color:${rc(wsi30)}">${rl(wsi30)}</div>
-      <div style="font-size:12px;color:var(--gray600);margin-top:4px">Avg WSI: ${wsi30.toFixed(2)} · ${Math.round(wsi30*100)}% stress</div>
+      <div style="font-size:12px;color:var(--gray600);margin-top:4px">Avg WSI: ${wsi30.toFixed(2)} · ${Math.round(wsi30 * 100)}% stress</div>
     </div>
     <div class="fc-card">
       <div class="fc-day">60-Day Forecast</div>
       <div class="fc-risk" style="color:${rc(wsi60)}">${rl(wsi60)}</div>
-      <div style="font-size:12px;color:var(--gray600);margin-top:4px">Avg WSI: ${wsi60.toFixed(2)} · ${Math.round(wsi60*100)}% stress</div>
+      <div style="font-size:12px;color:var(--gray600);margin-top:4px">Avg WSI: ${wsi60.toFixed(2)} · ${Math.round(wsi60 * 100)}% stress</div>
     </div>`;
-}
-
-function initForecastCharts(){
-  if(charts.forecast) charts.forecast.destroy();
-  const ctx = document.getElementById('forecastChart');
-  if(!ctx) return;
-  const labels = Array.from({length:12},(_,i)=>{
-    const d = new Date(); d.setDate(d.getDate()-60+i*10);
-    return d.toLocaleDateString('en-IN',{month:'short',day:'numeric'});
-  });
-  charts.forecast = new Chart(ctx,{
-    type:'line',
-    data:{
-      labels,
-      datasets:[
-        {label:'Reservoir %',data:[72,70,68,65,63,62,59,57,54,52,49,46],
-          borderColor:'#1a73e8',backgroundColor:'rgba(26,115,232,0.08)',fill:true,tension:0.4,borderWidth:2},
-        {label:'WSI Score',data:[0.52,0.54,0.57,0.59,0.61,0.64,0.67,0.70,0.73,0.76,0.80,0.84],
-          borderColor:'#ea4335',backgroundColor:'rgba(234,67,53,0.05)',fill:true,tension:0.4,borderWidth:2,
-          yAxisID:'wsi'},
-      ]
-    },
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'top',labels:{font:{family:'Google Sans'},boxWidth:12}}},
-      scales:{
-        y:{grid:{color:'#f1f3f4'},ticks:{font:{family:'Google Sans',size:11}}},
-        wsi:{position:'right',min:0,max:1,grid:{display:false},ticks:{font:{family:'Google Sans',size:11}}},
-        x:{grid:{color:'#f1f3f4'},ticks:{font:{family:'Google Sans',size:10},maxRotation:0}}
-      }
     }
-  });
-}
 
-function initAdminCharts(){
-  if(charts.model) charts.model.destroy();
-  const ctx = document.getElementById('modelChart');
-  if(!ctx) return;
-  charts.model = new Chart(ctx,{
-    type:'bar',
-    data:{
-      labels:['Jan','Feb','Mar','Apr','May','Jun'],
-      datasets:[
-        {label:'Predicted WSI',data:[0.58,0.60,0.62,0.63,0.64,0.67],backgroundColor:'rgba(26,115,232,0.7)',borderRadius:4},
-        {label:'Actual WSI',data:[0.57,0.61,0.61,0.64,0.63,0.66],backgroundColor:'rgba(52,168,83,0.5)',borderRadius:4},
-      ]
-    },
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'top',labels:{font:{family:'Google Sans'},boxWidth:12}}},
-      scales:{y:{min:0.4,max:0.9,grid:{color:'#f1f3f4'},ticks:{font:{family:'Google Sans',size:11}}},
-        x:{grid:{color:'#f1f3f4'},ticks:{font:{family:'Google Sans',size:11}}}}
+    function initForecastCharts() {
+      if (charts.forecast) charts.forecast.destroy();
+      const ctx = document.getElementById('forecastChart');
+      if (!ctx) return;
+      const labels = Array.from({ length: 12 }, (_, i) => {
+        const d = new Date(); d.setDate(d.getDate() - 60 + i * 10);
+        return d.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });
+      });
+      charts.forecast = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Reservoir %', data: [72, 70, 68, 65, 63, 62, 59, 57, 54, 52, 49, 46],
+              borderColor: '#1a73e8', backgroundColor: 'rgba(26,115,232,0.08)', fill: true, tension: 0.4, borderWidth: 2
+            },
+            {
+              label: 'WSI Score', data: [0.52, 0.54, 0.57, 0.59, 0.61, 0.64, 0.67, 0.70, 0.73, 0.76, 0.80, 0.84],
+              borderColor: '#ea4335', backgroundColor: 'rgba(234,67,53,0.05)', fill: true, tension: 0.4, borderWidth: 2,
+              yAxisID: 'wsi'
+            },
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'top', labels: { font: { family: 'Google Sans' }, boxWidth: 12 } } },
+          scales: {
+            y: { grid: { color: '#f1f3f4' }, ticks: { font: { family: 'Google Sans', size: 11 } } },
+            wsi: { position: 'right', min: 0, max: 1, grid: { display: false }, ticks: { font: { family: 'Google Sans', size: 11 } } },
+            x: { grid: { color: '#f1f3f4' }, ticks: { font: { family: 'Google Sans', size: 10 }, maxRotation: 0 } }
+          }
+        }
+      });
     }
-  });
-}
 
-function initReportsChart(){
-  if(charts.reports) charts.reports.destroy();
-  const ctx = document.getElementById('reportsChart');
-  if(!ctx) return;
-  charts.reports = new Chart(ctx,{
-    type:'doughnut',
-    data:{
-      labels:['Dry Tap','Illegal Borewell','Water Quality','Supply Leak','Tanker Issue'],
-      datasets:[{data:[34,18,22,16,10],
-        backgroundColor:['#ea4335','#fa7b17','#fbbc04','#1a73e8','#34a853'],
-        borderWidth:0,hoverOffset:6}]
-    },
-    options:{responsive:true,maintainAspectRatio:false,cutout:'65%',
-      plugins:{legend:{position:'right',labels:{font:{family:'Google Sans',size:12},boxWidth:12,padding:12}}}
+    function initAdminCharts() {
+      if (charts.model) charts.model.destroy();
+      const ctx = document.getElementById('modelChart');
+      if (!ctx) return;
+      charts.model = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [
+            { label: 'Predicted WSI', data: [0.58, 0.60, 0.62, 0.63, 0.64, 0.67], backgroundColor: 'rgba(26,115,232,0.7)', borderRadius: 4 },
+            { label: 'Actual WSI', data: [0.57, 0.61, 0.61, 0.64, 0.63, 0.66], backgroundColor: 'rgba(52,168,83,0.5)', borderRadius: 4 },
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'top', labels: { font: { family: 'Google Sans' }, boxWidth: 12 } } },
+          scales: {
+            y: { min: 0.4, max: 0.9, grid: { color: '#f1f3f4' }, ticks: { font: { family: 'Google Sans', size: 11 } } },
+            x: { grid: { color: '#f1f3f4' }, ticks: { font: { family: 'Google Sans', size: 11 } } }
+          }
+        }
+      });
     }
-  });
-}
 
-function initBudgetChart(){
-  if(charts.budget) charts.budget.destroy();
-  const ctx = document.getElementById('budgetChart');
-  if(!ctx) return;
-  charts.budget = new Chart(ctx,{
-    type:'doughnut',
-    data:{
-      labels:['Bathing','Toilet','Laundry','Dishes','Drinking','Garden'],
-      datasets:[{data:[50,30,80,15,5,10],
-        backgroundColor:['#1a73e8','#ea4335','#fa7b17','#fbbc04','#34a853','#9aa0a6'],
-        borderWidth:0,hoverOffset:6}]
-    },
-    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
-      plugins:{legend:{position:'right',labels:{font:{family:'Google Sans',size:11},boxWidth:10,padding:8}}}
+    function initReportsChart() {
+      if (charts.reports) charts.reports.destroy();
+      const ctx = document.getElementById('reportsChart');
+      if (!ctx) return;
+      charts.reports = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Dry Tap', 'Illegal Borewell', 'Water Quality', 'Supply Leak', 'Tanker Issue'],
+          datasets: [{
+            data: [34, 18, 22, 16, 10],
+            backgroundColor: ['#ea4335', '#fa7b17', '#fbbc04', '#1a73e8', '#34a853'],
+            borderWidth: 0, hoverOffset: 6
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, cutout: '65%',
+          plugins: { legend: { position: 'right', labels: { font: { family: 'Google Sans', size: 12 }, boxWidth: 12, padding: 12 } } }
+        }
+      });
     }
-  });
-}
 
-function initWardChart(){
-  if(charts.ward) charts.ward.destroy();
-  const ctx = document.getElementById('wardChart');
-  if(!ctx) return;
-  charts.ward = new Chart(ctx,{
-    type:'line',
-    data:{
-      labels:['Jan','Feb','Mar','Apr','May','Jun'],
-      datasets:[{label:'WSI Score',
-        data:[0.58,0.61,0.65,0.68,0.72,0.74],
-        borderColor:'#1a73e8',backgroundColor:'rgba(26,115,232,0.1)',
-        fill:true,tension:0.4,borderWidth:2}]
-    },
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{y:{min:0.4,max:1.0,grid:{color:'#f1f3f4'},ticks:{font:{family:'Google Sans',size:11}}},
-        x:{grid:{color:'#f1f3f4'},ticks:{font:{family:'Google Sans',size:11}}}}
+    function initBudgetChart() {
+      if (charts.budget) charts.budget.destroy();
+      const ctx = document.getElementById('budgetChart');
+      if (!ctx) return;
+      charts.budget = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Bathing', 'Toilet', 'Laundry', 'Dishes', 'Drinking', 'Garden'],
+          datasets: [{
+            data: [50, 30, 80, 15, 5, 10],
+            backgroundColor: ['#1a73e8', '#ea4335', '#fa7b17', '#fbbc04', '#34a853', '#9aa0a6'],
+            borderWidth: 0, hoverOffset: 6
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, cutout: '60%',
+          plugins: { legend: { position: 'right', labels: { font: { family: 'Google Sans', size: 11 }, boxWidth: 10, padding: 8 } } }
+        }
+      });
     }
-  });
-}
 
-// ─── TOASTS ──────────────────────────────────────────
-function showToast(type, message, title){
-  const container = document.getElementById('toast-container');
-  const t = document.createElement('div');
-  t.className = 'toast';
-  const iconMap = {critical:'ti-alert-circle',alert:'ti-bell-ringing',info:'ti-info-circle',success:'ti-circle-check'};
-  const typeMap = {critical:'critical',alert:'high',info:'info',success:'success'};
-  t.innerHTML = `
-    <div class="toast-icon ${typeMap[type]||'info'}"><i class="ti ${iconMap[type]||'ti-info-circle'}"></i></div>
+    function initWardChart() {
+      if (charts.ward) charts.ward.destroy();
+      const ctx = document.getElementById('wardChart');
+      if (!ctx) return;
+      charts.ward = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [{
+            label: 'WSI Score',
+            data: [0.58, 0.61, 0.65, 0.68, 0.72, 0.74],
+            borderColor: '#1a73e8', backgroundColor: 'rgba(26,115,232,0.1)',
+            fill: true, tension: 0.4, borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { min: 0.4, max: 1.0, grid: { color: '#f1f3f4' }, ticks: { font: { family: 'Google Sans', size: 11 } } },
+            x: { grid: { color: '#f1f3f4' }, ticks: { font: { family: 'Google Sans', size: 11 } } }
+          }
+        }
+      });
+    }
+
+    // ─── TOASTS ──────────────────────────────────────────
+    function showToast(type, message, title) {
+      const container = document.getElementById('toast-container');
+      const t = document.createElement('div');
+      t.className = 'toast';
+      const iconMap = { critical: 'ti-alert-circle', alert: 'ti-bell-ringing', info: 'ti-info-circle', success: 'ti-circle-check' };
+      const typeMap = { critical: 'critical', alert: 'high', info: 'info', success: 'success' };
+      t.innerHTML = `
+    <div class="toast-icon ${typeMap[type] || 'info'}"><i class="ti ${iconMap[type] || 'ti-info-circle'}"></i></div>
     <div class="toast-body">
-      <div class="toast-title">${title||'Notification'}</div>
+      <div class="toast-title">${title || 'Notification'}</div>
       <div class="toast-sub">${message}</div>
     </div>
     <div class="toast-close" onclick="this.parentElement.remove()">×</div>`;
-  container.appendChild(t);
-  requestAnimationFrame(()=>{ t.classList.add('show'); });
-  setTimeout(()=>{ t.classList.remove('show'); t.classList.add('hide'); setTimeout(()=>t.remove(),400); }, 5000);
-  notifCount++;
-  const badge = document.getElementById('notif-count');
-  if(badge) badge.textContent = notifCount;
-}
+      container.appendChild(t);
+      requestAnimationFrame(() => { t.classList.add('show'); });
+      setTimeout(() => { t.classList.remove('show'); t.classList.add('hide'); setTimeout(() => t.remove(), 400); }, 5000);
+      notifCount++;
+      const badge = document.getElementById('notif-count');
+      if (badge) badge.textContent = notifCount;
+    }
 
-function triggerTestNotification(){
-  const msgs = [
-    ['critical','Yelahanka WSI crossed 0.85 — Critical threshold','⚠️ Critical Alert'],
-    ['alert','BWSSB reduced supply to Zone 4 by 30%','Supply Update'],
-    ['info','IMD data synced — updated rainfall forecast','Data Sync'],
-    ['success','Complaint #108 resolved — Jayanagar supply restored','Report Resolved'],
-  ];
-  const m = msgs[Math.floor(Math.random()*msgs.length)];
-  showToast(m[0],m[1],m[2]);
-}
+    function triggerTestNotification() {
+      const msgs = [
+        ['critical', 'Yelahanka WSI crossed 0.85 — Critical threshold', '⚠️ Critical Alert'],
+        ['alert', 'BWSSB reduced supply to Zone 4 by 30%', 'Supply Update'],
+        ['info', 'IMD data synced — updated rainfall forecast', 'Data Sync'],
+        ['success', 'Complaint #108 resolved — Jayanagar supply restored', 'Report Resolved'],
+      ];
+      const m = msgs[Math.floor(Math.random() * msgs.length)];
+      showToast(m[0], m[1], m[2]);
+    }
 
-// ─── MODAL ───────────────────────────────────────────
-function pushAlertModal(){
-  document.getElementById('modal-overlay').style.display='flex';
-}
-function closeModal(){
-  document.getElementById('modal-overlay').style.display='none';
-}
-function sendAlert(){
-  closeModal();
-  showToast('success','Emergency alert sent to 7 critical wards successfully','Alert Sent ✓');
-}
-function submitReport(){
-  showPage('complaints');
-  showToast('success','Report submitted · Ref #CR-'+Math.floor(Math.random()*9000+1000),'Report Submitted');
-}
+    // ─── MODAL ───────────────────────────────────────────
+    function pushAlertModal() {
+      document.getElementById('modal-overlay').style.display = 'flex';
+    }
+    function closeModal() {
+      document.getElementById('modal-overlay').style.display = 'none';
+    }
+    function sendAlert() {
+      closeModal();
+      showToast('success', 'Emergency alert sent to 7 critical wards successfully', 'Alert Sent ✓');
+    }
+    function submitReport() {
+      showPage('complaints');
+      showToast('success', 'Report submitted · Ref #CR-' + Math.floor(Math.random() * 9000 + 1000), 'Report Submitted');
+    }
 
-// ─── INIT MAP ON LOAD ────────────────────────────────
-window.addEventListener('resize', ()=>{
-  setTimeout(()=>{
-    initMap('mapCanvas');
-    initMap('mapCanvas2');
-  }, 100);
-});
-</script>
+    // ─── INIT MAP ON LOAD ────────────────────────────────
+    window.addEventListener('resize', () => {
+      setTimeout(() => {
+        initMap('mapCanvas');
+        initMap('mapCanvas2');
+      }, 100);
+    });
+  </script>
 </body>
+
 </html>
