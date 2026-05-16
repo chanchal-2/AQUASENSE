@@ -1696,6 +1696,16 @@
       background: var(--gray400);
       border-radius: 3px
     }
+
+    /* ── SCREEN TRANSITIONS ── */
+    .screen {
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+
+    #app-screen.slide-out {
+      transform: translateX(100%);
+      opacity: 0;
+    }
   </style>
 </head>
 
@@ -2529,8 +2539,73 @@
     }
 
     function logout() {
-      location.reload();
+      const app = document.getElementById('app-screen');
+      const login = document.getElementById('login-screen');
+      app.classList.add('slide-out');
+      setTimeout(() => {
+        app.classList.remove('active', 'slide-out');
+        login.classList.add('active');
+      }, 400);
     }
+
+    // ─── SWIPE LEFT ON LEFT SIDE TO GO BACK TO LOGIN ─────
+    (function() {
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let startedOnLeftEdge = false;
+
+      document.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].clientX;
+        touchStartY = e.changedTouches[0].clientY;
+        // Only activate if touch starts within 200px from left edge
+        startedOnLeftEdge = touchStartX < 200;
+      }, false);
+
+      document.addEventListener('touchend', function(e) {
+        if (!startedOnLeftEdge) return;
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        const diffX = touchStartX - touchEndX;
+        const diffY = Math.abs(touchStartY - touchEndY);
+        // Swipe left: moved >80px horizontally and mostly horizontal
+        if (diffX > 80 && diffY < 80) {
+          const appScreen = document.getElementById('app-screen');
+          if (appScreen.classList.contains('active')) {
+            logout();
+          }
+        }
+      }, false);
+
+      // Also support mouse drag for desktop testing
+      let mouseDown = false;
+      let mouseStartX = 0;
+      let mouseStartY = 0;
+      let mouseStartedLeft = false;
+
+      document.addEventListener('mousedown', function(e) {
+        if (e.clientX < 200) {
+          mouseDown = true;
+          mouseStartX = e.clientX;
+          mouseStartY = e.clientY;
+          mouseStartedLeft = true;
+        }
+      });
+
+      document.addEventListener('mouseup', function(e) {
+        if (!mouseDown || !mouseStartedLeft) { mouseDown = false; return; }
+        const diffX = mouseStartX - e.clientX;
+        const diffY = Math.abs(mouseStartY - e.clientY);
+        if (diffX > 80 && diffY < 80) {
+          const appScreen = document.getElementById('app-screen');
+          if (appScreen.classList.contains('active')) {
+            logout();
+          }
+        }
+        mouseDown = false;
+        mouseStartedLeft = false;
+      });
+    })();
+
 
     // ─── PAGE NAVIGATION ─────────────────────────────────
     function showPage(id) {
