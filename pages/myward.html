@@ -1,0 +1,50 @@
+<!-- ── MY WARD PAGE (CITIZEN) ── -->
+<div class="page citizen-only-page" id="page-myward">
+  <div class="page-header">
+    <div>
+      <div class="page-title">My Ward Status</div>
+      <div class="page-sub" id="myward-sub">Personalized water status for your area</div>
+    </div>
+  </div>
+
+  <div class="ward-report-card" id="ward-report-card">
+    <div class="ward-rc-label">YOUR WARD</div>
+    <div class="ward-rc-name" id="ward-rc-name">Koramangala</div>
+    <div class="ward-rc-stats">
+      <div>
+        <div class="ward-rc-stat-val">0.74</div>
+        <div class="ward-rc-stat-label">WSI Score</div>
+      </div>
+      <div>
+        <div class="ward-rc-stat-val">52%</div>
+        <div class="ward-rc-stat-label">Borewell Level</div>
+      </div>
+      <div>
+        <div class="ward-rc-stat-val">14.2 MLD</div>
+        <div class="ward-rc-stat-label">Daily Supply</div>
+      </div>
+    </div>
+    <div class="ward-risk-banner">
+      <i class="ti ti-alert-triangle" style="font-size:14px"></i>
+      HIGH RISK — Action recommended in 30 days
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="g-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-chart-area-line"></i> Your Ward Trend</div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="wardChart"></canvas>
+      </div>
+    </div>
+    <div class="g-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-bulb"></i> Advisory for You</div>
+        <span class="chip chip-yellow">AI Generated</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px" id="advisory-list"></div>
+    </div>
+  </div>
+</div>

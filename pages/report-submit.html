@@ -1,0 +1,57 @@
+<!-- ── SUBMIT REPORT PAGE ── -->
+<div class="page" id="page-report-submit">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Submit Water Issue</div>
+      <div class="page-sub">Report a water problem in your area — our team will investigate</div>
+    </div>
+    <button class="btn-outlined" onclick="showPage('complaints')"><i class="ti ti-arrow-left"></i> Back</button>
+  </div>
+  <div class="g-card" style="max-width:600px">
+    <div class="complaint-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Ward / Area</label>
+          <select class="g-select">
+            <option>Koramangala</option>
+            <option>Whitefield</option>
+            <option>Yelahanka</option>
+            <option>Marathahalli</option>
+            <option>HSR Layout</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Issue Type</label>
+          <select class="g-select">
+            <option>Dry Tap / No Supply</option>
+            <option>Illegal Borewell Drilling</option>
+            <option>Water Quality Problem</option>
+            <option>Supply Leak / Wastage</option>
+            <option>Tanker Overcharging</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="g-textarea" placeholder="Describe the issue in detail..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Severity</label>
+          <select class="g-select">
+            <option>Low — Minor inconvenience</option>
+            <option>Medium — Affects daily needs</option>
+            <option>High — Complete disruption</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contact Number (optional)</label>
+          <input class="g-input" type="tel" placeholder="+91 98765 43210" />
+        </div>
+      </div>
+      <button class="btn-contained" style="width:auto;align-self:flex-start" onclick="submitReport()">
+        <i class="ti ti-send"></i> Submit Report
+      </button>
+    </div>
+  </div>
+</div>

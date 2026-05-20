@@ -1,0 +1,39 @@
+<!-- ── PUSH ALERT MODAL ── -->
+<div id="modal-overlay"
+  style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center">
+  <div
+    style="background:var(--white);border-radius:var(--radius-xl);padding:28px;width:440px;box-shadow:var(--shadow-3)">
+    <div style="font-family:var(--font);font-size:18px;font-weight:500;color:var(--gray900);margin-bottom:6px">Push
+      Emergency Alert</div>
+    <div style="font-size:13px;color:var(--gray600);margin-bottom:20px">Broadcast a water shortage alert to specific
+      wards</div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="form-group">
+        <label class="form-label">Target Wards</label>
+        <select class="g-select">
+          <option>All Critical Wards (7)</option>
+          <option>Whitefield (Ward 112)</option>
+          <option>Yelahanka (Ward 67)</option>
+          <option>All 198 Wards</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Alert Message</label>
+        <textarea class="g-textarea"
+          style="min-height:70px">Critical water shortage predicted in your ward within 30 days. Please conserve water and report issues.</textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Priority</label>
+        <select class="g-select">
+          <option>🔴 Critical</option>
+          <option>🟠 High</option>
+          <option>🟡 Moderate</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+        <button class="btn-outlined" onclick="closeModal()">Cancel</button>
+        <button class="btn-contained" onclick="sendAlert()"><i class="ti ti-send"></i> Send Alert</button>
+      </div>
+    </div>
+  </div>
+</div>

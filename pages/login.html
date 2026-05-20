@@ -1,0 +1,71 @@
+<!-- ═══ SCREEN 1: LOGIN ═══ -->
+<div id="login-screen" class="screen">
+  <div class="login-right">
+    <div class="login-logo" style="cursor: pointer;" onclick="navigateToHome()" title="Back to Home">
+      <div class="login-logo-mark"><i class="ti ti-droplet"></i></div>
+      <div>
+        <div class="login-logo-text">AquaSense</div>
+        <div class="login-logo-sub" style="font-size:11px;color:var(--gray600)">BWSSB · IMD · India-WRIS</div>
+      </div>
+    </div>
+
+    <div class="login-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+        <div>
+          <div class="login-title" style="margin-bottom:0;">Sign in to AquaSense</div>
+          <div class="login-sub" style="margin-bottom:0; font-size:12px;">Select your role to continue</div>
+        </div>
+        <button class="btn-outlined" style="padding:6px 12px; font-size:11px;" onclick="navigateToHome()">
+          <i class="ti ti-arrow-left"></i> Home
+        </button>
+      </div>
+
+      <div class="role-grid">
+        <div class="role-card selected" id="role-admin" onclick="selectRole('admin')">
+          <i class="ti ti-shield-check"></i>
+          <div class="role-card-title">Administrator</div>
+          <div class="role-card-sub">Full city access</div>
+        </div>
+        <div class="role-card" id="role-citizen" onclick="selectRole('citizen')">
+          <i class="ti ti-user"></i>
+          <div class="role-card-title">Citizen</div>
+          <div class="role-card-sub">Ward-level view</div>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Email</label>
+        <input class="g-input" type="email" id="login-email" placeholder="you@example.com"
+          value="admin@bwssb.gov.in" />
+      </div>
+      <div class="input-group">
+        <label class="input-label">Password</label>
+        <input class="g-input" type="password" id="login-pass" placeholder="••••••••" value="••••••••" />
+      </div>
+
+      <div class="ward-select-wrap" id="ward-select-wrap">
+        <div class="input-group">
+          <label class="input-label">Your Ward</label>
+          <select class="g-select" id="ward-select">
+            <option>Koramangala</option>
+            <option>Whitefield</option>
+            <option>Yelahanka</option>
+            <option>Marathahalli</option>
+            <option>HSR Layout</option>
+            <option>Jayanagar</option>
+            <option>Rajajinagar</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="doLogin()">
+        Sign In →
+      </button>
+
+      <div class="demo-creds">
+        <strong>Demo Admin:</strong> admin@bwssb.gov.in / any password<br>
+        <strong>Demo Citizen:</strong> Select Citizen role, choose a ward
+      </div>
+    </div>
+  </div>
+</div>

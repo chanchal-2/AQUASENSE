@@ -1,0 +1,29 @@
+<!-- ── COMPLAINTS / COMMUNITY REPORTS PAGE ── -->
+<div class="page" id="page-complaints">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Community Reports</div>
+      <div class="page-sub">Citizen-submitted water issues — verified and tracked by admin</div>
+    </div>
+    <button class="btn-contained" onclick="showPage('report-submit')"><i class="ti ti-plus"></i> Submit
+      Report</button>
+  </div>
+
+  <div class="grid-2">
+    <div class="g-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-list-check"></i> Recent Reports</div>
+        <span class="chip chip-yellow">8 Pending</span>
+      </div>
+      <div id="report-feed"></div>
+    </div>
+    <div class="g-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-chart-donut"></i> Report Stats</div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="reportsChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>

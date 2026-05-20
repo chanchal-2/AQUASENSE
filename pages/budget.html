@@ -1,0 +1,38 @@
+<!-- ── WATER BUDGET PAGE (CITIZEN) ── -->
+<div class="page citizen-only-page" id="page-budget">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Personal Water Budget</div>
+      <div class="page-sub">Track and reduce your daily water consumption</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div class="g-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-calculator"></i> Daily Usage Calculator</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px" id="budget-inputs"></div>
+      <div class="budget-total" id="budget-total">
+        <div class="budget-total-label">Estimated Daily Usage</div>
+        <div class="budget-total-val" id="budget-val">--</div>
+        <div style="font-size:13px;color:var(--blue)">litres per person</div>
+        <div class="budget-score" id="budget-score">Calculate to see score</div>
+      </div>
+    </div>
+    <div class="g-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-chart-pie"></i> Usage Breakdown</div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="budgetChart"></canvas>
+      </div>
+      <div style="background:var(--green-light);border-radius:var(--radius);padding:12px;margin-top:12px">
+        <div
+          style="font-size:13px;font-weight:500;color:var(--green);font-family:var(--font);margin-bottom:4px">💡
+          Conservation Tip</div>
+        <div style="font-size:12px;color:var(--gray700)">Fixing a leaky tap can save up to 15,000 litres per
+          year. Report water wastage in your ward.</div>
+      </div>
+    </div>
+  </div>
+</div>

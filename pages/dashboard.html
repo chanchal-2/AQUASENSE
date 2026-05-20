@@ -1,0 +1,133 @@
+<!-- ── DASHBOARD PAGE ── -->
+<div class="page active" id="page-dashboard">
+  <div class="page-header">
+    <div>
+      <div class="page-title">City Water Dashboard</div>
+      <div class="page-sub" id="dash-subtitle">Bengaluru — Real-time overview · Updated 2 min ago</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-outlined" onclick="showPage('forecast')"><i class="ti ti-chart-area-line"></i> View
+        Forecast</button>
+      <button class="btn-contained admin-only" onclick="pushAlertModal()"><i class="ti ti-bell-ringing"></i>
+        Push Alert</button>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-label">Reservoir Level</div>
+      <div class="stat-val">62<span class="unit">%</span></div>
+      <div class="stat-change down"><i class="ti ti-trending-down" style="font-size:13px"></i> −4% this week
+      </div>
+      <div class="stat-icon blue"><i class="ti ti-waves"></i></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Critical Wards</div>
+      <div class="stat-val" style="color:var(--red)">7</div>
+      <div class="stat-change up"><i class="ti ti-arrow-up" style="font-size:13px"></i> 2 new today</div>
+      <div class="stat-icon red"><i class="ti ti-alert-circle"></i></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Rainfall (30-day)</div>
+      <div class="stat-val">28<span class="unit">mm</span></div>
+      <div class="stat-change up"><i class="ti ti-trending-down" style="font-size:13px"></i> 60% below avg</div>
+      <div class="stat-icon yellow"><i class="ti ti-cloud-rain"></i></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Wards Monitored</div>
+      <div class="stat-val">198</div>
+      <div class="stat-change neutral">All BBMP wards</div>
+      <div class="stat-icon green"><i class="ti ti-map-pin"></i></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg WSI Score</div>
+      <div class="stat-val" style="color:var(--orange)">0.64</div>
+      <div class="stat-change up"><i class="ti ti-arrow-up" style="font-size:13px"></i> High stress zone</div>
+      <div class="stat-icon orange"><i class="ti ti-activity"></i></div>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="g-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-map-2"></i> Ward Risk Map</div>
+        <span class="chip chip-red">7 Critical</span>
+      </div>
+      <div class="map-wrap">
+        <canvas id="mapCanvas"></canvas>
+        <div class="map-legend">
+          <div
+            style="font-size:11px;font-weight:500;color:var(--gray600);font-family:var(--font);margin-bottom:6px">
+            Risk Level</div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#ea4335"></div> Critical
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#fa7b17"></div> High
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#fbbc04"></div> Moderate
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#34a853"></div> Low
+          </div>
+        </div>
+        <div id="wardTooltip"></div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="g-card" style="flex:1">
+        <div class="card-head">
+          <div class="card-title"><i class="ti ti-alert-triangle"></i> Latest Alerts</div>
+          <span class="chip chip-red">5 Active</span>
+        </div>
+        <div class="alert-item critical">
+          <div class="alert-icon"><i class="ti ti-alert-circle"></i></div>
+          <div>
+            <div class="alert-title">Whitefield — Critical WSI</div>
+            <div class="alert-desc">WSI 0.91 · Borewell depleted 78% · Immediate action required</div>
+            <div class="alert-meta">2 min ago · Ward 112</div>
+          </div>
+        </div>
+        <div class="alert-item high">
+          <div class="alert-icon"><i class="ti ti-droplet-off"></i></div>
+          <div>
+            <div class="alert-title">Yelahanka — Supply Cut Risk</div>
+            <div class="alert-desc">Reservoir at 35% · 60-day forecast: Critical</div>
+            <div class="alert-meta">18 min ago · Ward 67</div>
+          </div>
+        </div>
+        <div class="alert-item info">
+          <div class="alert-icon"><i class="ti ti-cloud"></i></div>
+          <div>
+            <div class="alert-title">IMD Forecast Updated</div>
+            <div class="alert-desc">Below normal rainfall predicted next 30 days for Bengaluru</div>
+            <div class="alert-meta">1 hr ago · IMD Data Feed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g-card">
+    <div class="card-head">
+      <div class="card-title"><i class="ti ti-list"></i> Ward Risk Overview</div>
+      <button class="btn-outlined" style="font-size:12px;padding:6px 14px" onclick="showPage('map')">See All
+        Wards</button>
+    </div>
+    <table class="ward-table">
+      <thead>
+        <tr>
+          <th>Ward</th>
+          <th>WSI Score</th>
+          <th>Borewell</th>
+          <th>Supply (MLD)</th>
+          <th>30-Day Risk</th>
+          <th>60-Day Risk</th>
+        </tr>
+      </thead>
+      <tbody id="ward-tbody"></tbody>
+    </table>
+  </div>
+</div>

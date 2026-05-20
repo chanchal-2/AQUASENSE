@@ -1,0 +1,67 @@
+<!-- ── FORECAST PAGE ── -->
+<div class="page" id="page-forecast">
+  <div class="page-header">
+    <div>
+      <div class="page-title">AI Predictive Forecast</div>
+      <div class="page-sub">30-day and 60-day Water Stress Index predictions powered by Random Forest Regressor
+      </div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="g-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-chart-area-line"></i> Reservoir Trend Forecast</div>
+        <span class="chip chip-yellow">Declining</span>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="forecastChart"></canvas>
+      </div>
+    </div>
+    <div class="g-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-clock-play"></i> Forecast Timeline</div>
+        <span class="chip chip-blue">Interactive</span>
+      </div>
+      <div style="font-size:13px;color:var(--gray600);margin-bottom:12px">Drag to explore predicted conditions
+        at different forecast horizons</div>
+      <input type="range" min="0" max="60" value="30" id="forecast-slider" style="width:100%"
+        oninput="updateForecastCards(this.value)" />
+      <div class="forecast-ticks">
+        <span>Now</span><span>15 days</span><span>30 days</span><span>45 days</span><span>60 days</span>
+      </div>
+      <div class="forecast-cards" id="forecast-cards"></div>
+    </div>
+  </div>
+  <div class="g-card">
+    <div class="card-head">
+      <div class="card-title"><i class="ti ti-brain"></i> AI Insight Summary</div>
+      <span class="chip chip-blue">ML Generated</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+      <div
+        style="background:var(--red-light);border-radius:var(--radius);padding:14px;border-left:3px solid var(--red)">
+        <div
+          style="font-size:11px;font-weight:500;color:var(--red);font-family:var(--font);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em">
+          Critical Prediction</div>
+        <div style="font-size:13px;color:var(--gray800)">7 wards projected to reach Critical WSI within 30 days
+          if current extraction rates persist</div>
+      </div>
+      <div
+        style="background:var(--yellow-light);border-radius:var(--radius);padding:14px;border-left:3px solid var(--yellow)">
+        <div
+          style="font-size:11px;font-weight:500;color:var(--orange);font-family:var(--font);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em">
+          Watch Zone</div>
+        <div style="font-size:13px;color:var(--gray800)">12 wards showing accelerating WSI rise. Demand
+          management advised before June 15</div>
+      </div>
+      <div
+        style="background:var(--green-light);border-radius:var(--radius);padding:14px;border-left:3px solid var(--green)">
+        <div
+          style="font-size:11px;font-weight:500;color:var(--green);font-family:var(--font);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em">
+          Good Status</div>
+        <div style="font-size:13px;color:var(--gray800)">134 wards remain in Low-Moderate range. Proactive
+          conservation can maintain status</div>
+      </div>
+    </div>
+  </div>
+</div>

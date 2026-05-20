@@ -1,0 +1,88 @@
+<!-- ── ADMIN PANEL PAGE ── -->
+<div class="page admin-only-page" id="page-admin">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Admin Control Panel</div>
+      <div class="page-sub">Manage ward data, push alerts, and oversee city-wide operations</div>
+    </div>
+  </div>
+  <div class="admin-action-grid">
+    <div class="admin-action"
+      onclick="showToast('alert','Ward Data Sync initiated — fetching from BWSSB portal','Data Sync')">
+      <div class="admin-action-icon" style="background:var(--blue-light)"><i class="ti ti-refresh"
+          style="font-size:20px;color:var(--blue)"></i></div>
+      <div>
+        <div class="admin-action-text">Sync Ward Data</div>
+        <div class="admin-action-sub">Pull latest from BWSSB &amp; IMD</div>
+      </div>
+    </div>
+    <div class="admin-action"
+      onclick="showToast('critical','Manual alert pushed to all Critical wards','Push Alert')">
+      <div class="admin-action-icon" style="background:var(--red-light)"><i class="ti ti-bell-ringing"
+          style="font-size:20px;color:var(--red)"></i></div>
+      <div>
+        <div class="admin-action-text">Push Emergency Alert</div>
+        <div class="admin-action-sub">Broadcast to Critical wards</div>
+      </div>
+    </div>
+    <div class="admin-action"
+      onclick="showToast('success','ML model retrained — new accuracy: 91.8%','Model Retrain')">
+      <div class="admin-action-icon" style="background:var(--green-light)"><i class="ti ti-cpu"
+          style="font-size:20px;color:var(--green)"></i></div>
+      <div>
+        <div class="admin-action-text">Retrain ML Model</div>
+        <div class="admin-action-sub">Update Random Forest on new data</div>
+      </div>
+    </div>
+    <div class="admin-action" onclick="showToast('info','PDF report generated for May 2026','Export Report')">
+      <div class="admin-action-icon" style="background:var(--yellow-light)"><i class="ti ti-file-type-pdf"
+          style="font-size:20px;color:var(--orange)"></i></div>
+      <div>
+        <div class="admin-action-text">Export Risk Report</div>
+        <div class="admin-action-sub">PDF for all ward assessments</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g-card">
+    <div class="card-head">
+      <div class="card-title"><i class="ti ti-settings-2"></i> Manual WSI Override</div>
+      <span class="chip chip-yellow">Admin Only</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end">
+      <div class="form-group">
+        <label class="form-label">Select Ward</label>
+        <select class="g-select" id="override-ward">
+          <option>Whitefield</option>
+          <option>Koramangala</option>
+          <option>Yelahanka</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">New WSI Score (0–1)</label>
+        <input class="g-input" type="number" min="0" max="1" step="0.01" value="0.72" id="override-wsi" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Risk Tier</label>
+        <select class="g-select">
+          <option>High</option>
+          <option>Critical</option>
+          <option>Moderate</option>
+          <option>Low</option>
+        </select>
+      </div>
+      <button class="btn-contained" style="white-space:nowrap;margin-bottom:0"
+        onclick="showToast('success','WSI updated for selected ward','Override Applied')">Apply</button>
+    </div>
+  </div>
+
+  <div class="g-card">
+    <div class="card-head">
+      <div class="card-title"><i class="ti ti-chart-bar"></i> Model Performance</div>
+      <span class="chip chip-green">91.4% Accuracy</span>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="modelChart"></canvas>
+    </div>
+  </div>
+</div>

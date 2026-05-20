@@ -1,0 +1,261 @@
+<!-- ── HOME / LANDING PAGE ── -->
+<div id="home-screen" class="screen active">
+
+  <!-- HERO NAVBAR -->
+  <nav class="home-nav">
+    <div class="home-nav-inner">
+      <div class="home-nav-logo">
+        <div class="top-logo-mark"><i class="ti ti-droplet"></i></div>
+        <span class="home-nav-brand">AquaSense</span>
+      </div>
+      <div class="home-nav-links">
+        <a href="#home-hero" class="home-link active">Home</a>
+        <a href="#home-about" class="home-link">About</a>
+        <a href="#home-features" class="home-link">Features</a>
+        <a href="#home-tech" class="home-link">Technology</a>
+        <a href="#home-team" class="home-link">Team</a>
+      </div>
+      <button class="btn-contained home-login-btn" onclick="navigateToLogin()">
+        <i class="ti ti-login"></i> Sign In
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="home-hero" id="home-hero">
+    <div class="hero-bg-shapes">
+      <div class="hero-shape shape-1"></div>
+      <div class="hero-shape shape-2"></div>
+      <div class="hero-shape shape-3"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <i class="ti ti-cpu"></i> Powered by AI & Machine Learning
+      </div>
+      <h1 class="hero-title">
+        Predict Water Shortages<br>
+        <span class="hero-gradient-text">Before They Happen</span>
+      </h1>
+      <p class="hero-subtitle">
+        AquaSense uses advanced Random Forest models and real-time data from BWSSB, IMD & India-WRIS
+        to forecast water stress across 198 wards in Bengaluru — empowering citizens and administrators
+        to act before crisis strikes.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-contained hero-btn-primary" onclick="navigateToLogin()">
+          <i class="ti ti-rocket"></i> Get Started
+        </button>
+        <a href="#home-about" class="btn-outlined hero-btn-secondary">
+          <i class="ti ti-info-circle"></i> Learn More
+        </a>
+      </div>
+      <div class="hero-stats-row">
+        <div class="hero-stat">
+          <div class="hero-stat-val">198</div>
+          <div class="hero-stat-label">Wards Monitored</div>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <div class="hero-stat-val">91.4%</div>
+          <div class="hero-stat-label">ML Accuracy</div>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <div class="hero-stat-val">60-Day</div>
+          <div class="hero-stat-label">Forecast Range</div>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <div class="hero-stat-val">Real-time</div>
+          <div class="hero-stat-label">Alert System</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT SECTION -->
+  <section class="home-section" id="home-about">
+    <div class="section-inner">
+      <div class="section-badge"><i class="ti ti-droplet"></i> About AquaSense</div>
+      <h2 class="section-title">AI-Driven Water Security for Bengaluru</h2>
+      <p class="section-desc">
+        AquaSense is an intelligent early-warning system designed to tackle urban water scarcity.
+        By integrating multi-source environmental data with predictive machine learning,
+        we provide actionable insights to both city administrators and everyday citizens.
+      </p>
+
+      <div class="about-grid">
+        <div class="about-card">
+          <div class="about-card-icon" style="background:var(--blue-light)">
+            <i class="ti ti-target" style="color:var(--blue)"></i>
+          </div>
+          <h3 class="about-card-title">Our Mission</h3>
+          <p class="about-card-desc">
+            To eliminate preventable water shortages through predictive analytics, 
+            enabling proactive resource management across all 198 BBMP wards of Bengaluru.
+          </p>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon" style="background:var(--green-light)">
+            <i class="ti ti-bulb" style="color:var(--green)"></i>
+          </div>
+          <h3 class="about-card-title">The Problem</h3>
+          <p class="about-card-desc">
+            Bengaluru faces severe groundwater depletion, erratic monsoons, and rising demand.
+            Traditional monitoring is reactive — AquaSense makes it predictive.
+          </p>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon" style="background:var(--orange-light)">
+            <i class="ti ti-chart-line" style="color:var(--orange)"></i>
+          </div>
+          <h3 class="about-card-title">Our Approach</h3>
+          <p class="about-card-desc">
+            We compute a Water Stress Index (WSI) per ward using rainfall, borewell depth,
+            reservoir levels, population density, and BWSSB supply data — all processed by ML.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES SECTION -->
+  <section class="home-section home-section-alt" id="home-features">
+    <div class="section-inner">
+      <div class="section-badge"><i class="ti ti-sparkles"></i> Key Features</div>
+      <h2 class="section-title">Everything You Need to Stay Ahead</h2>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ti ti-map-2"></i></div>
+          <h3 class="feature-title">Interactive Ward Map</h3>
+          <p class="feature-desc">Color-coded risk visualization across all wards with real-time WSI scoring.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ti ti-chart-area-line"></i></div>
+          <h3 class="feature-title">AI Forecasting</h3>
+          <p class="feature-desc">30 & 60-day predictions using Random Forest Regressor trained on historical data.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ti ti-bell-ringing"></i></div>
+          <h3 class="feature-title">Smart Alerts</h3>
+          <p class="feature-desc">Automated critical notifications when wards cross WSI danger thresholds.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ti ti-message-report"></i></div>
+          <h3 class="feature-title">Community Reports</h3>
+          <p class="feature-desc">Citizens submit water issues — tracked, verified, and resolved by admin.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ti ti-droplet"></i></div>
+          <h3 class="feature-title">Water Budget Tool</h3>
+          <p class="feature-desc">Personal daily usage calculator with conservation scoring and tips.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ti ti-award"></i></div>
+          <h3 class="feature-title">Gamified Badges</h3>
+          <p class="feature-desc">Earn Water Saver badges and points for conservation actions and reporting.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECHNOLOGY SECTION -->
+  <section class="home-section" id="home-tech">
+    <div class="section-inner">
+      <div class="section-badge"><i class="ti ti-cpu"></i> Technology Stack</div>
+      <h2 class="section-title">Built With Modern AI & Data Engineering</h2>
+
+      <div class="tech-grid">
+        <div class="tech-card">
+          <div class="tech-card-header">
+            <i class="ti ti-brain" style="font-size:24px;color:var(--blue)"></i>
+            <h3>Machine Learning</h3>
+          </div>
+          <ul class="tech-list">
+            <li><strong>Random Forest Regressor</strong> — 91.4% accuracy</li>
+            <li>Feature engineering on 12+ environmental variables</li>
+            <li>Auto-retrain pipeline with new data cycles</li>
+          </ul>
+        </div>
+        <div class="tech-card">
+          <div class="tech-card-header">
+            <i class="ti ti-database" style="font-size:24px;color:var(--green)"></i>
+            <h3>Data Sources</h3>
+          </div>
+          <ul class="tech-list">
+            <li><strong>BWSSB</strong> — Ward supply & borewell data</li>
+            <li><strong>IMD</strong> — Rainfall & weather forecasts</li>
+            <li><strong>India-WRIS</strong> — Reservoir & groundwater levels</li>
+          </ul>
+        </div>
+        <div class="tech-card">
+          <div class="tech-card-header">
+            <i class="ti ti-layout-dashboard" style="font-size:24px;color:var(--orange)"></i>
+            <h3>Frontend</h3>
+          </div>
+          <ul class="tech-list">
+            <li>Vanilla HTML, CSS & JavaScript</li>
+            <li>Chart.js for interactive data visualization</li>
+            <li>Modular page-based architecture</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM SECTION -->
+  <section class="home-section home-section-alt" id="home-team">
+    <div class="section-inner">
+      <div class="section-badge"><i class="ti ti-users"></i> Our Team</div>
+      <h2 class="section-title">The People Behind AquaSense</h2>
+
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-avatar" style="background:linear-gradient(135deg,#1a73e8,#34a853)">
+            <i class="ti ti-user" style="font-size:28px;color:white"></i>
+          </div>
+          <div class="team-name">Project Lead</div>
+          <div class="team-role">ML Engineering & System Design</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar" style="background:linear-gradient(135deg,#ea4335,#fa7b17)">
+            <i class="ti ti-user" style="font-size:28px;color:white"></i>
+          </div>
+          <div class="team-name">Data Analyst</div>
+          <div class="team-role">BWSSB & IMD Data Integration</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar" style="background:linear-gradient(135deg,#fbbc04,#34a853)">
+            <i class="ti ti-user" style="font-size:28px;color:white"></i>
+          </div>
+          <div class="team-name">Frontend Developer</div>
+          <div class="team-role">Dashboard & UI/UX Design</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar" style="background:linear-gradient(135deg,#9c27b0,#1a73e8)">
+            <i class="ti ti-user" style="font-size:28px;color:white"></i>
+          </div>
+          <div class="team-name">Research Lead</div>
+          <div class="team-role">Water Science & Domain Expert</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="home-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="top-logo-mark"><i class="ti ti-droplet"></i></div>
+        <span class="home-nav-brand">AquaSense</span>
+      </div>
+      <div class="footer-text">
+        AI Water Shortage Early Warning System · Bengaluru, India<br>
+        Data Sources: BWSSB · IMD · India-WRIS
+      </div>
+      <div class="footer-copy">© 2026 AquaSense. Built for a water-secure future.</div>
+    </div>
+  </footer>
+
+</div>
