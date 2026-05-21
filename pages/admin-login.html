@@ -1,0 +1,161 @@
+<!-- ═══ ADMIN LOGIN SCREEN — AquaSense Administrative Gateway ═══ -->
+<div id="admin-login-screen" class="screen">
+  <div class="admin-login-container">
+
+    <!-- ── LEFT PANEL — Project Showcase ── -->
+    <div class="admin-login-left">
+      <!-- Background effects -->
+      <div class="admin-grid-overlay"></div>
+      <div class="admin-water-ripple admin-ripple-1"></div>
+      <div class="admin-water-ripple admin-ripple-2"></div>
+      <div class="admin-water-ripple admin-ripple-3"></div>
+
+      <!-- Floating particles -->
+      <div class="admin-particles">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span>
+      </div>
+
+      <!-- Corner accents -->
+      <div class="admin-corner admin-corner-tl"></div>
+      <div class="admin-corner admin-corner-br"></div>
+
+      <div class="admin-left-content">
+
+        <!-- TOP: Logo + Tagline -->
+        <div class="admin-left-top">
+          <div class="admin-left-logo">
+            <div class="aq-logo-animated">
+              <i class="ti ti-droplet"></i>
+              <div class="aq-logo-ripple-ring"></div>
+            </div>
+            <div class="admin-brand-group">
+              <span class="admin-left-brand">AquaSense</span>
+              <span class="admin-left-tagline">AI-Powered Urban Water Intelligence</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CENTER: Hero + Ward Map -->
+        <div class="admin-left-center">
+          <h1 class="admin-hero-title">Predict. Monitor.<br><span class="admin-hero-accent">Sustain.</span></h1>
+          <p class="admin-hero-sub">Smart forecasting and real-time analysis for urban water stress management across Bengaluru wards.</p>
+
+          <!-- Ward Map Visualization -->
+          <div class="admin-map-wrap">
+            <canvas id="adminWardMap" class="admin-ward-canvas"></canvas>
+
+            <!-- Floating metric cards -->
+            <div class="admin-metric-float admin-metric-1">
+              <div class="admin-metric-dot" style="background:#4285f4;"></div>
+              <div class="admin-metric-info">
+                <div class="admin-metric-val">1,450 MLD</div>
+                <div class="admin-metric-label">Water Demand</div>
+              </div>
+            </div>
+            <div class="admin-metric-float admin-metric-2">
+              <div class="admin-metric-dot" style="background:#34a853;"></div>
+              <div class="admin-metric-info">
+                <div class="admin-metric-val">67.3%</div>
+                <div class="admin-metric-label">Reservoir Level</div>
+              </div>
+            </div>
+            <div class="admin-metric-float admin-metric-3">
+              <div class="admin-metric-dot" style="background:#ea4335;"></div>
+              <div class="admin-metric-info">
+                <div class="admin-metric-val">0.74</div>
+                <div class="admin-metric-label">Stress Index</div>
+              </div>
+            </div>
+            <div class="admin-metric-float admin-metric-4">
+              <div class="admin-metric-dot" style="background:#fbbc04;"></div>
+              <div class="admin-metric-info">
+                <div class="admin-metric-val">91.4%</div>
+                <div class="admin-metric-label">Forecast Accuracy</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTTOM: Feature Cards -->
+        <div class="admin-features-row">
+          <div class="admin-feat-card">
+            <div class="admin-feat-icon"><i class="ti ti-brain"></i></div>
+            <div class="admin-feat-title">AI Forecast Engine</div>
+            <div class="admin-feat-desc">Predict water demand and shortages.</div>
+          </div>
+          <div class="admin-feat-card">
+            <div class="admin-feat-icon" style="background:rgba(52,168,83,0.12);"><i class="ti ti-dashboard" style="color:#34a853;"></i></div>
+            <div class="admin-feat-title">Real-Time Monitoring</div>
+            <div class="admin-feat-desc">Live supply and consumption tracking.</div>
+          </div>
+          <div class="admin-feat-card">
+            <div class="admin-feat-icon" style="background:rgba(251,188,4,0.12);"><i class="ti ti-shield-check" style="color:#fbbc04;"></i></div>
+            <div class="admin-feat-title">Governance Insights</div>
+            <div class="admin-feat-desc">Decision support for city planning.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── RIGHT PANEL — Authentication Form (unchanged) ── -->
+    <div class="admin-login-right">
+      <div class="admin-right-top">
+        <button class="admin-back-btn" onclick="navigateFromAdminToHome()" title="Back to Home">
+          <i class="ti ti-arrow-left"></i> Back
+        </button>
+      </div>
+
+      <div class="admin-form-container">
+        <div class="admin-form-header">
+          <div class="admin-form-icon">
+            <i class="ti ti-shield-check"></i>
+          </div>
+          <h2 class="admin-form-title">Administrative Access</h2>
+          <p class="admin-form-sub">Please authenticate to continue.</p>
+        </div>
+
+        <div class="admin-form-body">
+          <div class="admin-input-group">
+            <label class="admin-label" for="admin-email">Work Email</label>
+            <div class="admin-input-wrap">
+              <i class="ti ti-mail admin-input-icon"></i>
+              <input type="email" class="admin-input" id="admin-email"
+                placeholder="admin@bwssb.gov.in" value="admin@bwssb.gov.in"
+                autocomplete="email" />
+            </div>
+          </div>
+
+          <div class="admin-input-group">
+            <div class="admin-label-row">
+              <label class="admin-label" for="admin-password">Access Key</label>
+              <a href="javascript:void(0)" class="admin-forgot-link">Forgot?</a>
+            </div>
+            <div class="admin-input-wrap">
+              <i class="ti ti-key admin-input-icon"></i>
+              <input type="password" class="admin-input" id="admin-password"
+                placeholder="Enter your access key" value="admin123"
+                autocomplete="current-password" />
+              <button class="admin-eye-btn" onclick="toggleAdminPassword()" type="button"
+                title="Toggle password visibility" aria-label="Toggle password visibility">
+                <i class="ti ti-eye" id="admin-eye-icon"></i>
+              </button>
+            </div>
+          </div>
+
+          <button class="admin-auth-btn" onclick="adminLogin()" id="admin-auth-btn">
+            Authenticate Access <i class="ti ti-arrow-right"></i>
+          </button>
+        </div>
+
+        <div class="admin-demo-note">
+          <i class="ti ti-info-circle"></i>
+          <span><strong>Demo:</strong> admin@bwssb.gov.in / any password</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

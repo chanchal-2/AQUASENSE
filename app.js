@@ -9,6 +9,10 @@
         const loginRes = await fetch('pages/login.html');
         document.getElementById('login-container').innerHTML = await loginRes.text();
 
+        // Load admin-login.html
+        const adminLoginRes = await fetch('pages/admin-login.html');
+        document.getElementById('admin-login-container').innerHTML = await adminLoginRes.text();
+
         // Load modal.html
         const modalRes = await fetch('pages/modal.html');
         document.getElementById('modal-container').innerHTML = await modalRes.text();
@@ -45,6 +49,202 @@
       const home = document.getElementById('home-screen');
       if (login) login.classList.remove('active');
       if (home) home.classList.add('active');
+    }
+
+    // ─── ADMIN LOGIN NAVIGATION ─────────────────────────
+    let adminMapAnimId = null;
+
+    function navigateToAdminLogin() {
+      const home = document.getElementById('home-screen');
+      const adminLogin = document.getElementById('admin-login-screen');
+      if (home) home.classList.remove('active');
+      if (adminLogin) adminLogin.classList.add('active');
+      setTimeout(initAdminMap, 120);
+    }
+
+    function navigateFromAdminToHome() {
+      if (adminMapAnimId) { cancelAnimationFrame(adminMapAnimId); adminMapAnimId = null; }
+      const adminLogin = document.getElementById('admin-login-screen');
+      const home = document.getElementById('home-screen');
+      if (adminLogin) {
+        adminLogin.classList.add('slide-out');
+        setTimeout(() => {
+          adminLogin.classList.remove('active', 'slide-out');
+          if (home) home.classList.add('active');
+        }, 400);
+      }
+    }
+
+    function navigateToCitizenLogin() {
+      selectRole('citizen');
+      navigateToLogin();
+    }
+
+    function toggleAdminPassword() {
+      const input = document.getElementById('admin-password');
+      const icon = document.getElementById('admin-eye-icon');
+      if (!input || !icon) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'ti ti-eye-off';
+      } else {
+        input.type = 'password';
+        icon.className = 'ti ti-eye';
+      }
+    }
+
+    function adminLogin() {
+      currentRole = 'admin';
+      const adminLogin = document.getElementById('admin-login-screen');
+      if (adminLogin) adminLogin.classList.remove('active');
+      document.getElementById('app-screen').classList.add('active');
+
+      document.getElementById('user-avatar').textContent = 'A';
+      document.getElementById('user-avatar').style.background = '#1a73e8';
+      document.getElementById('user-name-display').textContent = 'Admin — BWSSB';
+      document.getElementById('role-badge-display').textContent = 'ADMIN';
+      document.getElementById('role-badge-display').style.background = '#fce8e6';
+      document.getElementById('role-badge-display').style.color = '#ea4335';
+      document.querySelectorAll('.citizen-only').forEach(e => e.style.display = 'none');
+      document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'flex');
+      document.querySelectorAll('.admin-only-page').forEach(e => e.style.display = '');
+      document.querySelectorAll('.citizen-only-page').forEach(e => e.dataset.hidden = 'true');
+
+      initApp();
+      setTimeout(() => {
+        showToast('info', 'Welcome back, BWSSB Admin', 'Signed In');
+        setTimeout(() => showToast('critical', 'Whitefield WSI crossed 0.90 threshold', 'Critical Alert 🔴'), 2500);
+      }, 400);
+    }
+
+    // ─── ADMIN WARD MAP CANVAS ──────────────────────────
+    function initAdminMap() {
+      if (adminMapAnimId) cancelAnimationFrame(adminMapAnimId);
+      const canvas = document.getElementById('adminWardMap');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      const W = canvas.offsetWidth;
+      const H = canvas.offsetHeight;
+      if (!W || !H) return;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      ctx.scale(dpr, dpr);
+
+      let frame = 0;
+      const mapWards = [
+        { name: 'Whitefield', x: 0.76, y: 0.32, r: 16, color: '#ea4335' },
+        { name: 'Yelahanka', x: 0.38, y: 0.13, r: 14, color: '#ea4335' },
+        { name: 'M.halli', x: 0.70, y: 0.50, r: 13, color: '#fa7b17' },
+        { name: 'K.gala', x: 0.52, y: 0.58, r: 13, color: '#fa7b17' },
+        { name: 'HSR', x: 0.47, y: 0.72, r: 12, color: '#fa7b17' },
+        { name: 'Hebbal', x: 0.42, y: 0.22, r: 12, color: '#fbbc04' },
+        { name: 'J.nagar', x: 0.37, y: 0.70, r: 11, color: '#fbbc04' },
+        { name: 'R.nagar', x: 0.24, y: 0.44, r: 11, color: '#fbbc04' },
+        { name: 'M.waram', x: 0.32, y: 0.52, r: 10, color: '#34a853' },
+        { name: 'B.gudi', x: 0.42, y: 0.84, r: 10, color: '#34a853' },
+      ];
+      const conns = [[0,2],[2,3],[3,4],[5,8],[8,6],[7,8],[3,6],[1,5],[5,7],[0,5],[4,9],[6,9]];
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        frame++;
+
+        // Dot grid
+        ctx.fillStyle = 'rgba(66,133,244,0.04)';
+        for (let gx = 10; gx < W; gx += 22) {
+          for (let gy = 10; gy < H; gy += 22) {
+            ctx.beginPath();
+            ctx.arc(gx, gy, 0.8, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        // City boundary
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(66,133,244,0.1)';
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([3, 5]);
+        ctx.ellipse(W * 0.48, H * 0.48, W * 0.4, H * 0.42, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Connections with animated flow dots
+        conns.forEach(function(c) {
+          var a = mapWards[c[0]], b = mapWards[c[1]];
+          var ax = a.x * W, ay = a.y * H, bx = b.x * W, by = b.y * H;
+          ctx.beginPath();
+          ctx.strokeStyle = 'rgba(66,133,244,0.08)';
+          ctx.lineWidth = 0.8;
+          ctx.moveTo(ax, ay);
+          ctx.lineTo(bx, by);
+          ctx.stroke();
+          // Flow dot
+          var t = ((frame * 0.004 + c[0] * 0.1) % 1);
+          var dx = ax + (bx - ax) * t, dy = ay + (by - ay) * t;
+          ctx.beginPath();
+          ctx.fillStyle = 'rgba(66,133,244,0.45)';
+          ctx.arc(dx, dy, 1.5, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        // Ward zones
+        mapWards.forEach(function(w) {
+          var x = w.x * W, y = w.y * H;
+          // Outer glow
+          var g = ctx.createRadialGradient(x, y, 0, x, y, w.r * 2.2);
+          g.addColorStop(0, w.color + '20');
+          g.addColorStop(1, 'transparent');
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(x, y, w.r * 2.2, 0, Math.PI * 2);
+          ctx.fill();
+          // Filled circle
+          ctx.beginPath();
+          ctx.fillStyle = w.color + '30';
+          ctx.strokeStyle = w.color + '70';
+          ctx.lineWidth = 1.2;
+          ctx.arc(x, y, w.r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          // Pulsing ring
+          var pr = w.r + 2 + Math.sin(frame * 0.025 + w.x * 10) * 3;
+          ctx.beginPath();
+          ctx.strokeStyle = w.color + '25';
+          ctx.lineWidth = 0.8;
+          ctx.arc(x, y, pr, 0, Math.PI * 2);
+          ctx.stroke();
+          // Label
+          ctx.fillStyle = 'rgba(255,255,255,0.65)';
+          ctx.font = '8px "Google Sans", Inter, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(w.name, x, y);
+        });
+
+        // Legend
+        var lx = 8, ly = H - 52;
+        var items = [
+          { l: 'Critical', c: '#ea4335' },
+          { l: 'High Risk', c: '#fa7b17' },
+          { l: 'Moderate', c: '#fbbc04' },
+          { l: 'Stable', c: '#34a853' }
+        ];
+        items.forEach(function(it, i) {
+          var iy = ly + i * 13;
+          ctx.beginPath();
+          ctx.fillStyle = it.c;
+          ctx.arc(lx + 4, iy, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = 'rgba(255,255,255,0.45)';
+          ctx.font = '8px "Google Sans", Inter, sans-serif';
+          ctx.textAlign = 'left';
+          ctx.fillText(it.l, lx + 12, iy + 3);
+        });
+
+        adminMapAnimId = requestAnimationFrame(draw);
+      }
+      draw();
     }
 
     function setupHomeListeners() {
@@ -151,11 +351,11 @@
 
     function logout() {
       const app = document.getElementById('app-screen');
-      const login = document.getElementById('login-screen');
-      app.classList.add('slide-out');
+      const home = document.getElementById('home-screen');
+      if (app) app.classList.add('slide-out');
       setTimeout(() => {
-        app.classList.remove('active', 'slide-out');
-        login.classList.add('active');
+        if (app) app.classList.remove('active', 'slide-out');
+        if (home) home.classList.add('active');
       }, 400);
     }
 

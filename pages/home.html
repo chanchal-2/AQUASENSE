@@ -14,9 +14,14 @@
         <a href="#home-features" class="home-link">Features</a>
         <a href="#home-tech" class="home-link">Technology</a>
       </div>
-      <button class="btn-contained home-login-btn" onclick="navigateToLogin()">
-        <i class="ti ti-login"></i> Sign In
-      </button>
+      <div class="home-nav-actions">
+        <button class="btn-admin-pill" onclick="navigateToAdminLogin()">
+          <i class="ti ti-shield-check"></i> Admin
+        </button>
+        <button class="btn-citizen-pill" onclick="navigateToCitizenLogin()">
+          <i class="ti ti-user"></i> Citizen
+        </button>
+      </div>
     </div>
   </nav>
 
@@ -41,7 +46,7 @@
         to act before crisis strikes.
       </p>
       <div class="hero-actions">
-        <button class="btn-contained hero-btn-primary" onclick="navigateToLogin()">
+        <button class="btn-contained hero-btn-primary" onclick="navigateToCitizenLogin()">
           <i class="ti ti-rocket"></i> Get Started
         </button>
         <a href="#home-about" class="btn-outlined hero-btn-secondary">
