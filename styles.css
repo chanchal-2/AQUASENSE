@@ -3092,17 +3092,20 @@
     .admin-map-wrap {
       position: relative;
       width: 100%;
-      height: 240px;
+      height: 260px;
       border-radius: 16px;
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid rgba(255, 255, 255, 0.05);
       overflow: hidden;
     }
 
-    .admin-ward-canvas {
+    .admin-ward-img {
       width: 100%;
       height: 100%;
+      object-fit: cover;
       display: block;
+      border-radius: 16px;
+      opacity: 0.9;
     }
 
     /* ── Floating Metric Cards (glassmorphism) ── */
@@ -3357,5 +3360,1090 @@
 
       .admin-left-tagline {
         font-size: 9px;
+      }
+    }
+
+    /* ─── SwipeBack Styles ─── */
+    #swipeback-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 9991;
+      display: none;
+      opacity: 0;
+      pointer-events: none;
+      will-change: opacity;
+    }
+
+    #swipeback-edge {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100vh;
+      background: linear-gradient(to bottom, #00f2fe, #4facfe);
+      box-shadow: 0 0 8px rgba(0, 242, 254, 0.5);
+      z-index: 9993;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+    #swipeback-edge.active {
+      opacity: 1;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       CITIZEN LOGIN SCREEN — Premium Water Portal
+       ══════════════════════════════════════════════════════════ */
+
+    #citizen-login-screen {
+      background: #f0f8ff;
+      overflow: hidden;
+    }
+
+    .citizen-login-container {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* ── LEFT PANEL — Brand Showcase ── */
+    .citizen-login-left {
+      flex: 1;
+      background: linear-gradient(160deg, #0a3d7a 0%, #0c5caa 25%, #1a8cdb 50%, #27b2e0 75%, #36d1dc 100%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 56px 48px;
+    }
+
+    /* ── Animated Wave Layers ── */
+    .citizen-wave-layer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 200%;
+      height: 180px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .citizen-wave-1 {
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='rgba(255,255,255,0.08)' d='M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,133.3C672,117,768,139,864,165.3C960,192,1056,224,1152,218.7C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'/%3E%3C/svg%3E") repeat-x;
+      background-size: 50% 100%;
+      animation: citizenWave1 18s linear infinite;
+      bottom: 0;
+    }
+
+    .citizen-wave-2 {
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='rgba(255,255,255,0.05)' d='M0,224L48,213.3C96,203,192,181,288,186.7C384,192,480,224,576,234.7C672,245,768,235,864,213.3C960,192,1056,160,1152,165.3C1248,171,1344,213,1392,234.7L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'/%3E%3C/svg%3E") repeat-x;
+      background-size: 50% 100%;
+      animation: citizenWave2 14s linear infinite;
+      bottom: -10px;
+      height: 200px;
+    }
+
+    .citizen-wave-3 {
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='rgba(255,255,255,0.03)' d='M0,288L48,272C96,256,192,224,288,218.7C384,213,480,235,576,240C672,245,768,235,864,218.7C960,203,1056,181,1152,186.7C1248,192,1344,224,1392,240L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'/%3E%3C/svg%3E") repeat-x;
+      background-size: 50% 100%;
+      animation: citizenWave3 22s linear infinite;
+      bottom: -20px;
+      height: 220px;
+    }
+
+    @keyframes citizenWave1 {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    @keyframes citizenWave2 {
+      0% { transform: translateX(-50%); }
+      100% { transform: translateX(0); }
+    }
+
+    @keyframes citizenWave3 {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ── Floating particles ── */
+    .citizen-particles {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .citizen-particles span {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 50%;
+      animation: citizenParticleFloat 12s ease-in-out infinite;
+    }
+
+    .citizen-particles span:nth-child(1) { left: 10%; top: 15%; animation-delay: 0s; animation-duration: 10s; width: 4px; height: 4px; }
+    .citizen-particles span:nth-child(2) { left: 25%; top: 35%; animation-delay: -2s; animation-duration: 14s; width: 5px; height: 5px; }
+    .citizen-particles span:nth-child(3) { left: 50%; top: 20%; animation-delay: -4s; animation-duration: 11s; width: 3px; height: 3px; }
+    .citizen-particles span:nth-child(4) { left: 70%; top: 55%; animation-delay: -1s; animation-duration: 13s; width: 7px; height: 7px; }
+    .citizen-particles span:nth-child(5) { left: 85%; top: 25%; animation-delay: -5s; animation-duration: 15s; width: 4px; height: 4px; }
+    .citizen-particles span:nth-child(6) { left: 15%; top: 70%; animation-delay: -3s; animation-duration: 12s; width: 5px; height: 5px; }
+    .citizen-particles span:nth-child(7) { left: 40%; top: 80%; animation-delay: -6s; animation-duration: 16s; width: 3px; height: 3px; }
+    .citizen-particles span:nth-child(8) { left: 60%; top: 10%; animation-delay: -7s; animation-duration: 9s; width: 6px; height: 6px; }
+    .citizen-particles span:nth-child(9) { left: 90%; top: 75%; animation-delay: -4s; animation-duration: 11s; width: 4px; height: 4px; }
+    .citizen-particles span:nth-child(10) { left: 35%; top: 50%; animation-delay: -8s; animation-duration: 17s; width: 5px; height: 5px; }
+
+    @keyframes citizenParticleFloat {
+      0%, 100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.3; }
+      25% { transform: translateY(-30px) translateX(15px) scale(1.3); opacity: 0.6; }
+      50% { transform: translateY(-15px) translateX(-10px) scale(0.8); opacity: 0.2; }
+      75% { transform: translateY(-40px) translateX(20px) scale(1.1); opacity: 0.5; }
+    }
+
+    /* ── Left content structure ── */
+    .citizen-left-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 500px;
+      height: 100%;
+      gap: 0;
+    }
+
+    /* ── Back to home button ── */
+    .citizen-left-top {
+      margin-bottom: 20px;
+    }
+
+    .citizen-back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.85);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .citizen-back-home:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #fff;
+      transform: translateX(-4px);
+    }
+
+    .citizen-back-home i {
+      font-size: 16px;
+      transition: transform 0.2s ease;
+    }
+
+    .citizen-back-home:hover i {
+      transform: translateX(-3px);
+    }
+
+    /* ── Center hero content ── */
+    .citizen-left-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    /* Glowing logo icon */
+    .citizen-logo-glow {
+      position: relative;
+      width: 64px;
+      height: 64px;
+    }
+
+    .citizen-logo-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+
+    .citizen-logo-icon i {
+      font-size: 30px;
+      color: #fff;
+      filter: drop-shadow(0 2px 8px rgba(255,255,255,0.3));
+    }
+
+    .citizen-logo-ring {
+      position: absolute;
+      inset: -6px;
+      border-radius: 22px;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      animation: citizenRingPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes citizenRingPulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.12); opacity: 0; }
+    }
+
+    /* Hero title */
+    .citizen-hero-title {
+      font-family: var(--font);
+      font-size: 48px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin: 0;
+    }
+
+    .citizen-hero-accent {
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 40%, #87CEEB 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .citizen-hero-sub {
+      font-family: var(--font);
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.6;
+      max-width: 400px;
+    }
+
+    /* Feature chips */
+    .citizen-feature-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .citizen-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      padding: 7px 16px;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.8);
+      transition: all 0.25s ease;
+    }
+
+    .citizen-chip:hover {
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .citizen-chip i {
+      font-size: 14px;
+    }
+
+    /* ── Bottom signup CTA ── */
+    .citizen-left-bottom {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .citizen-signup-text {
+      font-family: var(--font);
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.55);
+      margin-bottom: 12px;
+    }
+
+    .citizen-signup-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .citizen-signup-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+      border-color: rgba(255, 255, 255, 0.35);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .citizen-signup-btn i {
+      font-size: 16px;
+      transition: transform 0.2s ease;
+    }
+
+    .citizen-signup-btn:hover i {
+      transform: translateX(4px);
+    }
+
+    /* ── Floating metric cards ── */
+    .citizen-float-card {
+      position: absolute;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 14px;
+      padding: 12px 16px;
+      animation: citizenFloatBob 6s ease-in-out infinite;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .citizen-float-card:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .citizen-float-1 {
+      top: 12%;
+      right: 8%;
+      animation-delay: 0s;
+    }
+
+    .citizen-float-2 {
+      top: 32%;
+      right: 4%;
+      animation-delay: -1.5s;
+    }
+
+    .citizen-float-3 {
+      bottom: 28%;
+      right: 6%;
+      animation-delay: -3s;
+    }
+
+    .citizen-float-4 {
+      bottom: 12%;
+      right: 10%;
+      animation-delay: -4.5s;
+    }
+
+    @keyframes citizenFloatBob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .citizen-float-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .citizen-float-icon i {
+      font-size: 16px;
+    }
+
+    .citizen-float-label {
+      font-family: var(--font);
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.55);
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .citizen-float-val {
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 1px;
+    }
+
+
+    /* ═══ RIGHT PANEL — Login Form ═══ */
+    .citizen-login-right {
+      flex: 1;
+      background: linear-gradient(180deg, #fafcff 0%, #f0f4f8 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow-y: auto;
+    }
+
+    .citizen-right-scroll {
+      width: 100%;
+      max-height: 100vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 48px;
+    }
+
+    .citizen-right-top-mobile {
+      display: none;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .citizen-back-btn-mobile {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff;
+      border: 1px solid #e0e3e8;
+      border-radius: 10px;
+      padding: 9px 18px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray600);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .citizen-back-btn-mobile:hover {
+      background: #f1f3f5;
+      color: var(--gray800);
+    }
+
+    .citizen-form-container {
+      max-width: 420px;
+      width: 100%;
+    }
+
+    /* ── Form header ── */
+    .citizen-form-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .citizen-form-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #0c5caa 0%, #27b2e0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 8px 28px rgba(12, 92, 170, 0.3);
+      position: relative;
+    }
+
+    .citizen-form-icon::after {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 22px;
+      border: 2px solid rgba(12, 92, 170, 0.15);
+      animation: citizenIconPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes citizenIconPulse {
+      0%, 100% { transform: scale(1); opacity: 0.4; }
+      50% { transform: scale(1.1); opacity: 0; }
+    }
+
+    .citizen-form-icon i {
+      font-size: 26px;
+      color: #fff;
+    }
+
+    .citizen-form-title {
+      font-family: var(--font);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--gray900);
+      letter-spacing: -0.5px;
+    }
+
+    .citizen-form-sub {
+      font-size: 14px;
+      color: var(--gray600);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    /* ── Form body ── */
+    .citizen-form-body {
+      background: #fff;
+      border-radius: 20px;
+      padding: 32px 28px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0,0,0,0.04);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .citizen-input-group {
+      margin-bottom: 18px;
+    }
+
+    .citizen-label {
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray800);
+      margin-bottom: 7px;
+      display: block;
+      letter-spacing: 0.2px;
+    }
+
+    .citizen-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 7px;
+    }
+
+    .citizen-label-row .citizen-label {
+      margin-bottom: 0;
+    }
+
+    .citizen-forgot-link {
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--blue);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .citizen-forgot-link:hover {
+      color: var(--blue-dark);
+      text-decoration: underline;
+    }
+
+    .citizen-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .citizen-input-icon {
+      position: absolute;
+      left: 14px;
+      font-size: 16px;
+      color: var(--gray400);
+      pointer-events: none;
+      transition: color 0.2s;
+      z-index: 1;
+    }
+
+    .citizen-input {
+      width: 100%;
+      border: 1.5px solid #e2e6ec;
+      border-radius: 12px;
+      padding: 12px 14px 12px 42px;
+      font-size: 14px;
+      font-family: var(--font-body);
+      color: var(--gray900);
+      outline: none;
+      background: #fafbfc;
+      transition: all 0.25s ease;
+    }
+
+    .citizen-input:focus {
+      border-color: #1a8cdb;
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(26, 140, 219, 0.1), 0 2px 8px rgba(26, 140, 219, 0.08);
+    }
+
+    .citizen-input:focus ~ .citizen-input-icon,
+    .citizen-input:focus + .citizen-input-icon {
+      color: #1a8cdb;
+    }
+
+    .citizen-input-wrap:focus-within .citizen-input-icon {
+      color: #1a8cdb;
+    }
+
+    .citizen-select {
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2380868b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    .citizen-eye-btn {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      color: var(--gray400);
+      transition: color 0.2s;
+      z-index: 1;
+    }
+
+    .citizen-eye-btn:hover {
+      color: var(--gray800);
+    }
+
+    .citizen-eye-btn i {
+      font-size: 18px;
+    }
+
+    /* ── Remember me ── */
+    .citizen-remember-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+
+    .citizen-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--gray600);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .citizen-checkbox-label input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #1a8cdb;
+      cursor: pointer;
+    }
+
+    /* ── Primary CTA button ── */
+    .citizen-auth-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #0c5caa 0%, #1a8cdb 50%, #27b2e0 100%);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 15px 24px;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.35s ease;
+      box-shadow: 0 4px 16px rgba(12, 92, 170, 0.3);
+    }
+
+    .citizen-auth-btn:hover {
+      box-shadow: 0 6px 24px rgba(12, 92, 170, 0.45), 0 0 40px rgba(39, 178, 224, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .citizen-auth-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(12, 92, 170, 0.3);
+    }
+
+    .citizen-auth-btn i {
+      font-size: 18px;
+      transition: transform 0.25s ease;
+    }
+
+    .citizen-auth-btn:hover i {
+      transform: translateX(4px);
+    }
+
+    /* Ripple effect */
+    .citizen-btn-ripple {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      border-radius: inherit;
+    }
+
+    .citizen-auth-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+
+    .citizen-auth-btn:active::before {
+      width: 400px;
+      height: 400px;
+    }
+
+    /* Loading state */
+    .citizen-auth-btn.loading .citizen-btn-text {
+      opacity: 0;
+    }
+
+    .citizen-auth-btn.loading i {
+      animation: citizenBtnSpin 1s linear infinite;
+    }
+
+    @keyframes citizenBtnSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* ── Divider ── */
+    .citizen-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .citizen-divider::before,
+    .citizen-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e8eaed;
+    }
+
+    .citizen-divider span {
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray400);
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    /* ── Social buttons ── */
+    .citizen-social-row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .citizen-social-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #fff;
+      border: 1.5px solid #e2e6ec;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray800);
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .citizen-social-btn:hover {
+      background: #f8f9fa;
+      border-color: #d0d5dd;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      transform: translateY(-1px);
+    }
+
+    .citizen-social-btn i {
+      font-size: 18px;
+    }
+
+    .citizen-guest-btn i {
+      color: var(--gray600);
+    }
+
+    /* ── Benefits section ── */
+    .citizen-benefits-section {
+      margin-top: 28px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px 24px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .citizen-benefits-title {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray900);
+      margin-bottom: 14px;
+      letter-spacing: -0.2px;
+    }
+
+    .citizen-benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .citizen-benefit-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #fafbfc;
+      border: 1px solid #f0f2f5;
+      transition: all 0.25s ease;
+    }
+
+    .citizen-benefit-card:hover {
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      transform: translateY(-2px);
+    }
+
+    .citizen-benefit-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .citizen-benefit-icon i {
+      font-size: 15px;
+    }
+
+    .citizen-benefit-text {
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray800);
+    }
+
+    /* ── Demo note ── */
+    .citizen-demo-note {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f0f7ff;
+      border: 1px solid #d4e8ff;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--gray600);
+      line-height: 1.5;
+    }
+
+    .citizen-demo-note i {
+      font-size: 16px;
+      color: var(--blue);
+      flex-shrink: 0;
+    }
+
+    /* ═══ CITIZEN LOGIN — SLIDE TRANSITION ═══ */
+    #citizen-login-screen.slide-out {
+      animation: citizenSlideOut 0.4s ease forwards;
+    }
+
+    @keyframes citizenSlideOut {
+      from { opacity: 1; transform: translateX(0); }
+      to { opacity: 0; transform: translateX(-40px); }
+    }
+
+    /* ═══ CITIZEN LOGIN — FADE-IN ENTRANCE ═══ */
+    #citizen-login-screen.active {
+      animation: citizenFadeIn 0.5s ease-out;
+    }
+
+    @keyframes citizenFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .citizen-left-center {
+      animation: citizenSlideUp 0.7s ease-out 0.2s both;
+    }
+
+    .citizen-form-container {
+      animation: citizenSlideUp 0.6s ease-out 0.3s both;
+    }
+
+    @keyframes citizenSlideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ═══ CITIZEN LOGIN — RESPONSIVE ═══ */
+
+    /* Tablet */
+    @media (max-width: 1024px) {
+      .citizen-login-container {
+        flex-direction: column;
+      }
+
+      .citizen-login-left {
+        min-height: 50vh;
+        padding: 40px 32px;
+      }
+
+      .citizen-login-right {
+        flex: unset;
+      }
+
+      .citizen-right-scroll {
+        padding: 32px 24px;
+      }
+
+      .citizen-hero-title {
+        font-size: 36px;
+      }
+
+      .citizen-float-card {
+        display: none;
+      }
+
+      .citizen-right-top-mobile {
+        display: block;
+      }
+
+      .citizen-left-top {
+        display: none;
+      }
+    }
+
+    /* Mobile */
+    @media (max-width: 640px) {
+      .citizen-login-left {
+        min-height: 42vh;
+        padding: 32px 20px;
+      }
+
+      .citizen-hero-title {
+        font-size: 28px;
+        letter-spacing: -1px;
+      }
+
+      .citizen-hero-sub {
+        font-size: 13px;
+      }
+
+      .citizen-feature-chips {
+        gap: 6px;
+      }
+
+      .citizen-chip {
+        font-size: 11px;
+        padding: 5px 12px;
+      }
+
+      .citizen-left-bottom {
+        margin-top: 20px;
+        padding-top: 16px;
+      }
+
+      .citizen-signup-btn {
+        font-size: 13px;
+        padding: 10px 18px;
+      }
+
+      .citizen-right-scroll {
+        padding: 24px 16px;
+      }
+
+      .citizen-form-body {
+        padding: 24px 20px;
+        border-radius: 16px;
+      }
+
+      .citizen-form-title {
+        font-size: 22px;
+      }
+
+      .citizen-auth-btn {
+        padding: 14px 20px;
+        border-radius: 12px;
+      }
+
+      .citizen-benefits-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .citizen-logo-glow {
+        width: 52px;
+        height: 52px;
+      }
+
+      .citizen-logo-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+      }
+
+      .citizen-logo-icon i {
+        font-size: 24px;
+      }
+    }
+
+    /* Large desktop tweaks */
+    @media (min-width: 1600px) {
+      .citizen-hero-title {
+        font-size: 56px;
+      }
+
+      .citizen-hero-sub {
+        font-size: 16px;
+        max-width: 440px;
+      }
+
+      .citizen-form-container {
+        max-width: 440px;
       }
     }

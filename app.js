@@ -13,6 +13,10 @@
         const adminLoginRes = await fetch('pages/admin-login.html');
         document.getElementById('admin-login-container').innerHTML = await adminLoginRes.text();
 
+        // Load citizen-login.html
+        const citizenLoginRes = await fetch('pages/citizen-login.html');
+        document.getElementById('citizen-login-container').innerHTML = await citizenLoginRes.text();
+
         // Load modal.html
         const modalRes = await fetch('pages/modal.html');
         document.getElementById('modal-container').innerHTML = await modalRes.text();
@@ -31,6 +35,10 @@
 
         // Setup navbar/scroll listeners for home page
         setupHomeListeners();
+
+        // Initialize swipe-back navigation
+        SwipeBack.init();
+        SwipeBack.push('home-screen');
       } catch (error) {
         console.error("Error loading templates dynamically:", error);
       }
@@ -42,6 +50,7 @@
       const login = document.getElementById('login-screen');
       if (home) home.classList.remove('active');
       if (login) login.classList.add('active');
+      SwipeBack.push('login-screen');
     }
 
     function navigateToHome() {
@@ -49,6 +58,7 @@
       const home = document.getElementById('home-screen');
       if (login) login.classList.remove('active');
       if (home) home.classList.add('active');
+      SwipeBack.pop();
     }
 
     // ─── ADMIN LOGIN NAVIGATION ─────────────────────────
@@ -59,6 +69,7 @@
       const adminLogin = document.getElementById('admin-login-screen');
       if (home) home.classList.remove('active');
       if (adminLogin) adminLogin.classList.add('active');
+      SwipeBack.push('admin-login-screen');
       setTimeout(initAdminMap, 120);
     }
 
@@ -73,11 +84,118 @@
           if (home) home.classList.add('active');
         }, 400);
       }
+      SwipeBack.pop();
     }
 
     function navigateToCitizenLogin() {
-      selectRole('citizen');
-      navigateToLogin();
+      const home = document.getElementById('home-screen');
+      const citizenLogin = document.getElementById('citizen-login-screen');
+      if (home) home.classList.remove('active');
+      if (citizenLogin) citizenLogin.classList.add('active');
+      SwipeBack.push('citizen-login-screen');
+    }
+
+    function navigateFromCitizenToHome() {
+      const citizenLogin = document.getElementById('citizen-login-screen');
+      const home = document.getElementById('home-screen');
+      if (citizenLogin) {
+        citizenLogin.classList.add('slide-out');
+        setTimeout(() => {
+          citizenLogin.classList.remove('active', 'slide-out');
+          if (home) home.classList.add('active');
+        }, 400);
+      }
+      SwipeBack.pop();
+    }
+
+    function toggleCitizenPassword() {
+      const input = document.getElementById('citizen-password');
+      const icon = document.getElementById('citizen-eye-icon');
+      if (!input || !icon) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'ti ti-eye-off';
+      } else {
+        input.type = 'password';
+        icon.className = 'ti ti-eye';
+      }
+    }
+
+    function citizenLogin() {
+      const btn = document.getElementById('citizen-auth-btn');
+      if (btn) btn.classList.add('loading');
+
+      setTimeout(() => {
+        if (btn) btn.classList.remove('loading');
+        currentRole = 'citizen';
+        const ward = document.getElementById('citizen-ward-select') ? document.getElementById('citizen-ward-select').value : 'Koramangala';
+        currentWard = ward;
+
+        const citizenLogin = document.getElementById('citizen-login-screen');
+        if (citizenLogin) citizenLogin.classList.remove('active');
+        document.getElementById('app-screen').classList.add('active');
+
+        document.getElementById('user-avatar').textContent = ward[0];
+        document.getElementById('user-avatar').style.background = '#34a853';
+        document.getElementById('user-name-display').textContent = 'Citizen — ' + ward;
+        document.getElementById('role-badge-display').textContent = 'CITIZEN';
+        document.getElementById('role-badge-display').style.background = '#e6f4ea';
+        document.getElementById('role-badge-display').style.color = '#34a853';
+        document.getElementById('ward-rc-name').textContent = ward;
+        document.getElementById('myward-sub').textContent = 'Personalized water status for ' + ward;
+        document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'none');
+        document.querySelectorAll('.citizen-only').forEach(e => e.style.display = 'flex');
+        document.querySelectorAll('.admin-only-page').forEach(e => e.dataset.hidden = 'true');
+        document.querySelectorAll('.citizen-only-page').forEach(e => e.dataset.hidden = '');
+        document.getElementById('dash-subtitle').textContent = ward + ' — Your ward status · Updated 2 min ago';
+        showPage('myward');
+
+        SwipeBack.push('app-screen');
+        initApp();
+        setTimeout(() => {
+          showToast('info', 'Welcome! Showing data for ' + ward, 'Signed In');
+          setTimeout(() => showToast('critical', 'Whitefield WSI crossed 0.90 threshold', 'Critical Alert 🔴'), 2500);
+          setTimeout(() => showToast('alert', 'Your ward ' + ward + ' needs attention in 30 days', 'Ward Advisory'), 5000);
+        }, 400);
+      }, 1200);
+    }
+
+    function citizenGoogleLogin() {
+      showToast('info', 'Google SSO integration coming soon', 'Google Login');
+    }
+
+    function citizenGuestLogin() {
+      currentRole = 'citizen';
+      currentWard = 'Koramangala';
+
+      const citizenLogin = document.getElementById('citizen-login-screen');
+      if (citizenLogin) citizenLogin.classList.remove('active');
+      document.getElementById('app-screen').classList.add('active');
+
+      document.getElementById('user-avatar').textContent = 'G';
+      document.getElementById('user-avatar').style.background = '#9aa0a6';
+      document.getElementById('user-name-display').textContent = 'Guest Citizen';
+      document.getElementById('role-badge-display').textContent = 'GUEST';
+      document.getElementById('role-badge-display').style.background = '#f1f3f4';
+      document.getElementById('role-badge-display').style.color = '#80868b';
+      document.getElementById('ward-rc-name').textContent = 'Koramangala';
+      document.getElementById('myward-sub').textContent = 'Personalized water status for Koramangala';
+      document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'none');
+      document.querySelectorAll('.citizen-only').forEach(e => e.style.display = 'flex');
+      document.querySelectorAll('.admin-only-page').forEach(e => e.dataset.hidden = 'true');
+      document.querySelectorAll('.citizen-only-page').forEach(e => e.dataset.hidden = '');
+      document.getElementById('dash-subtitle').textContent = 'Koramangala — Your ward status · Updated 2 min ago';
+      showPage('myward');
+
+      SwipeBack.push('app-screen');
+      initApp();
+      setTimeout(() => {
+        showToast('info', 'Welcome, Guest! Explore water data for Koramangala', 'Guest Mode');
+      }, 400);
+    }
+
+    function citizenSignupPrompt() {
+      showToast('info', 'Registration portal coming soon. Use demo credentials for now.', 'Create Account');
     }
 
     function toggleAdminPassword() {
@@ -110,6 +228,7 @@
       document.querySelectorAll('.admin-only-page').forEach(e => e.style.display = '');
       document.querySelectorAll('.citizen-only-page').forEach(e => e.dataset.hidden = 'true');
 
+      SwipeBack.push('app-screen');
       initApp();
       setTimeout(() => {
         showToast('info', 'Welcome back, BWSSB Admin', 'Signed In');
@@ -339,6 +458,7 @@
         showPage('myward');
       }
 
+      SwipeBack.push('app-screen');
       initApp();
       setTimeout(() => {
         showToast('info', currentRole === 'admin' ? 'Welcome back, BWSSB Admin' : 'Welcome! Showing data for ' + ward, 'Signed In');
@@ -357,65 +477,22 @@
         if (app) app.classList.remove('active', 'slide-out');
         if (home) home.classList.add('active');
       }, 400);
+      SwipeBack.reset('home-screen');
     }
 
-    // ─── SWIPE LEFT ON LEFT SIDE TO GO BACK TO LOGIN ─────
-    (function() {
-      let touchStartX = 0;
-      let touchStartY = 0;
-      let startedOnLeftEdge = false;
-
-      document.addEventListener('touchstart', function(e) {
-        touchStartX = e.changedTouches[0].clientX;
-        touchStartY = e.changedTouches[0].clientY;
-        // Only activate if touch starts within 200px from left edge
-        startedOnLeftEdge = touchStartX < 200;
-      }, false);
-
-      document.addEventListener('touchend', function(e) {
-        if (!startedOnLeftEdge) return;
-        const touchEndX = e.changedTouches[0].clientX;
-        const touchEndY = e.changedTouches[0].clientY;
-        const diffX = touchStartX - touchEndX;
-        const diffY = Math.abs(touchStartY - touchEndY);
-        // Swipe left: moved >80px horizontally and mostly horizontal
-        if (diffX > 80 && diffY < 80) {
-          const appScreen = document.getElementById('app-screen');
-          if (appScreen.classList.contains('active')) {
-            logout();
-          }
-        }
-      }, false);
-
-      // Also support mouse drag for desktop testing
-      let mouseDown = false;
-      let mouseStartX = 0;
-      let mouseStartY = 0;
-      let mouseStartedLeft = false;
-
-      document.addEventListener('mousedown', function(e) {
-        if (e.clientX < 200) {
-          mouseDown = true;
-          mouseStartX = e.clientX;
-          mouseStartY = e.clientY;
-          mouseStartedLeft = true;
-        }
-      });
-
-      document.addEventListener('mouseup', function(e) {
-        if (!mouseDown || !mouseStartedLeft) { mouseDown = false; return; }
-        const diffX = mouseStartX - e.clientX;
-        const diffY = Math.abs(mouseStartY - e.clientY);
-        if (diffX > 80 && diffY < 80) {
-          const appScreen = document.getElementById('app-screen');
-          if (appScreen.classList.contains('active')) {
-            logout();
-          }
-        }
-        mouseDown = false;
-        mouseStartedLeft = false;
-      });
-    })();
+    // ─── SWIPE-BACK EVENT HANDLER ─────────────────────────
+    // Listen for SwipeBack completions to do app-specific cleanup
+    document.addEventListener('swipeback', function(e) {
+      var from = e.detail.from;
+      // Cancel admin map animation when swiping away from admin login
+      if (from === 'admin-login-screen') {
+        if (adminMapAnimId) { cancelAnimationFrame(adminMapAnimId); adminMapAnimId = null; }
+      }
+      // Handle swipe-back from citizen login
+      if (from === 'citizen-login-screen') {
+        // No special cleanup needed
+      }
+    });
 
 
     // ─── PAGE NAVIGATION ─────────────────────────────────

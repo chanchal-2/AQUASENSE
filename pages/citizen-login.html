@@ -1,0 +1,265 @@
+<!-- ═══ CITIZEN LOGIN SCREEN — AquaSense Citizen Portal ═══ -->
+<div id="citizen-login-screen" class="screen">
+  <div class="citizen-login-container">
+
+    <!-- ── LEFT PANEL — Brand / Showcase Area ── -->
+    <div class="citizen-login-left">
+      <!-- Animated wave background layers -->
+      <div class="citizen-wave-layer citizen-wave-1"></div>
+      <div class="citizen-wave-layer citizen-wave-2"></div>
+      <div class="citizen-wave-layer citizen-wave-3"></div>
+
+      <!-- Floating water particles -->
+      <div class="citizen-particles">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="citizen-left-content">
+
+        <!-- TOP: Back to Home -->
+        <div class="citizen-left-top">
+          <button class="citizen-back-home" onclick="navigateFromCitizenToHome()" title="Back to Home">
+            <i class="ti ti-arrow-left"></i> Back to Home
+          </button>
+        </div>
+
+        <!-- CENTER: Hero Content -->
+        <div class="citizen-left-center">
+          <!-- Glowing icon -->
+          <div class="citizen-logo-glow">
+            <div class="citizen-logo-icon">
+              <i class="ti ti-droplet"></i>
+            </div>
+            <div class="citizen-logo-ring"></div>
+          </div>
+
+          <h1 class="citizen-hero-title">
+            Water Access<br>
+            <span class="citizen-hero-accent">Made Smarter.</span>
+          </h1>
+
+          <p class="citizen-hero-sub">
+            Monitor your ward, predict shortages, receive alerts, and help improve Bengaluru's water future.
+          </p>
+
+          <!-- Feature chips -->
+          <div class="citizen-feature-chips">
+            <div class="citizen-chip">
+              <i class="ti ti-map-pin"></i> Ward Insights
+            </div>
+            <div class="citizen-chip">
+              <i class="ti ti-chart-line"></i> Forecast Dashboard
+            </div>
+            <div class="citizen-chip">
+              <i class="ti ti-bell-ringing"></i> Real-Time Alerts
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTTOM: Sign up CTA -->
+        <div class="citizen-left-bottom">
+          <p class="citizen-signup-text">New to AquaSense?</p>
+          <button class="citizen-signup-btn" onclick="citizenSignupPrompt()">
+            Create Citizen Account <i class="ti ti-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- Floating metric cards -->
+        <div class="citizen-float-card citizen-float-1">
+          <div class="citizen-float-icon" style="background:rgba(26,115,232,0.15);">
+            <i class="ti ti-droplet" style="color:#1a73e8;"></i>
+          </div>
+          <div class="citizen-float-info">
+            <div class="citizen-float-label">Water Level</div>
+            <div class="citizen-float-val">82%</div>
+          </div>
+        </div>
+
+        <div class="citizen-float-card citizen-float-2">
+          <div class="citizen-float-icon" style="background:rgba(52,168,83,0.15);">
+            <i class="ti ti-chart-area-line" style="color:#34a853;"></i>
+          </div>
+          <div class="citizen-float-info">
+            <div class="citizen-float-label">Forecast</div>
+            <div class="citizen-float-val">Stable</div>
+          </div>
+        </div>
+
+        <div class="citizen-float-card citizen-float-3">
+          <div class="citizen-float-icon" style="background:rgba(251,188,4,0.15);">
+            <i class="ti ti-alert-triangle" style="color:#fbbc04;"></i>
+          </div>
+          <div class="citizen-float-info">
+            <div class="citizen-float-label">Risk</div>
+            <div class="citizen-float-val">Moderate</div>
+          </div>
+        </div>
+
+        <div class="citizen-float-card citizen-float-4">
+          <div class="citizen-float-icon" style="background:rgba(234,67,53,0.15);">
+            <i class="ti ti-message-report" style="color:#ea4335;"></i>
+          </div>
+          <div class="citizen-float-info">
+            <div class="citizen-float-label">Citizen Reports</div>
+            <div class="citizen-float-val">143</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── RIGHT PANEL — Citizen Login Form ── -->
+    <div class="citizen-login-right">
+      <div class="citizen-right-scroll">
+
+        <!-- Back button (mobile) -->
+        <div class="citizen-right-top-mobile">
+          <button class="citizen-back-btn-mobile" onclick="navigateFromCitizenToHome()">
+            <i class="ti ti-arrow-left"></i> Back
+          </button>
+        </div>
+
+        <div class="citizen-form-container">
+          <!-- Header -->
+          <div class="citizen-form-header">
+            <div class="citizen-form-icon">
+              <i class="ti ti-user-circle"></i>
+            </div>
+            <h2 class="citizen-form-title">Citizen Portal</h2>
+            <p class="citizen-form-sub">Access personalized water insights and community reporting.</p>
+          </div>
+
+          <!-- Form -->
+          <div class="citizen-form-body">
+            <div class="citizen-input-group">
+              <label class="citizen-label" for="citizen-email">Citizen Email</label>
+              <div class="citizen-input-wrap">
+                <i class="ti ti-mail citizen-input-icon"></i>
+                <input type="email" class="citizen-input" id="citizen-email"
+                  placeholder="you@email.com" value="citizen@gmail.com"
+                  autocomplete="email" />
+              </div>
+            </div>
+
+            <div class="citizen-input-group">
+              <label class="citizen-label" for="citizen-id">Citizen ID / Mobile</label>
+              <div class="citizen-input-wrap">
+                <i class="ti ti-id citizen-input-icon"></i>
+                <input type="text" class="citizen-input" id="citizen-id"
+                  placeholder="BLR-XXXX or 10-digit mobile"
+                  autocomplete="username" />
+              </div>
+            </div>
+
+            <div class="citizen-input-group">
+              <div class="citizen-label-row">
+                <label class="citizen-label" for="citizen-password">Password</label>
+                <a href="javascript:void(0)" class="citizen-forgot-link">Forgot Password?</a>
+              </div>
+              <div class="citizen-input-wrap">
+                <i class="ti ti-lock citizen-input-icon"></i>
+                <input type="password" class="citizen-input" id="citizen-password"
+                  placeholder="Enter your password" value="citizen123"
+                  autocomplete="current-password" />
+                <button class="citizen-eye-btn" onclick="toggleCitizenPassword()" type="button"
+                  title="Toggle password visibility" aria-label="Toggle password visibility">
+                  <i class="ti ti-eye" id="citizen-eye-icon"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Ward select -->
+            <div class="citizen-input-group">
+              <label class="citizen-label" for="citizen-ward-select">Your Ward</label>
+              <div class="citizen-input-wrap">
+                <i class="ti ti-map-pin citizen-input-icon"></i>
+                <select class="citizen-input citizen-select" id="citizen-ward-select">
+                  <option>Koramangala</option>
+                  <option>Whitefield</option>
+                  <option>Yelahanka</option>
+                  <option>Marathahalli</option>
+                  <option>HSR Layout</option>
+                  <option>Jayanagar</option>
+                  <option>Rajajinagar</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Remember me row -->
+            <div class="citizen-remember-row">
+              <label class="citizen-checkbox-label">
+                <input type="checkbox" id="citizen-remember" checked />
+                <span class="citizen-checkmark"></span>
+                Remember Me
+              </label>
+            </div>
+
+            <!-- Primary CTA -->
+            <button class="citizen-auth-btn" onclick="citizenLogin()" id="citizen-auth-btn">
+              <span class="citizen-btn-text">ENTER DASHBOARD</span>
+              <i class="ti ti-arrow-right"></i>
+              <div class="citizen-btn-ripple"></div>
+            </button>
+
+            <!-- Divider -->
+            <div class="citizen-divider">
+              <span>OR CONTINUE WITH</span>
+            </div>
+
+            <!-- Social buttons -->
+            <div class="citizen-social-row">
+              <button class="citizen-social-btn" onclick="citizenGoogleLogin()">
+                <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#34A853" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#EA4335" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                Continue with Google
+              </button>
+              <button class="citizen-social-btn citizen-guest-btn" onclick="citizenGuestLogin()">
+                <i class="ti ti-user"></i>
+                Continue as Guest
+              </button>
+            </div>
+          </div>
+
+          <!-- Benefits Section -->
+          <div class="citizen-benefits-section">
+            <div class="citizen-benefits-title">Your Benefits</div>
+            <div class="citizen-benefits-grid">
+              <div class="citizen-benefit-card">
+                <div class="citizen-benefit-icon" style="background:rgba(26,115,232,0.1);">
+                  <i class="ti ti-droplet" style="color:#1a73e8;"></i>
+                </div>
+                <div class="citizen-benefit-text">Live Water Availability</div>
+              </div>
+              <div class="citizen-benefit-card">
+                <div class="citizen-benefit-icon" style="background:rgba(52,168,83,0.1);">
+                  <i class="ti ti-chart-bar" style="color:#34a853;"></i>
+                </div>
+                <div class="citizen-benefit-text">Forecast Reports</div>
+              </div>
+              <div class="citizen-benefit-card">
+                <div class="citizen-benefit-icon" style="background:rgba(251,188,4,0.1);">
+                  <i class="ti ti-map-pin" style="color:#fbbc04;"></i>
+                </div>
+                <div class="citizen-benefit-text">Ward Monitoring</div>
+              </div>
+              <div class="citizen-benefit-card">
+                <div class="citizen-benefit-icon" style="background:rgba(234,67,53,0.1);">
+                  <i class="ti ti-bell-ringing" style="color:#ea4335;"></i>
+                </div>
+                <div class="citizen-benefit-text">Smart Alerts</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Demo credentials -->
+          <div class="citizen-demo-note">
+            <i class="ti ti-info-circle"></i>
+            <span><strong>Demo:</strong> citizen@gmail.com / any password · Choose a ward</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
