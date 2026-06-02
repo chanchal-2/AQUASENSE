@@ -17,6 +17,10 @@
         const citizenLoginRes = await fetch('pages/citizen-login.html');
         document.getElementById('citizen-login-container').innerHTML = await citizenLoginRes.text();
 
+        // Load citizen-signup.html
+        const citizenSignupRes = await fetch('pages/citizen-signup.html');
+        document.getElementById('citizen-signup-container').innerHTML = await citizenSignupRes.text();
+
         // Load modal.html
         const modalRes = await fetch('pages/modal.html');
         document.getElementById('modal-container').innerHTML = await modalRes.text();
@@ -39,6 +43,7 @@
         // Initialize swipe-back navigation
         SwipeBack.init();
         SwipeBack.push('home-screen');
+        history.replaceState({ screen: 'home-screen' }, '');
       } catch (error) {
         console.error("Error loading templates dynamically:", error);
       }
@@ -51,14 +56,11 @@
       if (home) home.classList.remove('active');
       if (login) login.classList.add('active');
       SwipeBack.push('login-screen');
+      history.pushState({ screen: 'login-screen' }, '');
     }
 
     function navigateToHome() {
-      const login = document.getElementById('login-screen');
-      const home = document.getElementById('home-screen');
-      if (login) login.classList.remove('active');
-      if (home) home.classList.add('active');
-      SwipeBack.pop();
+      history.back();
     }
 
     // ─── ADMIN LOGIN NAVIGATION ─────────────────────────
@@ -70,21 +72,12 @@
       if (home) home.classList.remove('active');
       if (adminLogin) adminLogin.classList.add('active');
       SwipeBack.push('admin-login-screen');
+      history.pushState({ screen: 'admin-login-screen' }, '');
       setTimeout(initAdminMap, 120);
     }
 
     function navigateFromAdminToHome() {
-      if (adminMapAnimId) { cancelAnimationFrame(adminMapAnimId); adminMapAnimId = null; }
-      const adminLogin = document.getElementById('admin-login-screen');
-      const home = document.getElementById('home-screen');
-      if (adminLogin) {
-        adminLogin.classList.add('slide-out');
-        setTimeout(() => {
-          adminLogin.classList.remove('active', 'slide-out');
-          if (home) home.classList.add('active');
-        }, 400);
-      }
-      SwipeBack.pop();
+      history.back();
     }
 
     function navigateToCitizenLogin() {
@@ -93,19 +86,11 @@
       if (home) home.classList.remove('active');
       if (citizenLogin) citizenLogin.classList.add('active');
       SwipeBack.push('citizen-login-screen');
+      history.pushState({ screen: 'citizen-login-screen' }, '');
     }
 
     function navigateFromCitizenToHome() {
-      const citizenLogin = document.getElementById('citizen-login-screen');
-      const home = document.getElementById('home-screen');
-      if (citizenLogin) {
-        citizenLogin.classList.add('slide-out');
-        setTimeout(() => {
-          citizenLogin.classList.remove('active', 'slide-out');
-          if (home) home.classList.add('active');
-        }, 400);
-      }
-      SwipeBack.pop();
+      history.back();
     }
 
     function toggleCitizenPassword() {
@@ -150,7 +135,9 @@
         document.getElementById('dash-subtitle').textContent = ward + ' — Your ward status · Updated 2 min ago';
         showPage('myward');
 
+        isLoggedIn = true;
         SwipeBack.push('app-screen');
+        history.pushState({ screen: 'app-screen' }, '');
         initApp();
         setTimeout(() => {
           showToast('info', 'Welcome! Showing data for ' + ward, 'Signed In');
@@ -187,7 +174,9 @@
       document.getElementById('dash-subtitle').textContent = 'Koramangala — Your ward status · Updated 2 min ago';
       showPage('myward');
 
+      isLoggedIn = true;
       SwipeBack.push('app-screen');
+      history.pushState({ screen: 'app-screen' }, '');
       initApp();
       setTimeout(() => {
         showToast('info', 'Welcome, Guest! Explore water data for Koramangala', 'Guest Mode');
@@ -228,7 +217,9 @@
       document.querySelectorAll('.admin-only-page').forEach(e => e.style.display = '');
       document.querySelectorAll('.citizen-only-page').forEach(e => e.dataset.hidden = 'true');
 
+      isLoggedIn = true;
       SwipeBack.push('app-screen');
+      history.pushState({ screen: 'app-screen' }, '');
       initApp();
       setTimeout(() => {
         showToast('info', 'Welcome back, BWSSB Admin', 'Signed In');
@@ -412,6 +403,7 @@
 
     let currentRole = 'admin';
     let currentWard = 'Koramangala';
+    let isLoggedIn = false;
     let notifCount = 3;
     let charts = {};
 
@@ -458,7 +450,9 @@
         showPage('myward');
       }
 
+      isLoggedIn = true;
       SwipeBack.push('app-screen');
+      history.pushState({ screen: 'app-screen' }, '');
       initApp();
       setTimeout(() => {
         showToast('info', currentRole === 'admin' ? 'Welcome back, BWSSB Admin' : 'Welcome! Showing data for ' + ward, 'Signed In');
@@ -470,6 +464,7 @@
     }
 
     function logout() {
+      isLoggedIn = false;
       const app = document.getElementById('app-screen');
       const home = document.getElementById('home-screen');
       if (app) app.classList.add('slide-out');
@@ -478,6 +473,7 @@
         if (home) home.classList.add('active');
       }, 400);
       SwipeBack.reset('home-screen');
+      history.replaceState({ screen: 'home-screen' }, '');
     }
 
     // ─── SWIPE-BACK EVENT HANDLER ─────────────────────────
@@ -488,9 +484,160 @@
       if (from === 'admin-login-screen') {
         if (adminMapAnimId) { cancelAnimationFrame(adminMapAnimId); adminMapAnimId = null; }
       }
-      // Handle swipe-back from citizen login
-      if (from === 'citizen-login-screen') {
-        // No special cleanup needed
+      
+      // Update history stack to match completed swipe gesture
+      history.back();
+    });
+
+    // ─── POPSTATE NAVIGATION EVENT LISTENER ─────────────────
+    window.addEventListener('popstate', function(event) {
+      const state = event.state;
+      const targetScreen = state && state.screen ? state.screen : 'home-screen';
+      
+      const activeScreen = document.querySelector('.screen.active');
+      if (!activeScreen) return;
+      const currentScreenId = activeScreen.id;
+      
+      if (currentScreenId === targetScreen) return; // already in sync from custom gesture
+      
+      // Check auth restriction: prevent accessing app-screen if not logged in
+      if (targetScreen === 'app-screen' && !isLoggedIn) {
+        history.replaceState({ screen: 'home-screen' }, '');
+        const active = document.querySelector('.screen.active');
+        if (active && active.id !== 'home-screen') {
+          active.classList.remove('active');
+          const home = document.getElementById('home-screen');
+          if (home) home.classList.add('active');
+        }
+        SwipeBack.reset('home-screen');
+        return;
+      }
+      
+      // Target: home-screen (going all the way back to home)
+      if (targetScreen === 'home-screen') {
+        if (currentScreenId === 'citizen-login-screen') {
+          const citizenLogin = document.getElementById('citizen-login-screen');
+          const home = document.getElementById('home-screen');
+          if (citizenLogin) {
+            citizenLogin.classList.add('slide-out');
+            setTimeout(() => {
+              citizenLogin.classList.remove('active', 'slide-out');
+              if (home) home.classList.add('active');
+            }, 400);
+          }
+        } else if (currentScreenId === 'citizen-signup-screen') {
+          const citizenSignup = document.getElementById('citizen-signup-screen');
+          const home = document.getElementById('home-screen');
+          if (citizenSignup) {
+            citizenSignup.classList.add('slide-out');
+            setTimeout(() => {
+              citizenSignup.classList.remove('active', 'slide-out');
+              if (home) home.classList.add('active');
+            }, 400);
+          }
+        } else if (currentScreenId === 'admin-login-screen') {
+          if (adminMapAnimId) { cancelAnimationFrame(adminMapAnimId); adminMapAnimId = null; }
+          const adminLogin = document.getElementById('admin-login-screen');
+          const home = document.getElementById('home-screen');
+          if (adminLogin) {
+            adminLogin.classList.add('slide-out');
+            setTimeout(() => {
+              adminLogin.classList.remove('active', 'slide-out');
+              if (home) home.classList.add('active');
+            }, 400);
+          }
+        } else if (currentScreenId === 'login-screen') {
+          const login = document.getElementById('login-screen');
+          const home = document.getElementById('home-screen');
+          if (login) login.classList.remove('active');
+          if (home) home.classList.add('active');
+        } else if (currentScreenId === 'app-screen') {
+          const app = document.getElementById('app-screen');
+          const home = document.getElementById('home-screen');
+          if (app) app.classList.add('slide-out');
+          setTimeout(() => {
+            if (app) app.classList.remove('active', 'slide-out');
+            if (home) home.classList.add('active');
+          }, 400);
+        }
+        SwipeBack.pop();
+        return;
+      }
+      
+      // Target: citizen-login-screen (going back from signup, or from app-screen)
+      if (targetScreen === 'citizen-login-screen') {
+        if (currentScreenId === 'citizen-signup-screen') {
+          const citizenSignup = document.getElementById('citizen-signup-screen');
+          const citizenLogin = document.getElementById('citizen-login-screen');
+          if (citizenSignup) {
+            citizenSignup.classList.add('slide-out');
+            setTimeout(() => {
+              citizenSignup.classList.remove('active', 'slide-out');
+              if (citizenLogin) citizenLogin.classList.add('active');
+            }, 400);
+          }
+          SwipeBack.pop();
+        } else if (currentScreenId === 'app-screen') {
+          const app = document.getElementById('app-screen');
+          const citizenLogin = document.getElementById('citizen-login-screen');
+          if (app) app.classList.add('slide-out');
+          setTimeout(() => {
+            if (app) app.classList.remove('active', 'slide-out');
+            if (citizenLogin) citizenLogin.classList.add('active');
+          }, 400);
+          SwipeBack.pop();
+        } else {
+          // Forward navigation in browser history to login
+          const currentEl = document.getElementById(currentScreenId);
+          const citizenLogin = document.getElementById('citizen-login-screen');
+          if (currentEl) currentEl.classList.remove('active');
+          if (citizenLogin) citizenLogin.classList.add('active');
+          SwipeBack.push('citizen-login-screen');
+        }
+        return;
+      }
+      
+      // Target: citizen-signup-screen (going forward to signup)
+      if (targetScreen === 'citizen-signup-screen') {
+        const currentEl = document.getElementById(currentScreenId);
+        const citizenSignup = document.getElementById('citizen-signup-screen');
+        if (currentEl) currentEl.classList.remove('active');
+        if (citizenSignup) {
+          citizenSignup.classList.add('active');
+          setupCitizenSignupListeners();
+        }
+        SwipeBack.push('citizen-signup-screen');
+        return;
+      }
+
+      // Other Targets (standard flow)
+      if (targetScreen === 'admin-login-screen' || targetScreen === 'login-screen') {
+        if (currentScreenId === 'app-screen') {
+          const app = document.getElementById('app-screen');
+          const targetEl = document.getElementById(targetScreen);
+          if (app) app.classList.add('slide-out');
+          setTimeout(() => {
+            if (app) app.classList.remove('active', 'slide-out');
+            if (targetEl) targetEl.classList.add('active');
+          }, 400);
+          SwipeBack.pop();
+        } else {
+          const currentEl = document.getElementById(currentScreenId);
+          const targetEl = document.getElementById(targetScreen);
+          if (currentEl) currentEl.classList.remove('active');
+          if (targetEl) targetEl.classList.add('active');
+          SwipeBack.push(targetScreen);
+        }
+        return;
+      }
+
+      if (targetScreen === 'app-screen') {
+        const currentEl = document.getElementById(currentScreenId);
+        const app = document.getElementById('app-screen');
+        if (currentEl) currentEl.classList.remove('active');
+        if (app) app.classList.add('active');
+        SwipeBack.push('app-screen');
+        return;
       }
     });
 
@@ -911,3 +1058,186 @@
         initMap('mapCanvas2');
       }, 100);
     });
+
+    // ─── CITIZEN SIGNUP / REGISTRATION ────────────────────
+    window.navigateToCitizenSignup = function() {
+      const citizenLogin = document.getElementById('citizen-login-screen');
+      const citizenSignup = document.getElementById('citizen-signup-screen');
+      if (citizenLogin) citizenLogin.classList.remove('active');
+      if (citizenSignup) citizenSignup.classList.add('active');
+      SwipeBack.push('citizen-signup-screen');
+      history.pushState({ screen: 'citizen-signup-screen' }, '');
+      
+      // Setup live password listeners
+      setupCitizenSignupListeners();
+    };
+
+    window.navigateFromCitizenSignupToLogin = function() {
+      history.back();
+    };
+
+    window.toggleCitizenSignupPassword = function(fieldId, iconId) {
+      const input = document.getElementById(fieldId);
+      const icon = document.getElementById(iconId);
+      if (!input || !icon) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'ti ti-eye-off';
+      } else {
+        input.type = 'password';
+        icon.className = 'ti ti-eye';
+      }
+    };
+
+    function setupCitizenSignupListeners() {
+      const pwd = document.getElementById('citizen-signup-password');
+      if (!pwd) return;
+
+      pwd.addEventListener('input', function() {
+        const val = pwd.value;
+
+        // 1. Length >= 8
+        const hasLength = val.length >= 8;
+        _toggleReq('req-signup-len', hasLength);
+
+        // 2. Uppercase letter (A-Z)
+        const hasUpper = /[A-Z]/.test(val);
+        _toggleReq('req-signup-upper', hasUpper);
+
+        // 3. Lowercase letter (a-z)
+        const hasLower = /[a-z]/.test(val);
+        _toggleReq('req-signup-lower', hasLower);
+
+        // 4. Number (0-9)
+        const hasNum = /[0-9]/.test(val);
+        _toggleReq('req-signup-num', hasNum);
+
+        // 5. Special character
+        const hasSpecial = /[^A-Za-z0-9]/.test(val);
+        _toggleReq('req-signup-spec', hasSpecial);
+      });
+    }
+
+    function _toggleReq(id, isValid) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (isValid) {
+        el.classList.add('valid');
+        const icon = el.querySelector('i');
+        if (icon) icon.className = 'ti ti-circle-check';
+      } else {
+        el.classList.remove('valid');
+        const icon = el.querySelector('i');
+        if (icon) icon.className = 'ti ti-circle';
+      }
+    }
+
+    window.citizenRegisterSubmit = function() {
+      const nameInput = document.getElementById('citizen-signup-name');
+      const emailInput = document.getElementById('citizen-signup-email');
+      const mobileInput = document.getElementById('citizen-signup-mobile');
+      const cidInput = document.getElementById('citizen-signup-cid');
+      const wardSelect = document.getElementById('citizen-signup-ward');
+      const pwdInput = document.getElementById('citizen-signup-password');
+      const confirmPwdInput = document.getElementById('citizen-signup-confirm-password');
+      const agreeCheck = document.getElementById('citizen-signup-agree');
+
+      if (!nameInput || !emailInput || !mobileInput || !wardSelect || !pwdInput || !confirmPwdInput || !agreeCheck) return;
+
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const mobile = mobileInput.value.trim();
+      const ward = wardSelect.value;
+      const pwd = pwdInput.value;
+      const confirmPwd = confirmPwdInput.value;
+      const agree = agreeCheck.checked;
+
+      // Validation checks
+      if (!name || !email || !mobile || !ward || !pwd || !confirmPwd) {
+        showToast('critical', 'Please fill in all required fields.', 'Validation Error');
+        return;
+      }
+
+      // Check email format
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showToast('critical', 'Please enter a valid email address.', 'Validation Error');
+        return;
+      }
+
+      // Check mobile number format (10 digit check)
+      if (!/^\d{10}$/.test(mobile)) {
+        showToast('critical', 'Please enter a 10-digit mobile number.', 'Validation Error');
+        return;
+      }
+
+      // Live checklist validation check
+      const isPwdSecure = (
+        pwd.length >= 8 &&
+        /[A-Z]/.test(pwd) &&
+        /[a-z]/.test(pwd) &&
+        /[0-9]/.test(pwd) &&
+        /[^A-Za-z0-9]/.test(pwd)
+      );
+
+      if (!isPwdSecure) {
+        showToast('critical', 'Password does not meet all security requirements.', 'Validation Error');
+        return;
+      }
+
+      // Check password matching
+      if (pwd !== confirmPwd) {
+        showToast('critical', 'Passwords do not match.', 'Validation Error');
+        return;
+      }
+
+      // Check terms agreement
+      if (!agree) {
+        showToast('critical', 'You must agree to the AquaSense Terms & Privacy Policy.', 'Validation Error');
+        return;
+      }
+
+      // All checks pass! Show loading state
+      const btn = document.getElementById('citizen-signup-auth-btn');
+      if (btn) btn.classList.add('loading');
+
+      setTimeout(() => {
+        if (btn) btn.classList.remove('loading');
+        
+        currentRole = 'citizen';
+        currentWard = ward;
+        isLoggedIn = true;
+
+        // Activate main screen
+        const citizenSignup = document.getElementById('citizen-signup-screen');
+        if (citizenSignup) citizenSignup.classList.remove('active');
+        document.getElementById('app-screen').classList.add('active');
+
+        // Update avatar and badges in main screen
+        document.getElementById('user-avatar').textContent = name[0].toUpperCase();
+        document.getElementById('user-avatar').style.background = '#34a853';
+        document.getElementById('user-name-display').textContent = name + ' (' + ward + ')';
+        document.getElementById('role-badge-display').textContent = 'CITIZEN';
+        document.getElementById('role-badge-display').style.background = '#e6f4ea';
+        document.getElementById('role-badge-display').style.color = '#34a853';
+        document.getElementById('ward-rc-name').textContent = ward;
+        document.getElementById('myward-sub').textContent = 'Personalized water status for ' + ward;
+        
+        // Toggle view blocks
+        document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'none');
+        document.querySelectorAll('.citizen-only').forEach(e => e.style.display = 'flex');
+        document.querySelectorAll('.admin-only-page').forEach(e => e.dataset.hidden = 'true');
+        document.querySelectorAll('.citizen-only-page').forEach(e => e.dataset.hidden = '');
+        document.getElementById('dash-subtitle').textContent = ward + ' — Your ward status · Updated just now';
+        
+        showPage('myward');
+
+        SwipeBack.push('app-screen');
+        history.pushState({ screen: 'app-screen' }, '');
+        initApp();
+
+        setTimeout(() => {
+          showToast('success', 'Your citizen account has been successfully created.', 'Welcome to AquaSense');
+          setTimeout(() => showToast('info', 'Showing data for ' + ward, 'Signed In'), 1500);
+        }, 400);
+      }, 1500);
+    };

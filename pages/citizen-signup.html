@@ -1,0 +1,280 @@
+<!-- ═══ CITIZEN REGISTRATION SCREEN — AquaSense Citizen Signup ═══ -->
+<div id="citizen-signup-screen" class="screen">
+  <div class="citizen-login-container">
+
+    <!-- ── LEFT PANEL — Brand / Showcase Area ── -->
+    <div class="citizen-login-left">
+      <!-- Animated wave background layers -->
+      <div class="citizen-wave-layer citizen-wave-1"></div>
+      <div class="citizen-wave-layer citizen-wave-2"></div>
+      <div class="citizen-wave-layer citizen-wave-3"></div>
+
+      <!-- Floating water particles -->
+      <div class="citizen-particles">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="citizen-left-content">
+
+        <!-- TOP: Back to Login -->
+        <div class="citizen-left-top">
+          <button class="citizen-back-home" onclick="navigateFromCitizenSignupToLogin()" title="Back to Login">
+            <i class="ti ti-arrow-left"></i> Back to Login
+          </button>
+        </div>
+
+        <!-- CENTER: Hero Content -->
+        <div class="citizen-left-center">
+          <!-- Glowing icon -->
+          <div class="citizen-logo-glow">
+            <div class="citizen-logo-icon">
+              <i class="ti ti-droplet"></i>
+            </div>
+            <div class="citizen-logo-ring"></div>
+          </div>
+
+          <h1 class="citizen-hero-title">
+            Citizen Water<br>
+            <span class="citizen-hero-accent">Network.</span>
+          </h1>
+
+          <p class="citizen-hero-sub">
+            Join AquaSense to monitor water availability, receive shortage alerts, report issues, and contribute to Bengaluru's sustainable water future.
+          </p>
+
+          <!-- Feature chips -->
+          <div class="citizen-feature-chips">
+            <div class="citizen-chip">
+              <i class="ti ti-users"></i> Community Power
+            </div>
+            <div class="citizen-chip">
+              <i class="ti ti-shield-check"></i> Water Security
+            </div>
+            <div class="citizen-chip">
+              <i class="ti ti-device-analytics"></i> AI Alerts
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTTOM: Sign in CTA (mirrored for signup) -->
+        <div class="citizen-left-bottom" style="opacity: 0.85;">
+          <p class="citizen-signup-text">Already registered?</p>
+          <button class="citizen-signup-btn" onclick="navigateFromCitizenSignupToLogin()">
+            Sign In to Portal <i class="ti ti-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- Floating metric cards -->
+        <div class="citizen-float-card citizen-float-1">
+          <div class="citizen-float-icon" style="background:rgba(26,115,232,0.15);">
+            <i class="ti ti-droplet" style="color:#1a73e8;"></i>
+          </div>
+          <div class="citizen-float-info">
+            <div class="citizen-float-label">Water Level</div>
+            <div class="citizen-float-val">82%</div>
+          </div>
+        </div>
+
+        <div class="citizen-float-card citizen-float-2">
+          <div class="citizen-float-icon" style="background:rgba(52,168,83,0.15);">
+            <i class="ti ti-chart-area-line" style="color:#34a853;"></i>
+          </div>
+          <div class="citizen-float-info">
+            <div class="citizen-float-label">Forecast</div>
+            <div class="citizen-float-val">Stable</div>
+          </div>
+        </div>
+
+        <div class="citizen-float-card citizen-float-3">
+          <div class="citizen-float-icon" style="background:rgba(251,188,4,0.15);">
+            <i class="ti ti-alert-triangle" style="color:#fbbc04;"></i>
+          </div>
+          <div class="citizen-float-info">
+            <div class="citizen-float-label">Risk</div>
+            <div class="citizen-float-val">Moderate</div>
+          </div>
+        </div>
+
+        <div class="citizen-float-card citizen-float-4">
+          <div class="citizen-float-icon" style="background:rgba(234,67,53,0.15);">
+            <i class="ti ti-message-report" style="color:#ea4335;"></i>
+          </div>
+          <div class="citizen-float-info">
+            <div class="citizen-float-label">Citizen Reports</div>
+            <div class="citizen-float-val">143</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── RIGHT PANEL — Citizen Registration Form ── -->
+    <div class="citizen-login-right">
+      <div class="citizen-right-scroll">
+
+        <!-- Back button (mobile) -->
+        <div class="citizen-right-top-mobile">
+          <button class="citizen-back-btn-mobile" onclick="navigateFromCitizenSignupToLogin()">
+            <i class="ti ti-arrow-left"></i> Back to Login
+          </button>
+        </div>
+
+        <div class="citizen-form-container" style="padding-top: 40px; padding-bottom: 40px;">
+          <!-- Header -->
+          <div class="citizen-form-header">
+            <div class="citizen-form-icon" style="background: linear-gradient(135deg, #2563EB 0%, #06B6D4 100%); color: white;">
+              <i class="ti ti-user-plus"></i>
+            </div>
+            <h2 class="citizen-form-title">Citizen Registration</h2>
+            <p class="citizen-form-sub">Create your AquaSense citizen account to access personalized water insights.</p>
+          </div>
+
+          <!-- Form -->
+          <div class="citizen-form-body">
+            <!-- Full Name -->
+            <div class="citizen-input-group">
+              <label class="citizen-label" for="citizen-signup-name">Full Name</label>
+              <div class="citizen-input-wrap">
+                <i class="ti ti-user citizen-input-icon"></i>
+                <input type="text" class="citizen-input" id="citizen-signup-name"
+                  placeholder="Enter your full name" autocomplete="name" />
+              </div>
+            </div>
+
+            <!-- Email Address -->
+            <div class="citizen-input-group">
+              <label class="citizen-label" for="citizen-signup-email">Email Address</label>
+              <div class="citizen-input-wrap">
+                <i class="ti ti-mail citizen-input-icon"></i>
+                <input type="email" class="citizen-input" id="citizen-signup-email"
+                  placeholder="you@email.com" autocomplete="email" />
+              </div>
+            </div>
+
+            <!-- Mobile Number -->
+            <div class="citizen-input-group">
+              <label class="citizen-label" for="citizen-signup-mobile">Mobile Number</label>
+              <div class="citizen-input-wrap">
+                <i class="ti ti-phone citizen-input-icon"></i>
+                <input type="tel" class="citizen-input" id="citizen-signup-mobile"
+                  placeholder="10-digit mobile number" autocomplete="tel" />
+              </div>
+            </div>
+
+            <!-- Citizen ID (optional) -->
+            <div class="citizen-input-group">
+              <label class="citizen-label" for="citizen-signup-cid">Citizen ID <span style="font-size:11px;opacity:0.6;">(optional)</span></label>
+              <div class="citizen-input-wrap">
+                <i class="ti ti-id citizen-input-icon"></i>
+                <input type="text" class="citizen-input" id="citizen-signup-cid"
+                  placeholder="BLR-XXXX (optional)" />
+              </div>
+            </div>
+
+            <!-- Ward Select -->
+            <div class="citizen-input-group">
+              <label class="citizen-label" for="citizen-signup-ward">Your Ward</label>
+              <div class="citizen-input-wrap">
+                <i class="ti ti-map-pin citizen-input-icon"></i>
+                <select class="citizen-input citizen-select" id="citizen-signup-ward">
+                  <option value="" disabled selected>Select your ward</option>
+                  <option>Koramangala</option>
+                  <option>Indiranagar</option>
+                  <option>Whitefield</option>
+                  <option>Jayanagar</option>
+                  <option>Electronic City</option>
+                  <option>HSR Layout</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="citizen-input-group">
+              <label class="citizen-label" for="citizen-signup-password">Password</label>
+              <div class="citizen-input-wrap">
+                <i class="ti ti-lock citizen-input-icon"></i>
+                <input type="password" class="citizen-input" id="citizen-signup-password"
+                  placeholder="Enter secure password" autocomplete="new-password" />
+                <button class="citizen-eye-btn" onclick="toggleCitizenSignupPassword('citizen-signup-password', 'citizen-signup-eye-icon')" type="button"
+                  title="Toggle password visibility">
+                  <i class="ti ti-eye" id="citizen-signup-eye-icon"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Password Requirements Checklist -->
+            <div class="citizen-signup-requirements">
+              <div class="req-checklist-title">Password must contain:</div>
+              <ul class="req-checklist">
+                <li id="req-signup-len" class="req-checklist-item">
+                  <i class="ti ti-circle"></i> <span>Minimum 8 characters</span>
+                </li>
+                <li id="req-signup-upper" class="req-checklist-item">
+                  <i class="ti ti-circle"></i> <span>Uppercase letter (A-Z)</span>
+                </li>
+                <li id="req-signup-lower" class="req-checklist-item">
+                  <i class="ti ti-circle"></i> <span>Lowercase letter (a-z)</span>
+                </li>
+                <li id="req-signup-num" class="req-checklist-item">
+                  <i class="ti ti-circle"></i> <span>At least one number (0-9)</span>
+                </li>
+                <li id="req-signup-spec" class="req-checklist-item">
+                  <i class="ti ti-circle"></i> <span>Special character (@, #, $, etc.)</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="citizen-input-group">
+              <label class="citizen-label" for="citizen-signup-confirm-password">Confirm Password</label>
+              <div class="citizen-input-wrap">
+                <i class="ti ti-lock citizen-input-icon"></i>
+                <input type="password" class="citizen-input" id="citizen-signup-confirm-password"
+                  placeholder="Re-enter password" autocomplete="new-password" />
+                <button class="citizen-eye-btn" onclick="toggleCitizenSignupPassword('citizen-signup-confirm-password', 'citizen-signup-confirm-eye-icon')" type="button"
+                  title="Toggle password visibility">
+                  <i class="ti ti-eye" id="citizen-signup-confirm-eye-icon"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Remember & Policy Checkboxes -->
+            <div class="citizen-signup-checkbox-group" style="margin-top: 18px;">
+              <div class="citizen-remember-row" style="margin-bottom: 10px;">
+                <label class="citizen-checkbox-label">
+                  <input type="checkbox" id="citizen-signup-remember" checked />
+                  <span class="citizen-checkmark"></span>
+                  Remember Me
+                </label>
+              </div>
+              <div class="citizen-remember-row">
+                <label class="citizen-checkbox-label">
+                  <input type="checkbox" id="citizen-signup-agree" />
+                  <span class="citizen-checkmark"></span>
+                  I agree to AquaSense Terms & Privacy Policy
+                </label>
+              </div>
+            </div>
+
+            <!-- Primary CTA -->
+            <button class="citizen-auth-btn" onclick="citizenRegisterSubmit()" id="citizen-signup-auth-btn" style="margin-top: 24px;">
+              <span class="citizen-btn-text">Create Citizen Account</span>
+              <i class="ti ti-arrow-right"></i>
+              <div class="citizen-btn-ripple"></div>
+            </button>
+
+            <!-- Already registered footer -->
+            <div class="citizen-signup-footer-link" style="text-align: center; margin-top: 20px; font-size: 14px; font-family: var(--font);">
+              <span style="color: var(--gray600);">Already have an account? </span>
+              <a href="javascript:void(0)" onclick="navigateFromCitizenSignupToLogin()" style="color: #2563eb; font-weight: 500; text-decoration: none;">Sign In</a>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
