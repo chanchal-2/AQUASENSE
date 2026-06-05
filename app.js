@@ -28,7 +28,7 @@
         // Load main content pages
         const pages = [
           'dashboard', 'map', 'forecast', 'alerts', 'admin',
-          'complaints', 'report-submit', 'myward', 'budget', 'badges'
+          'complaints', 'report-submit', 'myward', 'budget', 'badges', 'insights', '403'
         ];
         const mainContent = document.getElementById('g-main');
         for (const page of pages) {
@@ -131,9 +131,10 @@
         document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'none');
         document.querySelectorAll('.citizen-only').forEach(e => e.style.display = 'flex');
         document.querySelectorAll('.admin-only-page').forEach(e => e.dataset.hidden = 'true');
+        document.querySelectorAll('.admin-only-page').forEach(e => e.dataset.hidden = 'true');
         document.querySelectorAll('.citizen-only-page').forEach(e => e.dataset.hidden = '');
         document.getElementById('dash-subtitle').textContent = ward + ' — Your ward status · Updated 2 min ago';
-        showPage('myward');
+        showPage('insights');
 
         isLoggedIn = true;
         SwipeBack.push('app-screen');
@@ -170,9 +171,10 @@
       document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'none');
       document.querySelectorAll('.citizen-only').forEach(e => e.style.display = 'flex');
       document.querySelectorAll('.admin-only-page').forEach(e => e.dataset.hidden = 'true');
+      document.querySelectorAll('.admin-only-page').forEach(e => e.dataset.hidden = 'true');
       document.querySelectorAll('.citizen-only-page').forEach(e => e.dataset.hidden = '');
       document.getElementById('dash-subtitle').textContent = 'Koramangala — Your ward status · Updated 2 min ago';
-      showPage('myward');
+      showPage('insights');
 
       isLoggedIn = true;
       SwipeBack.push('app-screen');
@@ -215,7 +217,9 @@
       document.querySelectorAll('.citizen-only').forEach(e => e.style.display = 'none');
       document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'flex');
       document.querySelectorAll('.admin-only-page').forEach(e => e.style.display = '');
+      document.querySelectorAll('.admin-only-page').forEach(e => e.style.display = '');
       document.querySelectorAll('.citizen-only-page').forEach(e => e.dataset.hidden = 'true');
+      showPage('dashboard');
 
       isLoggedIn = true;
       SwipeBack.push('app-screen');
@@ -644,6 +648,9 @@
 
     // ─── PAGE NAVIGATION ─────────────────────────────────
     function showPage(id) {
+      if (currentRole === 'citizen' && (id === 'dashboard' || id === 'map' || id === 'forecast' || id === 'admin' || id === 'alerts' || id === 'complaints')) {
+        id = '403';
+      }
       document.querySelectorAll('.page').forEach(p => {
         p.classList.remove('active');
       });
@@ -660,6 +667,7 @@
       if (id === 'budget') initBudgetChart();
       if (id === 'myward') initWardChart();
       if (id === 'map') setTimeout(() => initMap('mapCanvas2'), 50);
+      if (id === 'insights' && typeof initInsightsCharts === 'function') setTimeout(initInsightsCharts, 50);
     }
 
     // ─── INIT APP ────────────────────────────────────────
@@ -796,59 +804,137 @@
     }
 
     // ─── MAP ─────────────────────────────────────────────
-    function initMap(canvasId) {
-      const canvas = document.getElementById(canvasId);
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      const W = canvas.offsetWidth;
-      const H = canvas.offsetHeight || 340;
-      canvas.width = W; canvas.height = H;
+    let leafletMapInstances = {};
 
-      ctx.fillStyle = '#f8f9fa';
-      ctx.fillRect(0, 0, W, H);
+    function initMap(mapId) {
+      const container = document.getElementById(mapId);
+      if (!container) return;
+      
+      if (typeof L === 'undefined') {
+         setTimeout(() => initMap(mapId), 200);
+         return;
+      }
 
-      // Draw grid
-      ctx.strokeStyle = '#e8eaed'; ctx.lineWidth = 1;
-      for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke() }
-      for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke() }
+      if (leafletMapInstances[mapId]) {
+          leafletMapInstances[mapId].invalidateSize();
+          return;
+      }
 
-      // Draw wards as circles
+      // Initialize Leaflet map
+      const map = L.map(mapId, {
+        center: [12.9716, 77.5946],
+        zoom: 11,
+        zoomControl: false
+      });
+      L.control.zoom({ position: 'bottomleft' }).addTo(map);
+
+      // CartoDB Positron (Light, Google Maps style)
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(map);
+
+      leafletMapInstances[mapId] = map;
+
+      // Layer Groups for toggling
+      const polygonLayer = L.layerGroup().addTo(map);
+      const markerLayer = L.layerGroup().addTo(map);
+
       WARDS.forEach(w => {
-        const x = w.x / 100 * W; const y = w.y / 100 * H;
-        const r = 18 + w.wsi * 12;
-        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = w.color + '33'; ctx.fill();
-        ctx.strokeStyle = w.color; ctx.lineWidth = 2.5;
-        ctx.stroke();
-        ctx.fillStyle = w.color;
-        ctx.font = 'bold 11px Google Sans, sans-serif';
-        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText(w.name.split(' ')[0], x, y);
+        const lat = 12.9 + (w.y / 100) * 0.15 - 0.075;
+        const lng = 77.5 + (w.x / 100) * 0.2 - 0.1;
+        
+        let status = 'safe';
+        let color = '#34a853';
+        if (w.wsi > 0.8) { status = 'critical'; color = '#ea4335'; }
+        else if (w.wsi > 0.6) { status = 'high'; color = '#fa7b17'; }
+        else if (w.wsi > 0.4) { status = 'moderate'; color = '#fbbc04'; }
+
+        // Simulate a Ward Polygon
+        const radius = 0.015 + (Math.random() * 0.01);
+        const polygonCoords = [];
+        for (let i = 0; i < 6; i++) {
+          const angle = (i / 6) * Math.PI * 2;
+          polygonCoords.push([lat + Math.cos(angle)*radius, lng + Math.sin(angle)*radius]);
+        }
+        
+        const polygon = L.polygon(polygonCoords, {
+          color: color,
+          fillColor: color,
+          fillOpacity: 0.3,
+          weight: 1.5
+        }).addTo(polygonLayer);
+
+        // Google-style Pin Marker
+        const customIcon = L.divIcon({
+          className: 'custom-gmaps-marker',
+          html: `<div class="gmaps-pin ${status}">
+                   <div class="gmaps-pin-title">${w.name.split(' ')[0]}</div>
+                   <div class="gmaps-pin-val" style="color:${color}; font-weight:700;">Score: ${w.wsi.toFixed(2)}</div>
+                   <div class="gmaps-pin-val">Level: ${w.borewell}%</div>
+                 </div>`,
+          iconSize: [100, 60],
+          iconAnchor: [50, 60],
+          popupAnchor: [0, -65]
+        });
+
+        const marker = L.marker([lat, lng], { icon: customIcon }).addTo(markerLayer);
+        
+        const popImpact = Math.floor(Math.random() * 30000 + 20000);
+        
+        const popupContent = `
+          <div style="color:var(--gray900);font-weight:700;font-size:16px;margin-bottom:8px;border-bottom:1px solid var(--gray200);padding-bottom:6px;">
+            Ward: ${w.name}
+          </div>
+          <div class="gmaps-popup-row"><span>WSI Score:</span><span style="color:${color};">${w.wsi}</span></div>
+          <div class="gmaps-popup-row"><span>Reservoir Level:</span><span>${w.borewell}%</span></div>
+          <div class="gmaps-popup-row"><span>Groundwater Status:</span><span>${status === 'critical' ? 'Depleted' : 'Low'}</span></div>
+          <div class="gmaps-popup-row"><span>Population Impact:</span><span>${popImpact.toLocaleString()}</span></div>
+          <div class="gmaps-popup-row"><span>AI Risk Forecast:</span><span style="color:${color};">${status.toUpperCase()}</span></div>
+          <div style="font-size:11px;color:var(--gray500);margin-top:12px;text-align:right;">Last Updated: 2 mins ago</div>
+        `;
+
+        polygon.bindPopup(popupContent, { closeButton: false });
+        marker.bindPopup(popupContent, { closeButton: false });
+
+        // Hover interaction
+        polygon.on('mouseover', function (e) { this.openPopup(); });
+        polygon.on('mouseout', function (e) { this.closePopup(); });
+        marker.on('mouseover', function (e) { this.openPopup(); });
+        marker.on('mouseout', function (e) { this.closePopup(); });
       });
 
-      const tt = document.getElementById('wardTooltip');
-      if (!tt) return;
-      canvas.onmousemove = (e) => {
-        const rect = canvas.getBoundingClientRect();
-        const mx = (e.clientX - rect.left) * (W / rect.width);
-        const my = (e.clientY - rect.top) * (H / rect.height);
-        let hit = null;
-        WARDS.forEach(w => {
-          const wx = w.x / 100 * W; const wy = w.y / 100 * H;
-          const d = Math.hypot(mx - wx, my - wy);
-          if (d < 30) hit = w;
-        });
-        if (hit) {
-          tt.style.display = 'block';
-          tt.style.left = (e.clientX - rect.left + 12) + 'px';
-          tt.style.top = (e.clientY - rect.top - 60) + 'px';
-          tt.innerHTML = `<div class="tt-name">${hit.name}</div>
-        <div class="tt-row"><span>WSI Score</span><span style="color:${hit.color}">${hit.wsi}</span></div>
-        <div class="tt-row"><span>30-Day Risk</span><span style="color:${hit.color}">${hit.r30}</span></div>
-        <div class="tt-row"><span>Borewell</span><span>${hit.borewell}%</span></div>`;
-        } else tt.style.display = 'none';
+      // Layer Controls Logic
+      const setupToggle = (id, layer) => {
+        const cb = document.getElementById(id);
+        if (cb) {
+          cb.addEventListener('change', (e) => {
+            if (e.target.checked) map.addLayer(layer);
+            else map.removeLayer(layer);
+          });
+        }
       };
-      canvas.onmouseleave = () => { if (tt) tt.style.display = 'none'; };
+
+      if (mapId === 'mapCanvas') {
+        setupToggle('layer-stress', polygonLayer);
+        setupToggle('layer-markers', markerLayer);
+      } else if (mapId === 'mapCanvas2') {
+        setupToggle('layer2-stress', polygonLayer);
+        setupToggle('layer2-markers', markerLayer);
+      }
+
+      // Simulated Real-Time Telemetry updates
+      if (!window.telemetryStarted) {
+        window.telemetryStarted = true;
+        setInterval(() => {
+           const liveBadge = document.getElementById('dash-subtitle');
+           if (liveBadge) liveBadge.innerHTML = 'Bengaluru — Real-time overview · <span style="color:var(--green)">● Live Sync</span>';
+           setTimeout(() => {
+              if (liveBadge) liveBadge.innerHTML = 'Bengaluru — Real-time overview · Updated just now';
+           }, 2000);
+        }, 8000);
+      }
     }
 
     // ─── FORECAST ────────────────────────────────────────
@@ -1240,4 +1326,65 @@
           setTimeout(() => showToast('info', 'Showing data for ' + ward, 'Signed In'), 1500);
         }, 400);
       }, 1500);
+    };
+
+    // ─── INSIGHTS CHARTS ─────────────────────────────────
+    let insightsDailyChartInst = null;
+    let insightsWeeklyChartInst = null;
+    let insightsBreakdownChartInst = null;
+
+    window.initInsightsCharts = function() {
+      const dailyCanvas = document.getElementById('insightsDailyChart');
+      if (dailyCanvas) {
+        if (insightsDailyChartInst) insightsDailyChartInst.destroy();
+        insightsDailyChartInst = new Chart(dailyCanvas.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+              label: 'Daily Usage (L)',
+              data: [150, 142, 138, 160, 145, 120, 125],
+              backgroundColor: '#1a73e8',
+              borderRadius: 4
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false }
+        });
+      }
+
+      const weeklyCanvas = document.getElementById('insightsWeeklyChart');
+      if (weeklyCanvas) {
+        if (insightsWeeklyChartInst) insightsWeeklyChartInst.destroy();
+        insightsWeeklyChartInst = new Chart(weeklyCanvas.getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+            datasets: [{
+              label: 'Weekly Usage (L)',
+              data: [1050, 980, 950, 920],
+              borderColor: '#34a853',
+              backgroundColor: 'rgba(52, 168, 83, 0.1)',
+              fill: true,
+              tension: 0.4
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false }
+        });
+      }
+
+      const breakdownCanvas = document.getElementById('insightsBreakdownChart');
+      if (breakdownCanvas) {
+        if (insightsBreakdownChartInst) insightsBreakdownChartInst.destroy();
+        insightsBreakdownChartInst = new Chart(breakdownCanvas.getContext('2d'), {
+          type: 'doughnut',
+          data: {
+            labels: ['Bathing', 'Toilet', 'Laundry', 'Kitchen', 'Drinking', 'Garden'],
+            datasets: [{
+              data: [35, 20, 18, 15, 7, 5],
+              backgroundColor: ['#1a73e8', '#ea4335', '#fa7b17', '#fbbc04', '#34a853', '#9aa0a6']
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+      }
     };

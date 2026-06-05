@@ -6,8 +6,33 @@
       <div class="page-sub">Interactive ward-level Water Stress Index visualization</div>
     </div>
   </div>
-  <div class="g-card">
-    <canvas id="mapCanvas2"
-      style="width:100%;height:500px;border-radius:var(--radius);cursor:crosshair;display:block"></canvas>
+  <div class="g-card" style="position: relative; width: 100%; height: 70vh; min-height: 500px; border-radius: 12px; overflow: hidden; background: #e5e3df; border: 1px solid var(--gray200);">
+    <div id="mapCanvas2" style="width: 100%; height: 100%; z-index: 1;"></div>
+    
+    <!-- Google-style Layer Controls -->
+    <div style="position: absolute; top: 16px; right: 16px; z-index: 2;" class="gmaps-layer-controls">
+      <div class="gmaps-controls-title">Map Layers</div>
+      <label class="gmaps-layer-label"><input type="checkbox" id="layer2-stress" checked> Water Risk Overlay</label>
+      <label class="gmaps-layer-label"><input type="checkbox" id="layer2-markers" checked> Smart Markers</label>
+      <label class="gmaps-layer-label"><input type="checkbox" id="layer2-heatmap"> Heatmap Zone</label>
+      <label class="gmaps-layer-label"><input type="checkbox" id="layer2-reservoirs"> Reservoirs</label>
+      <label class="gmaps-layer-label"><input type="checkbox" id="layer2-forecast"> AI Forecast</label>
+    </div>
+
+    <div class="map-legend" style="position: absolute; bottom: 24px; right: 16px; z-index: 2; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); padding: 10px 14px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); border: 1px solid var(--gray200);">
+      <div style="font-size:11px;font-weight:600;color:var(--gray700);font-family:var(--font);margin-bottom:8px; text-transform: uppercase;">Risk Level</div>
+      <div class="legend-item" style="display: flex; align-items: center; gap: 8px; font-size: 13px; margin-bottom: 6px;">
+        <div class="legend-dot" style="background:#ea4335; width: 12px; height: 12px; border-radius: 50%;"></div> Critical
+      </div>
+      <div class="legend-item" style="display: flex; align-items: center; gap: 8px; font-size: 13px; margin-bottom: 6px;">
+        <div class="legend-dot" style="background:#fa7b17; width: 12px; height: 12px; border-radius: 50%;"></div> High
+      </div>
+      <div class="legend-item" style="display: flex; align-items: center; gap: 8px; font-size: 13px; margin-bottom: 6px;">
+        <div class="legend-dot" style="background:#fbbc04; width: 12px; height: 12px; border-radius: 50%;"></div> Moderate
+      </div>
+      <div class="legend-item" style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+        <div class="legend-dot" style="background:#34a853; width: 12px; height: 12px; border-radius: 50%;"></div> Safe
+      </div>
+    </div>
   </div>
 </div>

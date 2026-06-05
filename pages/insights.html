@@ -1,0 +1,259 @@
+<!-- ── WATER INSIGHTS CENTER (CITIZEN ONLY) ── -->
+<div class="page citizen-only-page" id="page-insights">
+  
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <div class="page-title">Water Insights Center</div>
+      <div class="page-sub">Monitor personal water usage, track your budget, and engage in local conservation efforts.</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-outlined" onclick="showPage('budget')">
+        <i class="ti ti-calculator"></i> Adjust Budget Calculator
+      </button>
+      <button class="btn-contained" onclick="showPage('complaints')">
+        <i class="ti ti-message-report"></i> View Community Feed
+      </button>
+    </div>
+  </div>
+
+  <!-- FOUR DASHBOARD STAT CARDS -->
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+    <!-- CARD 1: Monthly Usage -->
+    <div class="stat-card">
+      <div class="stat-label">Monthly Usage (May)</div>
+      <div class="stat-val">4,250<span class="unit">L</span></div>
+      <div class="stat-change down"><i class="ti ti-trending-down" style="font-size:13px"></i> −12% vs last month</div>
+      <div class="stat-icon blue" style="background:var(--blue-light);color:var(--blue);"><i class="ti ti-droplet"></i></div>
+    </div>
+
+    <!-- CARD 2: Remaining Budget -->
+    <div class="stat-card">
+      <div class="stat-label">Remaining Budget</div>
+      <div class="stat-val">750<span class="unit">L</span></div>
+      <div class="progress-bar" style="height: 6px; margin: 8px 0; border-radius: 3px; background: var(--gray200);">
+        <div class="progress-fill" style="width: 85%; background: var(--orange); border-radius: 3px;"></div>
+      </div>
+      <div style="font-size: 11px; color: var(--gray600)">85% of your 5,000L limit consumed</div>
+      <div class="stat-icon yellow" style="background:var(--yellow-light);color:var(--orange);"><i class="ti ti-chart-pie"></i></div>
+    </div>
+
+    <!-- CARD 3: Conservation Score -->
+    <div class="stat-card">
+      <div class="stat-label">Conservation Score</div>
+      <div class="stat-val" style="color:var(--green)">95<span class="unit">/100</span></div>
+      <div class="stat-change up"><i class="ti ti-arrow-up" style="font-size:13px"></i> Grade: A+ (+3 pts)</div>
+      <div class="stat-icon green" style="background:var(--green-light);color:var(--green);"><i class="ti ti-award"></i></div>
+    </div>
+
+    <!-- CARD 4: Community Rank -->
+    <div class="stat-card">
+      <div class="stat-label">Community Ranking</div>
+      <div class="stat-val" style="color:var(--blue)">#14</div>
+      <div class="stat-change up"><i class="ti ti-arrow-up" style="font-size:13px"></i> Top 2% in Koramangala</div>
+      <div class="stat-icon orange" style="background:var(--orange-light);color:var(--orange);"><i class="ti ti-medal"></i></div>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW -->
+  <div class="grid-2">
+    <!-- Chart 1: Daily Usage -->
+    <div class="g-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-chart-bar"></i> Daily Consumption (Past 7 Days)</div>
+        <span class="chip chip-blue">Avg: 140L/day</span>
+      </div>
+      <div class="chart-wrap" style="height: 240px; position: relative;">
+        <canvas id="insightsDailyChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Chart 2: Weekly Trends -->
+    <div class="g-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-chart-area-line"></i> Weekly Usage Trends (Past 4 Weeks)</div>
+        <span class="chip chip-green">Declining Trend</span>
+      </div>
+      <div class="chart-wrap" style="height: 240px; position: relative;">
+        <canvas id="insightsWeeklyChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOCAL ALERTS & AI SUGGESTIONS ROW -->
+  <div class="grid-2">
+    <!-- Local Alerts and Advisories -->
+    <div class="g-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-notification"></i> Local Alerts & Advisories</div>
+        <span class="chip chip-red">Action Recommended</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <!-- Supply Alert -->
+        <div style="display:flex; gap:10px; align-items:flex-start; padding:12px; background:var(--blue-light); border-radius:var(--radius); border-left:4px solid var(--blue)">
+          <i class="ti ti-clock" style="font-size:18px; color:var(--blue); flex-shrink:0;"></i>
+          <div style="flex:1;">
+            <div style="font-weight:600; font-size:13px; color:var(--gray900); font-family:var(--font)">Water Supply Schedule</div>
+            <div style="font-size:12px; color:var(--gray700); margin-top:2px;">Scheduled piped water supply tomorrow between **6:00 AM and 9:00 AM**. Maintain backup storage.</div>
+          </div>
+        </div>
+
+        <!-- Maintenance Notification -->
+        <div style="display:flex; gap:10px; align-items:flex-start; padding:12px; background:var(--orange-light); border-radius:var(--radius); border-left:4px solid var(--orange)">
+          <i class="ti ti-tool" style="font-size:18px; color:var(--orange); flex-shrink:0;"></i>
+          <div style="flex:1;">
+            <div style="font-weight:600; font-size:13px; color:var(--gray900); font-family:var(--font)">Borewell Repair Alert</div>
+            <div style="font-size:12px; color:var(--gray700); margin-top:2px;">Koramangala Block 4 borewell pump replacement on **Saturday, June 6 (9 AM - 1 PM)**. Pressure may drop temporarily.</div>
+          </div>
+        </div>
+
+        <!-- Quality Advisory -->
+        <div style="display:flex; gap:10px; align-items:flex-start; padding:12px; background:var(--green-light); border-radius:var(--radius); border-left:4px solid var(--green)">
+          <i class="ti ti-activity" style="font-size:18px; color:var(--green); flex-shrink:0;"></i>
+          <div style="flex:1;">
+            <div style="font-weight:600; font-size:13px; color:var(--gray900); font-family:var(--font)">Water Quality (TDS Tracker)</div>
+            <div style="font-size:12px; color:var(--gray700); margin-top:2px;">Current TDS: **150 ppm** (Excellent range). Safe for direct drinking after standard filtration. pH level: **7.2**.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Conservation Tips -->
+    <div class="g-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-cpu"></i> AI-Powered Conservation Tips</div>
+        <span class="chip chip-blue">ML Tailored</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="padding:14px; background:var(--gray50); border-radius:var(--radius); border-left:3px solid var(--blue)">
+          <div style="font-weight:500; font-size:13px; color:var(--gray900); font-family:var(--font); display:flex; align-items:center; gap:6px;">
+            💧 Shower Optimization
+          </div>
+          <div style="font-size:12px; color:var(--gray700); margin-top:4px;">Reducing your shower timer from 8 minutes to 5 minutes will save **35L of water daily** per household member. That is **1,050L saved** this month!</div>
+        </div>
+
+        <div style="padding:14px; background:var(--gray50); border-radius:var(--radius); border-left:3px solid var(--green)">
+          <div style="font-weight:500; font-size:13px; color:var(--gray900); font-family:var(--font); display:flex; align-items:center; gap:6px;">
+            🌱 Tap Aerator Upgrades
+          </div>
+          <div style="font-size:12px; color:var(--gray700); margin-top:4px;">Installing low-flow tap aerators in your washbasins saves up to **50% flow rate** without reducing water pressure. Low cost, high impact.</div>
+        </div>
+
+        <div style="padding:14px; background:var(--gray50); border-radius:var(--radius); border-left:3px solid var(--orange)">
+          <div style="font-weight:500; font-size:13px; color:var(--gray900); font-family:var(--font); display:flex; align-items:center; gap:6px;">
+            🌦️ Rainwater Potential
+          </div>
+          <div style="font-size:12px; color:var(--gray700); margin-top:4px;">Light rain forecast for Koramangala this Thursday. Direct rooftop drainage to storage tanks to capture up to **400L of pure utility water**.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK ISSUE REPORTING & COMMUNITY METRICS -->
+  <div class="grid-2">
+    <!-- Quick Reporting Form -->
+    <div class="g-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-alert-triangle"></i> Quick Water Issue Reporter</div>
+        <span class="chip chip-yellow">Community Action</span>
+      </div>
+      
+      <div style="display:flex; flex-direction:column; gap:12px; margin-top:6px;">
+        <div class="input-group">
+          <label class="input-label" for="quick-report-type">Issue Type</label>
+          <select id="quick-report-type" class="g-input">
+            <option value="leak">Water Supply Pipe Leakage</option>
+            <option value="dry">Dry Tap / No Supply</option>
+            <option value="quality">Poor Water Quality (Smell/Color)</option>
+            <option value="waste">Wasteful Commercial Drilling</option>
+            <option value="other">Other Issues</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="quick-report-desc">Describe the Issue</label>
+          <textarea id="quick-report-desc" class="g-input" rows="3" placeholder="State where the issue is happening and any description..."></textarea>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <!-- Mock Location Tracker -->
+          <div class="input-group">
+            <label class="input-label">Report Location</label>
+            <div style="display:flex; gap:6px;">
+              <input type="text" id="quick-report-loc" class="g-input" placeholder="Not located" readonly style="background:var(--gray100); font-family:monospace; font-size:12px;"/>
+              <button class="btn-outlined" style="padding:6px 12px; font-size:12px; white-space:nowrap;" onclick="mockGeolocate()">
+                <i class="ti ti-map-pin"></i> Locate Me
+              </button>
+            </div>
+          </div>
+
+          <!-- Mock Image Uploader -->
+          <div class="input-group">
+            <label class="input-label">Attach Photo (Optional)</label>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <input type="file" id="quick-report-file" style="display:none;" onchange="handleQuickFileChange(this)"/>
+              <button class="btn-outlined" style="width:100%; text-align:center; padding:9px 12px; font-size:12px;" onclick="document.getElementById('quick-report-file').click()">
+                <i class="ti ti-camera"></i> <span id="quick-upload-text">Upload Image</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary" style="margin-top:4px;" onclick="submitQuickReport()">
+          <i class="ti ti-send"></i> Submit Immediate Report
+        </button>
+      </div>
+    </div>
+
+    <!-- Achievements & Badges and Community Rank -->
+    <div class="g-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-award"></i> Sustainability Badges & Impact</div>
+        <span class="chip chip-green">Level 3 Saver</span>
+      </div>
+
+      <!-- Badge row (dynamic look) -->
+      <div class="badge-grid" style="display:grid; grid-template-columns:repeat(5, 1fr); gap:10px; margin-bottom:18px; margin-top:8px;">
+        <div class="badge-card earned" style="padding:10px 6px; border-radius:var(--radius); border:1px solid var(--blue-light); text-align:center;">
+          <div style="font-size:24px; margin-bottom:4px;">💧</div>
+          <div style="font-size:10px; font-weight:600; color:var(--gray800); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">First Report</div>
+        </div>
+        <div class="badge-card earned" style="padding:10px 6px; border-radius:var(--radius); border:1px solid var(--blue-light); text-align:center;">
+          <div style="font-size:24px; margin-bottom:4px;">🌱</div>
+          <div style="font-size:10px; font-weight:600; color:var(--gray800); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">Low Usage</div>
+        </div>
+        <div class="badge-card earned" style="padding:10px 6px; border-radius:var(--radius); border:1px solid var(--blue-light); text-align:center;">
+          <div style="font-size:24px; margin-bottom:4px;">📊</div>
+          <div style="font-size:10px; font-weight:600; color:var(--gray800); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">Data Saver</div>
+        </div>
+        <div class="badge-card" style="padding:10px 6px; border-radius:var(--radius); border:1px dashed var(--gray400); text-align:center; opacity:0.5;">
+          <div style="font-size:24px; margin-bottom:4px; filter:grayscale(1);">🏆</div>
+          <div style="font-size:10px; font-weight:600; color:var(--gray600); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">Gold Saver</div>
+        </div>
+        <div class="badge-card" style="padding:10px 6px; border-radius:var(--radius); border:1px dashed var(--gray400); text-align:center; opacity:0.5;">
+          <div style="font-size:24px; margin-bottom:4px; filter:grayscale(1);">🚿</div>
+          <div style="font-size:10px; font-weight:600; color:var(--gray600); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">Shower Hero</div>
+        </div>
+      </div>
+
+      <!-- Community collective saved metrics -->
+      <div style="padding:16px; background:linear-gradient(135deg, var(--green-light) 0%, rgba(52,168,83,0.05) 100%); border-radius:var(--radius-lg); border:1px solid rgba(52,168,83,0.15)">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-family:var(--font); font-size:14px; font-weight:700; color:var(--green)">Koramangala Ward Impact</div>
+          <span class="chip chip-green" style="background:var(--green); color:#fff; font-size:10px;">Goal: 95%</span>
+        </div>
+        <div style="font-size:28px; font-family:var(--font); font-weight:700; color:var(--green); margin-top:8px;">1,245,680 <span style="font-size:14px; font-weight:500;">Litres Saved</span></div>
+        <div style="font-size:12px; color:var(--gray800); margin-top:4px;">Our community water level saving goal is within reach! This effort has successfully reduced total local borewell stress index by **4.2%** this cycle.</div>
+        
+        <!-- Interactive Progress bar showing community goal -->
+        <div class="progress-bar" style="height:8px; margin-top:12px; border-radius:4px; background:rgba(52,168,83,0.15)">
+          <div class="progress-fill" style="width:83%; background:var(--green); border-radius:4px;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--gray600); margin-top:4px;">
+          <span>83% toward June Goal</span><span>1.5M Litres Target</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

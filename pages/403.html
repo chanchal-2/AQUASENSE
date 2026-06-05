@@ -1,0 +1,40 @@
+<!-- ── 403 ACCESS DENIED VIEW ── -->
+<div class="page" id="page-403">
+  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 480px; text-align: center; padding: 24px;">
+    
+    <!-- Lock & Warning Illustration -->
+    <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--red-light); color: var(--red); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; font-size: 36px; box-shadow: 0 4px 10px rgba(234, 67, 53, 0.15); animation: errorPulse 2s infinite;">
+      <i class="ti ti-lock"></i>
+    </div>
+    
+    <div style="font-family: var(--font); font-size: 24px; font-weight: 700; color: var(--gray900); margin-bottom: 8px;">
+      403 — Administrative Area
+    </div>
+    
+    <div style="font-size: 15px; color: var(--gray800); max-width: 440px; margin-bottom: 28px; line-height: 1.6;">
+      Access to this dashboard view is restricted. City-wide ward heatmaps, ML model configurations, and regional water stress analytics are reserved for **BWSSB Administrative Officers** only.
+    </div>
+
+    <!-- Redirection Action Buttons -->
+    <div style="display: flex; gap: 12px;">
+      <button class="btn-contained" onclick="showPage('insights')" class="citizen-only">
+        <i class="ti ti-bulb"></i> Return to Water Insights
+      </button>
+      <button class="btn-contained" onclick="showPage('dashboard')" class="admin-only" style="display:none;">
+        <i class="ti ti-layout-dashboard"></i> Return to Dashboard
+      </button>
+      <button class="btn-outlined" onclick="logout()">
+        <i class="ti ti-logout"></i> Sign Out
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<style>
+@keyframes errorPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+</style>

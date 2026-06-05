@@ -10,6 +10,9 @@
     href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <link rel="stylesheet" href="styles.css?v=1.0.1">
 </head>
@@ -70,11 +73,13 @@
 
       <!-- SIDEBAR -->
       <div class="g-sidebar" id="sidebar">
-        <div class="nav-section">Overview</div>
-        <div class="nav-item active" onclick="showPage('dashboard')"><i class="ti ti-layout-dashboard"></i> Dashboard
-        </div>
-        <div class="nav-item" onclick="showPage('map')"><i class="ti ti-map-2"></i> Ward Risk Map</div>
-        <div class="nav-item" onclick="showPage('forecast')"><i class="ti ti-chart-area-line"></i> AI Forecast</div>
+        <div class="nav-section admin-only">City Overview</div>
+        <div class="nav-item active admin-only" onclick="showPage('dashboard')"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+        <div class="nav-item admin-only" onclick="showPage('map')"><i class="ti ti-map-2"></i> Ward Risk Map</div>
+        <div class="nav-item admin-only" onclick="showPage('forecast')"><i class="ti ti-chart-area-line"></i> AI Forecast</div>
+
+        <div class="nav-section citizen-only" style="display:none;">Water Management</div>
+        <div class="nav-item citizen-only" style="display:none;" onclick="showPage('insights')"><i class="ti ti-bulb"></i> Water Insights</div>
 
         <div class="nav-section" id="admin-section">Management</div>
         <div class="nav-item" id="nav-alerts" onclick="showPage('alerts')"><i class="ti ti-alert-triangle"></i> Active

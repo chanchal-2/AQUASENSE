@@ -1,0 +1,122 @@
+/* ══════════════════════════════════════════════════════════
+   DARK SAAS THEME (NEON WATER) OVERRIDES
+   ══════════════════════════════════════════════════════════ */
+
+/* Global Typography & Smoothing */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--gray50) !important;
+  color: var(--gray800) !important;
+}
+
+/* Base Overrides */
+h1, h2, h3, h4, .page-title, .card-title, .stat-val {
+  color: var(--gray900) !important;
+}
+
+/* Card Overrides */
+.g-card {
+  background: var(--white) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4) !important;
+}
+.card-head {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Button Enhancements */
+.btn-contained, .btn-primary {
+  background: linear-gradient(135deg, var(--blue), var(--blue-dark)) !important;
+  color: #000 !important;
+  border-radius: var(--radius);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: var(--shadow-glow) !important;
+  transition: all 0.2s ease;
+  border: none;
+}
+.btn-contained:hover, .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.6) !important;
+}
+.btn-outlined {
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  background: transparent !important;
+  color: var(--gray800) !important;
+  border-radius: var(--radius);
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.btn-outlined:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  color: var(--gray900) !important;
+}
+
+/* Sidebar & Topbar Enhancements */
+.g-sidebar {
+  background: #0a0a0a !important;
+  border-right: 1px solid rgba(255,255,255,0.05) !important;
+}
+.g-topbar {
+  background: rgba(10, 10, 10, 0.8) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+}
+.nav-item {
+  color: var(--gray600) !important;
+}
+.nav-item:hover {
+  background: rgba(255,255,255,0.05) !important;
+  color: var(--gray800) !important;
+}
+.nav-item.active {
+  background: var(--blue-light) !important;
+  color: var(--blue) !important;
+}
+.nav-item.active i {
+  color: var(--blue) !important;
+}
+
+/* Input Fields */
+.g-input, .top-search input {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--gray900) !important;
+}
+.g-input:focus, .top-search input:focus {
+  background: rgba(0, 0, 0, 0.5) !important;
+  border-color: var(--blue) !important;
+  box-shadow: 0 0 0 3px var(--blue-light) !important;
+}
+
+/* Stat Cards */
+.stat-card {
+  background: var(--white) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+}
+.stat-card .stat-label { color: var(--gray600) !important; }
+.stat-card .stat-val { color: var(--gray900) !important; }
+
+/* Table */
+.ward-table th {
+  background: rgba(255, 255, 255, 0.02) !important;
+  color: var(--gray600) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+}
+.ward-table td {
+  border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+  color: var(--gray800) !important;
+}
+
+/* Toast */
+.toast {
+  background: var(--white) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  box-shadow: var(--shadow-2) !important;
+  color: var(--gray900) !important;
+}
